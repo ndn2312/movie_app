@@ -24,8 +24,8 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $list = Movie::with('category', 'genre', 'country')->orderBy('id', 'DESC')->get();
-        return view('admincp.movie.index', compact('list'));
+        $list = Movie::with('category', 'genre', 'country')->orderBy('id', 'DESC')->get()
+        return view('admincp.movie.index', compact('list'))
     }
 
     public function update_year(Request $request){
