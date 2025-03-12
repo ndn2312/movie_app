@@ -315,7 +315,6 @@
         function showCustomModal(messageHtml, seconds = 3) { 
             // Thiết lập nội dung thông báo 
             $('.success-message').html(messageHtml);
-            
             // Hiển thị modal
             $('#success-modal').css('display', 'flex');
             
