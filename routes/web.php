@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth; // Thêm dòng này
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\HomeController;
 
@@ -51,5 +52,5 @@ Route::resource('episode', EspisodeController::class);
 Route::resource('movie', MovieController::class);
 Route::get('/update-year-phim', [MovieController::class, 'update_year']);
 Route::get('/update-topview-phim', [MovieController::class, 'update_topview']);
-Route::post('/filter-topview-phim', [MovieController::class, 'filter_topview']);
+Route::get('/filter-topview-phim', [MovieController::class, 'filter_topview']);
 Route::get('/filter-topview-default', [MovieController::class, 'filter_default']);

@@ -196,10 +196,10 @@
                // Thực hiện yêu cầu AJAX
                $.ajax({
                   url: "{{url('/filter-topview-phim')}}",
-                  method: "POST",
+                  method: "GET",
                   
                   data: { value: value },
-                  headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                  // headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 
                   success: function(data) {
                         $('#halim-ajax-popular-post-default').css("display", "none");
