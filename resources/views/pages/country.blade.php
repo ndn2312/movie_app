@@ -36,11 +36,18 @@
                             @elseif($mov->resolution==4)
                             FullHD
                             @endif
-                     </span><span class="episode"><i class="fa fa-play" aria-hidden="true"></i>
+                     </span>
+                     <span class="episode"><i class="fa fa-play" aria-hidden="true"></i>
                         @if($mov->phude==0)
-                        Phụ đề
+                           Phụ đề
+                              @if($mov->season!==0)
+                              - Season {{$mov->season}}
+                              @endif
                         @else
-                        Thuyết minh
+                           Thuyết minh
+                              @if($mov->season!==0)
+                                 - Season {{$mov->season}}
+                              @endif
                         @endif
                      </span> 
                      <div class="icon_overlay"></div>

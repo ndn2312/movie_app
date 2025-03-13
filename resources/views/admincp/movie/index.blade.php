@@ -154,13 +154,14 @@
                         <th scope="col">Quốc gia</th>
                         <th scope="col">Thời gian tạo</th>
                         <th scope="col">Thời gian cập nhật</th>
-                        <th scope="col">Năm phim</th>
                         <th scope="col">Top view</th>
+                        <th scope="col">Năm phim</th>
+                        <th scope="col">Season</th>
 
                         <th scope="col">Quản lý</th>
                     </tr>
                 </thead>
-                <tbody>
+            <tbody>
                     @foreach($list as $key => $cate)
                     <tr>
                         <th scope="row">{{$key}}</th>
@@ -331,14 +332,22 @@
                     @endphp
                 </td>
                 
-                <!--Năm phim -->
-                    <td>
-                        {!! Form::selectYear('year',2000,2025,isset($cate->year) ? $cate->year:'',['class'=>'select-year','id'=>$cate->id, 'title'=>$cate->title] ) !!}
-
-                    </td>
+                    
                     <td>
                         {!! Form::select('topview',['0'=>'Ngày','1'=>'Tuần', '2'=>'Tháng'], isset($cate->topview) ? $cate->topview : '', ['class'=>'select-topview','id'=>$cate->id,'title'=>$cate->title]) !!}
-
+                    </form>
+                    </td>
+                    <!--Năm phim -->
+                    <td>
+                           
+                            {!! Form::selectYear('year',2000,2025,isset($cate->year) ? $cate->year:'',['class'=>'select-year','id'=>$cate->id, 'title'=>$cate->title] ) !!}
+                    </td>
+                    <td>
+                        <form action="" method="post">
+                            @csrf
+                            
+                            {!! Form::selectRange('season',0,20,isset($cate->season) ? $cate->season:'',['class'=>'select-season','id'=>$cate->id, 'title'=>$cate->title] ) !!}
+                        </form>
                     </td>
                     <td>
                         {!! Form::open([

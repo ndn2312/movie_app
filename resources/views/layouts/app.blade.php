@@ -249,6 +249,7 @@
     </script>
     
     <!-- jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     
     <!-- DataTables -->
@@ -310,7 +311,25 @@
                     }
                 });
             });
-        
+            
+            // ----- Xử lý cập nhật season phim ----- 
+            $(document).on('change', '.select-season', function() {
+                var season = $(this).find(":selected").val(), 
+                    id_phim = $(this).attr("id"),
+                    ten_phim = $(this).attr("title"),
+                    _token = $('input[name="_token"]').val();
+                
+                $.ajax({
+                    url: "{{url('/update-season-phim')}}",
+                    method: "POST",
+                    data: {season: season, id_phim: id_phim, ten_phim:ten_phim, _token: _token},
+                    success: function() {
+                        const message = 'Phim "<span class="highlight-name">' + ten_phim + '</span>" đã được <span class="highlight">CẬP NHẬT</span> thành season ' + '<span class="highlight-year">' + season + '</span> thành công!';
+                        showCustomModal(message);
+                    }
+                });
+            });
+                
         // ----- Hàm hiển thị modal tùy chỉnh ----- 
         function showCustomModal(messageHtml, seconds = 3) { 
             // Thiết lập nội dung thông báo 
@@ -388,7 +407,7 @@
     </script>
 
     <!-- Script cho chức năng sắp xếp với SweetAlert --> 
-    <script>
+<script>
     $(document).ready(function() { 
         // Lưu thứ tự ban đầu 
         let originalOrder = [];
@@ -473,6 +492,8 @@
             }); 
         } 
     });
-    </script>
+</script>
+
+
 </body>
 </html>

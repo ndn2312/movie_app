@@ -48,9 +48,15 @@
                      </span><span class="episode"><i class="fa fa-play" aria-hidden="true"></i>
                         @if($mov->phude==0)
                         Phụ đề
-                        @else
+                           @if($mov->season!==0)
+                           - Season {{$mov->season}}
+                           @endif
+                     @else
                         Thuyết minh
-                        @endif
+                           @if($mov->season!==0)
+                              - Season {{$mov->season}}
+                           @endif
+                     @endif
                      </span> 
                      <div class="icon_overlay"></div>
                      <div class="halim-post-title-box">

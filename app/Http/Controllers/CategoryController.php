@@ -71,7 +71,7 @@ class CategoryController extends Controller
         $category->status = $data['status'];
         $category->ngaytao = Carbon::now('Asia/Ho_Chi_Minh');
         $category->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
-        $category->position = Category::max('position') + 1; // THÊM DÒNG NÀY để đặt vị trí mới ở cuối
+        $category->position = Category::max('position')+1; // THÊM DÒNG NÀY để đặt vị trí mới ở cuối
         $category->save();
     
         return redirect()->back()->with([
@@ -142,17 +142,7 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-    public function resorting(Request $request) {
-        $data = $request->all(); // Lấy toàn bộ dữ liệu từ request
     
-        foreach ($data['array_id'] as $key => $value) {
-            $category = Category::find($value); // Tìm category theo ID
-            $category->position = $key; // Gán vị trí mới
-            $category->save(); // Lưu vào database
-        }
-        
-    }
-
     public function destroy($id)
     {
 
@@ -167,5 +157,16 @@ class CategoryController extends Controller
             'item_type' => 'danh mục'
         ]);
     }
+    public function resorting(Request $request) {
+        $data = $request->all(); // Lấy toàn bộ dữ liệu từ request
+    
+        foreach ($data['array_id'] as $key => $value) {
+            $category = Category::find($value); // Tìm category theo ID
+            $category->position = $key ; // Gán vị trí mới
+            $category->save(); // Lưu vào database
+        }
+        
+    }
+
     
 }

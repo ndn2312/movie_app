@@ -35,6 +35,13 @@ class MovieController extends Controller
         $movie->year = $data['year'];
         $movie->save();
     }
+    public function update_season(Request $request){
+        $data = $request->all();
+        $movie = Movie::find($data['id_phim']);
+
+        $movie->season = $data['season'];
+        $movie->save();
+    }
     public function update_topview(Request $request){
         $data = $request->all();
         $movie = Movie::find($data['id_phim']);
@@ -42,6 +49,7 @@ class MovieController extends Controller
         $movie->topview = $data['topview'];
         $movie->save();
     }
+    
     public function filter_topview(Request $request){
         
     $data = $request->all();

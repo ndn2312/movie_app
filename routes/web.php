@@ -27,7 +27,7 @@ use App\Http\Controllers\EspisodeController;
 */
 
 Route::get('/', [IndexController::class, 'home'])->name('homepage');
-    
+
 Route::get('/danh-muc/{slug}', [IndexController::class, 'category'])->name('category');
 Route::get('/the-loai/{slug}', [IndexController::class, 'genre'])->name('genre');
 Route::get('/quoc-gia/{slug}', [IndexController::class, 'country'])->name('country');
@@ -44,13 +44,16 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 //route admin
-Route::post('/resorting',[CategoryController::class,'resorting'])->name('resorting');
+Route::post('resorting', [CategoryController::class, 'resorting'])->name('resorting');
 Route::resource('category', CategoryController::class);
 Route::resource('genre', GenreController::class);
 Route::resource('country', CountryController::class);
 Route::resource('episode', EspisodeController::class);
 Route::resource('movie', MovieController::class);
+Route::get('nam/{year}', [MovieController::class, 'year'])->name('year');
+
 Route::get('/update-year-phim', [MovieController::class, 'update_year']);
 Route::get('/update-topview-phim', [MovieController::class, 'update_topview']);
 Route::get('/filter-topview-phim', [MovieController::class, 'filter_topview']);
 Route::get('/filter-topview-default', [MovieController::class, 'filter_default']);
+Route::post('/update-season-phim', [MovieController::class, 'update_season']);
