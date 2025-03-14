@@ -2,61 +2,61 @@
 
 @section('content')
 <style>
-.button-custom {
-    width: 200px; /* Điều chỉnh kích thước theo ý muốn */
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 10px;
-    background: linear-gradient(90deg, #ff416c, #ff4b2b);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease-in-out;
-    max-width: 400px;
-    margin:auto;
+    .button-custom {
+        width: 200px; /* Điều chỉnh kích thước theo ý muốn */
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #ff416c, #ff4b2b);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        max-width: 400px;
+        margin:auto;
 
 
-}
-.button-custom:hover{
-    background: linear-gradient(90deg, #ff4b2b, #ff416c);
-    transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-} 
-/*css them phim*/
-/*css them phim*/
-.button-customadd {
-    width: 200px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    text-decoration: none;
-    transition: all 0.3s ease-in-out;
-    max-width: 400px;
-    margin: auto;
-    
-    /* Thêm màu nền gradient xanh */
-    background: linear-gradient(90deg, #4CAF50, #2196F3);
-    /* Thêm màu chữ vàng */
-    color: #FFD700;
-    /* Thêm đổ bóng cho chữ */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
+    }
+    .button-custom:hover{
+        background: linear-gradient(90deg, #ff4b2b, #ff416c);
+        transform: scale(1.1);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    } 
+    /*css them phim*/
+    /*css them phim*/
+    .button-customadd {
+        width: 200px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+        max-width: 400px;
+        margin: auto;
+        
+        /* Thêm màu nền gradient xanh */
+        background: linear-gradient(90deg, #4CAF50, #2196F3);
+        /* Thêm màu chữ vàng */
+        color: #FFD700;
+        /* Thêm đổ bóng cho chữ */
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
 
-/* Thêm hiệu ứng hover */
-.button-customadd:hover {
-    background: linear-gradient(90deg, #2196F3, #4CAF50);
-    transform: scale(1.1);
-    box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
-}
+    /* Thêm hiệu ứng hover */
+    .button-customadd:hover {
+        background: linear-gradient(90deg, #2196F3, #4CAF50);
+        transform: scale(1.1);
+        box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
+    }
 
 
 </style>

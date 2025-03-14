@@ -29,6 +29,7 @@
                                     FullHD
                                     @endif
                                 </span>
+                                
                             </div>
                             <p class="title">{{$hot_sidebar->title}}</p>
                         </a>
