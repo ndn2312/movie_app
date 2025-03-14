@@ -121,6 +121,11 @@
                         </div>
                         <br>
                         <div class="form-group">
+                            {!! Form::label('trailer','Trailer',['class' => 'd-block mb-2']) !!}
+                            {!! Form::text('trailer',isset($movie)? $movie->trailer:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
                             {!! Form::label('slug','Đường dẫn',['class' => 'd-block mb-2']) !!}
                             {!! Form::text('slug',isset($movie)? $movie->slug:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'convert_slug']) !!}
                         </div>
@@ -145,7 +150,7 @@
                         <br>
                         <div class="form-group">
                             {!! Form::label('resolution','Định dạng',['class' => 'd-block mb-2']) !!}
-                            {!! Form::select('resolution',['0'=>'HD','1'=>'SD','2'=>'HDcam','3'=>'Cam','4'=>'FullHD'], isset($movie) ? $movie->resolution : '', ['class'=>'form-control']) !!}
+                            {!! Form::select('resolution',['0'=>'HD','1'=>'SD','2'=>'HDcam','3'=>'Cam','4'=>'FullHD', '5'=>'Trailer'], isset($movie) ? $movie->resolution : '', ['class'=>'form-control']) !!}
 
                         </div>
                         <br>

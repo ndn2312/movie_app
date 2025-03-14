@@ -16,14 +16,14 @@
    }
  
    /* Vị trí cho status và episode */
-   .status {
+   /* .status {
        position: absolute;
        top: 10px;
        left: 10px;
        z-index: 10;
-   }
+   } */
  
-   .episode {
+   /* .episode {
        position: absolute;
        top: 10px;
        right: 10px;
@@ -31,9 +31,13 @@
        background: none;
        padding: 0;
        margin: 0;
-   }
+   } */
  
    /* Style cho từng loại tag với gradient */
+   .trailer-tag {
+       background: linear-gradient(135deg, #e304af 0%, #dc07d5 100%);
+   }
+ 
    .fullhd-tag {
        background: linear-gradient(135deg, #e30404 0%, #dc2407 100%);
    }
@@ -135,23 +139,28 @@
                          <li class="list-info-group-item"><span>Trạng Thái</span> : 
                            <span class="quality">
                                  @if($movie->resolution==0)
-                                 HD
+                                    HD
                                  @elseif($movie->resolution==1)
-                                 SD
+                                    SD
                                  @elseif($movie->resolution==2)
-                                 HDCam
+                                    HDCam
                                  @elseif($movie->resolution==3)
-                                 Cam
+                                    Cam
                                  @elseif($movie->resolution==4)
-                                 FullHD
+                                    FullHD
+                                 @else
+                                    Trailer
                                  @endif
-                           </span><span class="episode">
-                              @if($movie->phude==0)
-                              Phụ đề
-                              @else
-                              Thuyết minh
-                        @endif
                            </span>
+                        @if($movie->resolution==0)
+                           <span class="episode">
+                              @if($movie->phude==0)
+                                 Phụ đề
+                              @else
+                                 Thuyết minh
+                              @endif
+                           </span>     
+                        @endif
                         </li>
                          <li class="list-info-group-item"><span>Điểm IMDb</span> : 
                            <span class="imdb">7.2</span>
@@ -211,6 +220,18 @@
                      </article>
                   </div>
                  </div>
+                 {{-- Trailer phim --}}
+                 <div class="section-bar clearfix">
+                  <h2 class="section-title"><span style="color:#ffed4d">Trailer phim</span></h2>
+              </div>
+                 <div class="entry-content htmlwrap clearfix">
+                  <div class="video-item halim-entry-box">
+                     <article id="post-38424" class="item-content">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{$movie->trailer}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        {{-- <iframe width="560" height="415" src="https://www.youtube.com/embed/{{$movie->trailer}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> --}}
+                     </article>
+                  </div>
+                 </div>
           </div>
        </section>
        <section class="related-movies">
@@ -229,15 +250,17 @@
                                      alt="{{$hot->title}}" title="{{$hot->title}}"></figure>
                                      <span class="status">
                                        @if($movie->resolution==0)
-                                       <span class="tag-base hd-tag">HD</span>
+                                          <span class="tag-base hd-tag">HD</span>
                                        @elseif($movie->resolution==1)
-                                       <span class="tag-base sd-tag">SD</span>
+                                          <span class="tag-base sd-tag">SD</span>
                                        @elseif($movie->resolution==2)
-                                       <span class="tag-base hdcam-tag">HDCam</span>
+                                          <span class="tag-base hdcam-tag">HDCam</span>
                                        @elseif($movie->resolution==3)
-                                       <span class="tag-base cam-tag">Cam</span>
+                                          <span class="tag-base cam-tag">Cam</span>
                                        @elseif($movie->resolution==4)
-                                       <span class="tag-base fullhd-tag">FullHD</span>
+                                          <span class="tag-base fullhd-tag">FullHD</span>
+                                       @else
+                                          <span class="tag-base trailer-tag">Trailer</span>
                                        @endif
                                      </span>
                                      

@@ -34,6 +34,10 @@
    }
  
    /* Style cho từng loại tag với gradient */
+   .trailer-tag {
+       background: linear-gradient(135deg, #e304af 0%, #dc07d5 100%);
+   }
+ 
    .fullhd-tag {
        background: linear-gradient(135deg, #e30404 0%, #dc2407 100%);
    }
@@ -118,15 +122,17 @@
                      <figure><img class="lazy img-responsive" src="{{asset('uploads/movie/'.$mov->image)}}" title="{{$mov->title}}"></figure>
                      <span class="status">
                         @if($mov->resolution==0)
-                        <span class="tag-base hd-tag">HD</span>
+                           <span class="tag-base hd-tag">HD</span>
                         @elseif($mov->resolution==1)
-                        <span class="tag-base sd-tag">SD</span>
+                           <span class="tag-base sd-tag">SD</span>
                         @elseif($mov->resolution==2)
-                        <span class="tag-base hdcam-tag">HDCam</span>
+                           <span class="tag-base hdcam-tag">HDCam</span>
                         @elseif($mov->resolution==3)
-                        <span class="tag-base cam-tag">Cam</span>
+                           <span class="tag-base cam-tag">Cam</span>
                         @elseif($mov->resolution==4)
-                        <span class="tag-base fullhd-tag">FullHD</span>
+                           <span class="tag-base fullhd-tag">FullHD</span>
+                        @else
+                           <span class="tag-base trailer-tag">Trailer</span>
                         @endif
                       </span>
                       
@@ -168,6 +174,7 @@
           </div>
        </section>
     </main>
+    
     @include('pages.include.sidebar')
 
    </div>

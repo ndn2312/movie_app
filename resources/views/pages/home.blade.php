@@ -34,6 +34,10 @@
   }
 
   /* Style cho từng loại tag với gradient */
+  .trailer-tag {
+      background: linear-gradient(135deg, #e304af 0%, #dc07d5 100%);
+  }
+
   .fullhd-tag {
       background: linear-gradient(135deg, #e30404 0%, #dc2407 100%);
   }
@@ -123,6 +127,8 @@
                                       <span class="tag-base cam-tag">Cam</span>
                                       @elseif($hot->resolution==4)
                                       <span class="tag-base fullhd-tag">FullHD</span>
+                                      @else
+                                        <span class="tag-base trailer-tag">Trailer</span>
                                       @endif
                                     </span>
                                     
@@ -212,6 +218,8 @@
                                 <span class="tag-base cam-tag">Cam</span>
                                 @elseif($mov->resolution==4)
                                 <span class="tag-base fullhd-tag">FullHD</span>
+                                @else
+                                  <span class="tag-base trailer-tag">Trailer</span>
                                 @endif
                               </span>
                               
@@ -245,6 +253,8 @@
                <div class="clearfix"></div>
                @endforeach
             </main>
+            
+            
             {{-- Sidebar --}}
             @include('pages.include.sidebar')
          </div> 

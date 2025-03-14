@@ -70,8 +70,10 @@ class MovieController extends Controller
             $text = 'HDCam';
         } elseif ($mov->resolution == 3) {
             $text = 'Cam';
-        } else {
+        } elseif ($mov->resolution == 4) {
             $text = 'FullHD';
+        } else {    
+            $text = 'Trailer';
         }
         
         // Tạo HTML cho mỗi phim
@@ -115,8 +117,10 @@ public function filter_default(Request $request){
             $text = 'HDCam';
         } elseif ($mov->resolution == 3) {
             $text = 'Cam';
-        } else {
+        } elseif ($mov->resolution == 4) {
             $text = 'FullHD';
+        } else {
+            $text = 'Trailer';
         }
         
         // Tạo HTML cho mỗi phim
@@ -166,6 +170,8 @@ public function filter_default(Request $request){
         $data = $request->all();
         $movie = new Movie();
         $movie->title = $data['title'];
+        $movie->trailer = $data['trailer'];
+
         $movie->tags = $data['tags'];
 
         $movie->thoiluong = $data['thoiluong'];
@@ -257,6 +263,8 @@ public function filter_default(Request $request){
             $data = $request->all();
             $movie = Movie::find($id);
             $movie->title = $data['title'];
+            $movie->trailer = $data['trailer'];
+
             $movie->tags = $data['tags'];
 
             $movie->thoiluong = $data['thoiluong'];

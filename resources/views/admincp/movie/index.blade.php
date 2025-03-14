@@ -177,15 +177,17 @@
                         </td>
                         <td>
                             @if($cate->resolution==0)
-                            HD
+                                HD
                             @elseif($cate->resolution==1)
-                            SD
+                                SD
                             @elseif($cate->resolution==2)
-                            HDCam
+                                HDCam
                             @elseif($cate->resolution==3)
-                            Cam
+                                Cam
                             @elseif($cate->resolution==4)
-                            FullHD
+                                FullHD
+                            @else
+                                Trailer
                             @endif
                         </td>
                         <td>
