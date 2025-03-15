@@ -124,13 +124,17 @@
                 </div>
                 <div class="movie_info col-xs-12">
                    <div class="movie-poster col-md-3">
-                      <img class="movie-thumb" src="{{asset('uploads/movie/'.$movie->image)}}" alt="">
-                      <div class="bwa-content">
-                         <div class="loader"></div>
-                         <a href="{{route('watch')}}" class="bwac-btn">
-                         <i class="fa fa-play"></i>
-                         </a>
-                      </div>
+                      <img class="movie-thumb" src="{{asset('uploads/movie/'.$movie->image)}}" alt="{{$movie->title}}">
+                        @if($movie->resolution!==5)
+                           <div class="bwa-content">
+                              <div class="loader"></div>
+                              <a href="{{route('watch')}}" class="bwac-btn">
+                              <i class="fa fa-play"></i>
+                              </a>
+                           </div>
+                        @else
+                           <a href="#watch_trailer" style="display:block" class="btn btn-primary watch_trailer">Xem trailer</a>
+                        @endif
                    </div>
                    <div class="film-poster col-md-9">
                       <h1 class="movie-title title-1" style="display:block;line-height:35px;margin-bottom: -14px;color: #ffed4d;text-transform: uppercase;font-size: 18px;">{{$movie->title}}</h1>
@@ -226,7 +230,7 @@
               </div>
                  <div class="entry-content htmlwrap clearfix">
                   <div class="video-item halim-entry-box">
-                     <article id="post-38424" class="item-content">
+                     <article id="watch_trailer" class="item-content">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/{{$movie->trailer}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                         {{-- <iframe width="560" height="415" src="https://www.youtube.com/embed/{{$movie->trailer}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> --}}
                      </article>

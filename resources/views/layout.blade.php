@@ -169,6 +169,20 @@
       <script type='text/javascript' src='{{asset('js/bootstrap.min.js')}}' id='bootstrap-js'></script>
       <script type='text/javascript' src='{{asset('js/owl.carousel.min.js')}}' id='carousel-js'></script>
       <script type='text/javascript' src='{{asset('js/halimtheme-core.min.js')}}' id='halim-init-js'></script>
+      <script>
+         // Thêm sự kiện click cho các phần tử có class "watch_trailer"
+         $(".watch_trailer").click(function(event) {
+         // Ngăn chặn hành động mặc định của thẻ a
+               event.preventDefault();
+         // Lấy giá trị thuộc tính href của phần tử được click
+               var targetId = $(this).attr("href");
+         // Tạo hiệu ứng cuộn trang đến phần tử có id tương ứng
+         $("html, body").animate(
+               { scrollTop: $(targetId).offset().top }, 'slow'
+            );
+         });
+
+      </script>
       <script type='text/javascript'>
             $(document).ready(function() {
                $.ajax({
