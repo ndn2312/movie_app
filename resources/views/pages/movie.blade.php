@@ -15,23 +15,6 @@
        transition: all 0.3s ease;
    }
  
-   /* Vị trí cho status và episode */
-   /* .status {
-       position: absolute;
-       top: 10px;
-       left: 10px;
-       z-index: 10;
-   } */
- 
-   /* .episode {
-       position: absolute;
-       top: 10px;
-       right: 10px;
-       z-index: 10;
-       background: none;
-       padding: 0;
-       margin: 0;
-   } */
  
    /* Style cho từng loại tag với gradient */
    .trailer-tag {
@@ -93,8 +76,13 @@
      .halim-thumb:hover .original_title {
          color: #ff6600;        /
      }
- 
- 
+
+     .fb-comments{
+      
+      background: rgb(236, 230, 230);
+     }
+      
+
 </style>
 <div class="row container" id="wrapper">
     <div class="halim-panel-filter">
@@ -221,6 +209,20 @@
                         @else
                         {{$movie->title}}
                         @endif
+                     </article>
+                  </div>
+                 </div>
+                 {{-- CMT fb    --}}
+               <div class="section-bar clearfix">
+                  <h2 class="section-title"><span style="color:#ffed4d">BÌNH LUẬN</span></h2>
+              </div>
+                 <div class="entry-content htmlwrap clearfix">
+                  @php
+                     $current_url = Request::url();
+                  @endphp
+                  <div class="video-item halim-entry-box">
+                     <article id="post-38424" class="item-content">
+                        <div  class="fb-comments" data-href="{{$current_url}}" data-width="100%" data-numposts="3"></div>
                      </article>
                   </div>
                  </div>
