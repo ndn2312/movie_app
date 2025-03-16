@@ -15,6 +15,60 @@ use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
+    public function timkiem()
+{
+    // Kiểm tra nếu có tham số search
+    if (!isset($_GET['search'])) {
+        return redirect('/');
+    }
+    
+    // Lấy từ khóa tìm kiếm
+    $search = trim($_GET['search']);
+    
+    // Nếu search rỗng, chuyển hướng về trang chủ
+    if (empty($search)) {
+        return redirect('/');
+    }
+    
+    // Lấy dữ liệu chung cần thiết cho view
+    $category = Category::orderBy('position', 'ASC')
+                ->where('status', 1)
+                ->get();
+                
+    $genre = Genre::orderBy('id', 'DESC')->get();
+    
+    $country = Country::orderBy('id', 'DESC')->get();
+    
+    // Lấy phim hot cho sidebar
+    $phimhot_sidebar = Movie::where('phim_hot', 1)
+                       ->where('status', 1)
+                       ->orderBy('ngaycapnhat', 'DESC')
+                       ->take(30)
+                       ->get();
+    
+    // Lấy phim trailer hot
+    $phimhot_trailer = Movie::where('resolution', 5)
+                      ->where('status', 1)
+                      ->orderBy('ngaycapnhat', 'DESC')
+                      ->take(10)
+                      ->get();
+    
+    // Tìm kiếm phim theo tiêu đề
+    $movie = Movie::where('title', 'LIKE', '%' . $search . '%')
+             ->orderBy('ngaycapnhat', 'DESC')
+             ->paginate(40);
+    
+    // Trả về view kết quả tìm kiếm
+    return view('pages.timkiem', compact(
+        'category',
+        'genre',
+        'country',
+        'search',
+        'movie',
+        'phimhot_sidebar',
+        'phimhot_trailer'
+    ));
+}
     public function home(){
         $phimhot = Movie::where('phim_hot',1)->where('status',1)->orderBy('ngaycapnhat','DESC')->get();
         $phimhot_sidebar = Movie::where('phim_hot',1)->where('status',1)->orderBy('ngaycapnhat','DESC')->take('5')->get();

@@ -35,6 +35,7 @@ Route::get('/phim/{slug}', [IndexController::class, 'movie'])->name('movie');
 Route::get('/xem-phim', [IndexController::class, 'watch'])->name('watch');
 Route::get('/nam/{year}', [IndexController::class, 'year']);
 Route::get('/tag/{tag}', [IndexController::class, 'tag']);
+Route::get('/tim-kiem', [IndexController::class, 'timkiem'])->name('tim-kiem');
 
 
 
