@@ -1,98 +1,116 @@
 @extends('layout')
 @section('content')
 <style>
-  .tag-base {
-      display: inline-block;
-      padding: 4px 10px;
-      margin-right: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      border-radius: 20px;  /* Bo tròn hoàn toàn */
-      color: #FFFFFF;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.3s ease;
-  }
-
-  /* Vị trí cho status và episode */
-  .status {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 10;
-  }
-
-  .episode {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
-      background: none;
-      padding: 0;
-      margin: 0;
-  }
-
-  /* Style cho từng loại tag với gradient */
-  .trailer-tag {
-      background: linear-gradient(135deg, #e304af 0%, #dc07d5 100%);
-  }
-
-  .fullhd-tag {
-      background: linear-gradient(135deg, #e30404 0%, #dc2407 100%);
-  }
-
-  .hd-tag {
-      background: linear-gradient(135deg, #03f5fd 0%, #0f6060 100%);
-  }
-
-  .sd-tag {
-      background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
-  }
-
-  .hdcam-tag {
-      background: linear-gradient(135deg, #533483 0%, #9896f1 100%);
-  }
-
-  .cam-tag {
-      background: linear-gradient(135deg, #9896f1 0%, #7579e7 100%);
-  }
-
-  .thuyetminh-tag {
-      background: linear-gradient(135deg, #16a085 0%, #2ecc71 100%);
-  }
-
-  .phude-tag {
-      background: linear-gradient(135deg, #5aa469 0%, #7ec544 100%);
-  }
-
-  .season-tag {
-      background: linear-gradient(135deg, #e74c3c 0%, #ff5e57 100%);
-  }
-
-  /* Hiệu ứng hover */
-  .halim-thumb:hover .tag-base {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
-      box-shadow: 0 3px 5px rgba(0,0,0,0.3);
-  }
-    .halim-post-title .entry-title {
-        font-weight: 700;          
-        font-size: 15px;           
-        margin-bottom: 3px;       
-        line-height: 1.3;          
+    .tag-base {
+        display: inline-block;
+        padding: 4px 10px;
+        /* margin-right: 6px; */
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 20px;  /* Bo tròn hoàn toàn */
+        color: #FFFFFF;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
     }
 
-    .halim-post-title .original_title {
-        font-weight: 600;        
-        font-size: 13px;          
-        line-height: 1.2;          
+    /* Vị trí cho status và episode */
+    .status {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
     }
 
-    .halim-thumb:hover .entry-title,
-    .halim-thumb:hover .original_title {
-        color: #ff6600;        /
+    .episode {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+        background: none;
+        padding: 0;
+        margin: 0;
     }
+    /* .sotap-position {
+    position: absolute;
+    top:40px;
+    left: 6px;
+    z-index: 10;
+    } */
+
+
+    /* Style cho từng loại tag với gradient */
+    .trailer-tag {
+        background: linear-gradient(135deg, #e304af 0%, #dc07d5 100%);
+    }
+
+    .fullhd-tag {
+        background: linear-gradient(135deg, #e30404 0%, #dc2407 100%);
+    }
+
+    .hd-tag {
+        background: linear-gradient(135deg, #03f5fd 0%, #0f6060 100%);
+    }
+
+    .sd-tag {
+        background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
+    }
+
+    .hdcam-tag {
+        background: linear-gradient(135deg, #533483 0%, #9896f1 100%);
+    }
+
+    .cam-tag {
+        background: linear-gradient(135deg, #9896f1 0%, #7579e7 100%);
+    }
+
+    .thuyetminh-tag {
+        background: linear-gradient(135deg, #16a085 0%, #2ecc71 100%);
+        /* margin-right: 3px; */
+
+    }
+
+    .phude-tag {
+        background: linear-gradient(135deg, #02f733 0%, #7ec544 100%);
+        /* margin-right: 0; */
+
+    }
+    .sotap-tag {
+        background: linear-gradient(135deg, #408BEA 30%, #080808 70%);
+        
+        /* margin-right: 3px; */
+
+    }
+
+
+    .season-tag {
+        background: linear-gradient(135deg, #e74c3c 0%, #ff5e57 100%);
+    }
+
+    /* Hiệu ứng hover */
+    .halim-thumb:hover .tag-base {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+    }
+        .halim-post-title .entry-title {
+            font-weight: 700;          
+            font-size: 15px;           
+            margin-bottom: 3px;       
+            line-height: 1.3;          
+        }
+
+        .halim-post-title .original_title {
+            font-weight: 600;        
+            font-size: 13px;          
+            line-height: 1.2;          
+        }
+
+        .halim-thumb:hover .entry-title,
+        .halim-thumb:hover .original_title {
+            color: #ff6600;        /
+        }
 
 
 </style>
@@ -131,6 +149,8 @@
                                         <span class="tag-base trailer-tag">Trailer</span>
                                       @endif
                                     </span>
+                                    <span class="sotap-position">
+                                     </span>
                                     
                                     <span class="episode">
                                       @if($hot->phude==0)
@@ -139,9 +159,12 @@
                                       <span class="tag-base thuyetminh-tag">T.Minh</span>
                                       @endif
                                       
-                                      @if($hot->season!=0)
-                                      <span class="tag-base season-tag">S.{{$hot->season}}</span>
-                                      @endif
+                                    @if($hot->season!=0)
+                                        <span class="tag-base sotap-tag">S{{$hot->season}}-Tập{{$hot->sotap}}</span>
+                                    @else
+                                        <span class="tag-base sotap-tag">Tập{{$hot->sotap}}</span>
+                                    @endif
+
                                     </span>
                                     
                                    
@@ -170,9 +193,12 @@
                        autoplayTimeout: 4000,
                        autoplayHoverPause: true,
                        nav: true,
-                       navText: ['<i class="hl-down-open rotate-left"></i>',
-                           '<i class="hl-down-open rotate-right"></i>'
-                       ],
+                       navText: [
+  '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>',
+  '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>'
+]
+
+,
                        responsiveClass: true,
                        responsive: {
                            0: {
@@ -221,7 +247,9 @@
                                 @else
                                   <span class="tag-base trailer-tag">Trailer</span>
                                 @endif
+
                               </span>
+
                               
                               <span class="episode">
                                 @if($mov->phude==0)
@@ -231,8 +259,11 @@
                                 @endif
                                 
                                 @if($mov->season!=0)
-                                <span class="tag-base season-tag">S.{{$mov->season}}</span>
+                                        <span class="tag-base sotap-tag">S{{$mov->season}}-Tập{{$mov->sotap}}</span>
+                                @else
+                                        <span class="tag-base sotap-tag">Tập{{$mov->sotap}}</span>
                                 @endif
+                                
                               </span>
                               
                               

@@ -204,6 +204,7 @@
                         <th scope="col">Danh mục</th>
                         <th scope="col">Thể loại</th>
                         <th scope="col">Quốc gia</th>
+                        <th scope="col">Số tập</th>
                         <th scope="col">Thời gian tạo</th>
                         <th scope="col">Thời gian cập nhật</th>
                         <th scope="col">Top view</th>
@@ -326,6 +327,10 @@
                                 <span class="deleted-name">{{ $deleted_country ? $deleted_country->title : '' }}</span> đã bị xóa
                             </span>
                         @endif
+                    </td>
+                <!-- Số tập -->
+                    <td>
+                        {{ $cate->sotap }}
                     </td>
 
                 <!-- Ngày tạo, ngày cập nhật -->

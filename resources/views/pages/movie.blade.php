@@ -89,7 +89,14 @@
        <div class="panel-heading">
           <div class="row">
              <div class="col-xs-6">
-                <div class="yoast_breadcrumb hidden-xs"><span><span><a href="{{route('category',[$movie->category->slug])}}">{{$movie->category->title}}</a> » <span><a href="{{route('country',[$movie->country->slug])}}">{{$movie->country->title}}</a> » <span class="breadcrumb_last" aria-current="page">{{$movie->title}}</span></span></span></span></div>
+                <div class="yoast_breadcrumb hidden-xs"><span><span><a href="{{route('category',[$movie->category->slug])}}">{{$movie->category->title}}</a> » 
+                  <span>
+                     <a href="{{route('country',[$movie->country->slug])}}">{{$movie->country->title}}</a> » 
+                        @foreach($movie->movie_genre as $gen)
+                     <a href="{{route('genre',[$gen->slug])}}">{{$gen->title}}</a> » 
+                     @endforeach
+
+                  <span class="breadcrumb_last" aria-current="page">{{$movie->title}}</span></span></span></span></div>
              </div>
           </div>
        </div>
@@ -159,6 +166,9 @@
                         </li>
                          <li class="list-info-group-item"><span>Thời lượng</span> : 
                            {{$movie->thoiluong}}
+                        </li>
+                        <li class="list-info-group-item"><span>Số tập</span> : 
+                           {{$movie->sotap}}/{{$movie->sotap}}
                         </li>
                            @if($movie->season!==0)
                               <li class="list-info-group-item"><span>Season</span> : {{$movie->season}}</li>
@@ -302,7 +312,11 @@
              <script>
                 jQuery(document).ready(function($) {				
                 var owl = $('#halim_related_movies-2');
-                owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: ['<i class="hl-down-open rotate-left"></i>', '<i class="hl-down-open rotate-right"></i>'],responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 4}}})});
+                owl.owlCarousel({loop: true,margin: 4,autoplay: true,autoplayTimeout: 4000,autoplayHoverPause: true,nav: true,navText: [
+  '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>',
+  '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>'
+]
+,responsiveClass: true,responsive: {0: {items:2},480: {items:3}, 600: {items:4},1000: {items: 4}}})});
              </script>
           </div>
        </section>

@@ -179,6 +179,7 @@ public function filter_default(Request $request){
         $movie = new Movie();
         $movie->title = $data['title'];
         $movie->trailer = $data['trailer'];
+        $movie->sotap = $data['sotap'];
 
         $movie->tags = $data['tags'];
 
@@ -281,6 +282,7 @@ public function filter_default(Request $request){
             $movie = Movie::find($id);
             $movie->title = $data['title'];
             $movie->trailer = $data['trailer'];
+            $movie->sotap = $data['sotap'];
 
             $movie->tags = $data['tags'];
 

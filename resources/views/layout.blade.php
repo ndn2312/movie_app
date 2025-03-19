@@ -158,11 +158,11 @@
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
-            <img src="https://example.com/logo.png" alt="PhimHay" class="footer-logo">
+            <img src="https://example.com/logo.png" alt="NdnPhim" class="footer-logo">
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>Về chúng tôi</h3>
-                    <p>PhimHay cung cấp kho phim HD chất lượng cao miễn phí. Chúng tôi liên tục cập nhật những bộ phim mới nhất với chất lượng tốt nhất.</p>
+                    <p>NdnPhim cung cấp kho phim HD chất lượng cao miễn phí. Chúng tôi liên tục cập nhật những bộ phim mới nhất với chất lượng tốt nhất.</p>
 
                     <div class="footer-social">
                         <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>

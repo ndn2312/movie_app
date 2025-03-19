@@ -111,6 +111,11 @@
                         </div>
                         <br>
                         <div class="form-group">
+                            {!! Form::label('title','Số tập phim',['class' => 'd-block mb-2']) !!}
+                            {!! Form::text('sotap',isset($movie)? $movie->sotap:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
                             {!! Form::label('thoiluong','Thời lượng phim',['class' => 'd-block mb-2']) !!}
                             {!! Form::text('thoiluong',isset($movie)? $movie->thoiluong:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...']) !!}
                         </div>
