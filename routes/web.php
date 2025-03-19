@@ -11,7 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\MovieController;
-use App\Http\Controllers\EspisodeController;
+use App\Http\Controllers\EpisodeController;
 
 
 
@@ -49,7 +49,9 @@ Route::post('resorting', [CategoryController::class, 'resorting'])->name('resort
 Route::resource('category', CategoryController::class);
 Route::resource('genre', GenreController::class);
 Route::resource('country', CountryController::class);
-Route::resource('episode', EspisodeController::class);
+Route::resource('episode', EpisodeController::class);
+Route::get('select-movie', [EpisodeController::class,'select_movie'])->name('select-movie');
+
 Route::resource('movie', MovieController::class);
 
 Route::get('/update-year-phim', [MovieController::class, 'update_year']);

@@ -1,33 +1,35 @@
 <!Doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
     <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
-    
+    {{--
+    <link rel="stylesheet" href="/resources/demos/style.css"> --}}
+
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="//cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css">
-    
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
+
     <!-- SweetAlert2 (Thêm mới) -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <style>
         /* Modal container và nội dung */
         .custom-modal {
@@ -37,7 +39,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 9999;
             justify-content: center;
             align-items: center;
@@ -50,7 +52,7 @@
             text-align: center;
             max-width: 450px;
             width: 100%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             animation: fadeInDown 0.3s ease-out;
         }
 
@@ -59,6 +61,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -76,12 +79,12 @@
             justify-content: center;
             margin: 0 auto 15px;
         }
-        
+
         .success-icon i {
             color: #ffc107;
             font-size: 40px;
         }
-        
+
         .success-title {
             color: #ffc107;
             font-size: 24px;
@@ -94,7 +97,7 @@
             color: #666;
             margin: 15px 0;
         }
-        
+
         .countdown i {
             margin-right: 5px;
         }
@@ -111,43 +114,47 @@
             font-weight: bold;
             transition: background-color 0.2s ease;
         }
-        
+
         .ok-button:hover {
             background-color: #e0aa00;
         }
 
         /* Các phần highlight */
-        .highlight, .highlight-year, .highlight-name {
+        .highlight,
+        .highlight-year,
+        .highlight-name {
             padding: 2px 6px;
             font-weight: bold;
             border-radius: 4px;
         }
-        
+
         .highlight {
             background-color: #ffc107;
             color: #000;
         }
-        
+
         .highlight-year {
             background-color: #4CAF50;
             color: white;
         }
-        
+
         .highlight-name {
             background-color: #2196F3;
             color: white;
         }
-        
+
         /* Hiệu ứng nhấp nháy cho sắp xếp */
         @keyframes glowBlink {
             0% {
                 background-color: white;
                 box-shadow: 0 0 5px rgba(220, 53, 69, 0.2);
             }
+
             50% {
                 background-color: rgba(220, 53, 69, 0.5);
                 box-shadow: 0 0 15px rgba(220, 53, 69, 0.5);
             }
+
             100% {
                 background-color: rgba(220, 53, 69, 0.2);
                 box-shadow: 0 0 5px rgba(220, 53, 69, 0.2);
@@ -170,94 +177,111 @@
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">Admin</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent"> 
-                    <!-- Left Side Of Navbar --> 
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto"></ul>
 
-                    <!-- Right Side Of Navbar --> 
-                    <ul class="navbar-nav ms-auto"> 
-                        <!-- Authentication Links --> 
-                        @guest 
-                            @if (Route::has('login')) 
-                                <li class="nav-item"> 
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a> 
-                                </li> 
-                            @endif
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ms-auto">
+                        <!-- Authentication Links -->
+                        @guest
+                        @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                        @endif
 
-                            @if (Route::has('register')) 
-                                <li class="nav-item"> 
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a> 
-                                </li> 
-                            @endif 
-                        @else 
-                            <li class="nav-item dropdown"> 
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" 
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre> 
-                                    {{ Auth::user()->name }} 
+                        @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                        @endif
+                        @else
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }}
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown"> 
-                                    <a class="dropdown-item" href="{{ route('logout') }}" 
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> 
-                                        {{ __('Logout') }} 
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none"> 
-                                        @csrf 
-                                    </form> 
-                                </div> 
-                            </li> 
-                        @endguest 
-                    </ul> 
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
+                        @endguest
+                    </ul>
                 </div>
             </div>
-        </nav> 
-        <main class="py-4"> 
-            @if(Auth::id()) 
-                <div class="container"> 
-                    @include('layouts.navbar') 
-                </div> 
-            @endif 
-            @yield('content') 
+        </nav>
+        <main class="py-4">
+            @if(Auth::id())
+            <div class="container">
+                @include('layouts.navbar')
+            </div>
+            @endif
+            @yield('content')
         </main>
     </div>
 
-    <!-- Modal thông báo tùy chỉnh --> 
-    <div id="success-modal" class="custom-modal"> 
-        <div class="modal-content"> 
-            <div class="success-icon"> 
-                <i class="fas fa-check"></i> 
-            </div> 
-            <h3 class="success-title">Thành công!</h3> 
-            <p class="success-message"></p> 
-            <p class="countdown"><i class="fas fa-clock"></i> tự động đóng sau: <span id="countdown-timer">3</span> giây</p> 
-            <button class="ok-button">OK</button> 
-        </div> 
+    <!-- Modal thông báo tùy chỉnh -->
+    <div id="success-modal" class="custom-modal">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 class="success-title">Thành công!</h3>
+            <p class="success-message"></p>
+            <p class="countdown"><i class="fas fa-clock"></i> tự động đóng sau: <span id="countdown-timer">3</span> giây
+            </p>
+            <button class="ok-button">OK</button>
+        </div>
     </div>
 
-    <!-- jQuery (một phiên bản duy nhất) -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-    
+
     <!-- jQuery UI -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
-    
+
     <!-- DataTables -->
     <script type="text/javascript" src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <!-- Episode -->
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-    <!-- Script cho modal cập nhật năm và topview --> 
+        $('.select-movie').change(function(){
+            var id = $(this).val();
+            $.ajax({
+                
+                url: "{{route('select-movie')}}",
+                method: "GET",
+                data: {id:id},
+                success: function(data){
+                    $('#episode').html(data);
+                }
+        });
+    });
+});
+    </script>
+
+    <!-- Script cho modal cập nhật năm và topview -->
     <script>
-    $(document).ready(function() {
+        $(document).ready(function() {
             // ----- Biến toàn cục cho bộ đếm thời gian ----- 
             let modalCountdownTimer;
             
@@ -366,9 +390,9 @@
     });
     </script>
 
-    <!-- Script cho chức năng tạo slug --> 
+    <!-- Script cho chức năng tạo slug -->
     <script>
-    function ChangeToSlug() { 
+        function ChangeToSlug() { 
         var slug; 
         // Lấy text từ thẻ input title 
         title = document.getElementById("slug").value;
@@ -406,9 +430,9 @@
     }
     </script>
 
-    <!-- Script cho chức năng sắp xếp với SweetAlert --> 
-<script>
-    $(document).ready(function() { 
+    <!-- Script cho chức năng sắp xếp với SweetAlert -->
+    <script>
+        $(document).ready(function() { 
         // Lưu thứ tự ban đầu 
         let originalOrder = [];
         
@@ -492,8 +516,10 @@
             }); 
         } 
     });
-</script>
+    </script>
+
 
 
 </body>
+
 </html>

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Movie;
 
-class EspisodeController extends Controller
+class EpisodeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +24,8 @@ class EspisodeController extends Controller
      */
     public function create()
     {
-        //
+        $list_movie = Movie::orderBy('id', 'DESC')->pluck('title', 'id');
+        return view('admincp.episode.form', compact('list_movie'));
     }
 
     /**
@@ -80,5 +82,16 @@ class EspisodeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function select_movie()
+    {
+        $id = $_GET['id'];
+        $movie = Movie::find($id);
+        $output = '<option value="">---Chọn tập phim---</option>';
+        for ($i = 1; $i <= $movie->sotap; $i++) {
+            $output .= '<option value="' . $i . '">Tập ' . $i . '</option>';
+        };
+        echo $output;
     }
 }
