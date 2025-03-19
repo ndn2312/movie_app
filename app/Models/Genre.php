@@ -11,6 +11,9 @@ class Genre extends Model
     public $timestamps = false;
     use HasFactory;
 
-    use SoftDeletes;
+    public function movie(){
+        return $this->belongsTo(Movie::class);
+    }
+    // use SoftDeletes;
 
 }

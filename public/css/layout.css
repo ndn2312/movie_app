@@ -466,7 +466,7 @@
             font-weight: 600;
             font-size: 16px;
             margin-bottom: 5px;
-            color: var(--text-light);
+            color: #ffffff;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1192,6 +1192,7 @@
     margin-right: 8px;
     font-size: 10px;
     font-weight: 600;
+    color: #ffffff;
 }
 
 .hot-trailer {

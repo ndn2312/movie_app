@@ -2,116 +2,168 @@
 
 @section('content')
 <style>
-    .button-custom {
-        width: 200px;
-        /* Điều chỉnh kích thước theo ý muốn */
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 10px;
-        background: linear-gradient(90deg, #ff416c, #ff4b2b);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        color: white;
-        text-decoration: none;
-        transition: all 0.3s ease-in-out;
-        max-width: 400px;
-        margin: auto;
+        .button-custom {
+            width: 200px;
+            /* Điều chỉnh kích thước theo ý muốn */
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            max-width: 400px;
+            margin: auto;
 
 
 
-    }
-
-    .button-custom:hover {
-        background: linear-gradient(90deg, #ff4b2b, #ff416c);
-        transform: scale(1.1);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    }
-    /*css them phim*/
-    .button-custom {
-        width: 200px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        text-decoration: none;
-        transition: all 0.3s ease-in-out;
-        max-width: 400px;
-        margin: auto;
-    }
-    
-    .button-add {
-        background: linear-gradient(90deg, #4CAF50, #2196F3);
-        color: #FFD700; /* Màu vàng gold */
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Thêm đổ bóng cho chữ */
-    }
-    
-    .button-add:hover {
-        background: linear-gradient(90deg, #2196F3, #4CAF50);
-        transform: scale(1.1);
-        box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
-    }
-
-    /* Css xóa admin */
-    .deleted-item {
-        display: inline-block;
-        padding: 3px 8px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
-        color: white;
-        font-weight: 500;
-        box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        animation: soft-pulse 2s infinite;
-    }
-
-    .deleted-item i {
-        margin-right: 5px;
-        font-size: 0.85rem;
-    }
-
-    .deleted-type {
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-right: 3px;
-    color: #fff; 
-    text-shadow: 0px 1px 1px rgba(0,0,0,0.3); /* Thêm đổ bóng nhẹ để nổi bật hơn */
-}
-
-
-    .deleted-item:hover {
-        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.5);
-        transform: translateY(-2px);
-    }
-    .deleted-name {
-    color: #e5f508;
-    font-weight: 600;
-    font-style: italic;
-}
-
-
-    @keyframes soft-pulse {
-        0% {
-            opacity: 1;
         }
 
-        50% {
-            opacity: 0.85;
+        .button-custom:hover {
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        /*css them phim*/
+        .button-custom {
+            width: 200px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            max-width: 400px;
+            margin: auto;
+        }
+        
+        .button-add {
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            color: #FFD700; /* Màu vàng gold */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Thêm đổ bóng cho chữ */
+        }
+        
+        .button-add:hover {
+            background: linear-gradient(90deg, #2196F3, #4CAF50);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
         }
 
-        100% {
-            opacity: 1;
+        /* Css xóa admin */
+        .deleted-item {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            animation: soft-pulse 2s infinite;
         }
+
+        .deleted-item i {
+            margin-right: 5px;
+            font-size: 0.85rem;
+        }
+
+        .deleted-type {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        margin-right: 3px;
+        color: #fff; 
+        text-shadow: 0px 1px 1px rgba(0,0,0,0.3); /* Thêm đổ bóng nhẹ để nổi bật hơn */
     }
+
+
+        .deleted-item:hover {
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.5);
+            transform: translateY(-2px);
+        }
+        .deleted-name {
+        color: #e5f508;
+        font-weight: 600;
+        font-style: italic;
+    }
+
+
+        @keyframes soft-pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.85;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+        /* Kiểu cơ bản cho huy hiệu thể loại phim */
+        .genre-badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: 0.85em;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.375rem;
+            margin: 0.2rem;
+            color: white;
+            background-color: #6c757d;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            transition: all 0.2s ease;
+        }
+
+        .genre-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Các biến thể màu cho những thể loại khác nhau */
+        .genre-badge:nth-child(8n+1) { background: linear-gradient(45deg, #FF5722, #F44336); }
+        .genre-badge:nth-child(8n+2) { background: linear-gradient(45deg, #9C27B0, #673AB7); }
+        .genre-badge:nth-child(8n+3) { background: linear-gradient(45deg, #FFEB3B, #FFC107); color: #212529; }
+        .genre-badge:nth-child(8n+4) { background: linear-gradient(45deg, #212121, #424242); }
+        .genre-badge:nth-child(8n+5) { background: linear-gradient(45deg, #00BCD4, #03A9F4); }
+        .genre-badge:nth-child(8n+6) { background: linear-gradient(45deg, #E91E63, #F48FB1); }
+        .genre-badge:nth-child(8n+7) { background: linear-gradient(45deg, #4CAF50, #8BC34A); }
+        .genre-badge:nth-child(8n+8) { background: linear-gradient(45deg, #3F51B5, #2196F3); }
+        /* Hiệu ứng chuyển động tùy chọn khi di chuột */
+        @keyframes badge-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .genre-badge:hover {
+            animation: badge-pulse 1s infinite;
+            cursor: pointer;
+        }
+
+        /* Thêm biểu tượng nhỏ trước mỗi tên thể loại */
+        .genre-badge::before {
+            content: "🎬";
+            margin-right: 4px;
+            font-size: 0.9em;
+        }
+
 </style>
 <!-- Thêm vào phần head của layout -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -231,26 +283,32 @@
                             </span>
                         @endif
                     </td>
-
-                <!-- Cho thể loại -->
+                    <!-- Cho thể loại -->
                     <td>
-                        @if($cate->genre)
-                            {{ $cate->genre->title }}
-                        @else
-                            @php
-                                $deleted_genre = \App\Models\Genre::withTrashed()
-                                    ->find($cate->genre_id);
-                            @endphp
-                            
-                            <span class="position-relative deleted-item" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Thể loại này đã bị xóa khỏi hệ thống">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <span class="deleted-type">THỂ LOẠI</span> 
-                                <span class="deleted-name">{{ $deleted_genre ? $deleted_genre->title : '' }}</span> đã bị xóa
-                            </span>
-                        @endif
+                        @foreach($cate->movie_genre as $gen)
+                        <span class="genre-badge">{{ $gen->title }}</span>
+                    @endforeach
+                    
                     </td>
+                    
 
+                        {{-- 
+                            @if($gen->genre)
+                                @else
+                                    @php
+                                        $deleted_genre = \App\Models\Genre::withTrashed()
+                                            ->find($gen->genre_id);
+                                    @endphp
+                                    
+                                    <span class="position-relative deleted-item" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Thể loại này đã bị xóa khỏi hệ thống">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span class="deleted-type">THỂ LOẠI</span> 
+                                        <span class="deleted-name">{{ $deleted_genre ? $deleted_genre->title : '' }}</span> đã bị xóa
+                                    </span>
+                            @endif --}}
+
+               
                 <!-- Cho quốc gia -->
                     <td>
                         @if($cate->country)
@@ -369,38 +427,57 @@
             </table>
         </div>
     </div>
-    @if(session('action_type') == 'xóa')
-    <div class="success-notification-overlay" id="deleteSuccessPopup">
-        <div class="delete-notification-card">
-            <div class="delete-icon-container">
-                <svg class="delete-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+    @if(session('action_type') == 'xóa' || session('action_type') == 'thêm' || session('action_type') == 'cập nhật')
+    <div class="success-notification-overlay" id="{{ session('action_type') == 'xóa' ? 'deleteSuccessPopup' : 'successPopup' }}">
+        <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-card' : 'success-notification-card' }}">
+            <div class="{{ session('action_type') == 'xóa' ? 'delete-icon-container' : 'success-icon-container' }}">
+                <svg class="{{ 
+                    session('action_type') == 'xóa' ? 'delete-checkmark' : 
+                    (session('action_type') == 'thêm' ? 'success-checkmark add-icon' : 'success-checkmark update-icon') 
+                }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                     <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
                     <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                 </svg>
             </div>
-            <div class="delete-notification-content">
-                <h2 class="delete-title">Thành công!</h2>
-                <p class="delete-message">
-                    Phim "<span class="highlighted-title-delete">{{ session('movie_title') }}</span>" 
-                    {{ session('delete_message') }}
-                    <span class="action-highlight delete-action">{{ session('action_type') }}</span>
-                    {{ session('delete_end') }}
+            
+            <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-content' : 'success-notification-content' }}">
+                <h2 class="{{ 
+                    session('action_type') == 'xóa' ? 'delete-title' : 
+                    (session('action_type') == 'cập nhật' ? 'success-title update-title' : 'success-title') 
+                }}">Thành công!</h2>
+                
+                <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
+                    Phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
+                    {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }} 
+                    <span class="action-highlight {{ 
+                        session('action_type') == 'xóa' ? 'delete-action' : 
+                        (session('action_type') == 'thêm' ? 'add-action' : 'update-action') 
+                    }}">{{ session('action_type') }}</span> 
+                    {{ session('action_type') == 'xóa' ? session('delete_end') : session('success_end') }}
                 </p>
-                <div class="delete-countdown-container">
+                
+                <div class="{{ session('action_type') == 'xóa' ? 'delete-countdown-container' : 'countdown-container' }}">
                     <span>Tự động đóng sau </span>
-                    <span class="countdown-number" id="deleteCountdown">3</span>
+                    <span class="countdown-number" id="{{ session('action_type') == 'xóa' ? 'deleteCountdown' : 'countdown' }}">3</span>
                     <span> giây</span>
                 </div>
-                <button class="delete-button" id="closeDeleteBtn">OK</button>
+                
+                <button class="{{ 
+                    session('action_type') == 'xóa' ? 'delete-button' : 
+                    (session('action_type') == 'thêm' ? 'success-button add-button' : 'success-button update-button') 
+                }}" id="{{ session('action_type') == 'xóa' ? 'closeDeleteBtn' : 'closeSuccessBtn' }}">OK</button>
             </div>
         </div>
     </div>
     
     <style>
+        /* Common notification overlay */
         .success-notification-overlay {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(0, 0, 0, 0.65);
             display: flex;
             justify-content: center;
@@ -410,7 +487,8 @@
             animation: fadeIn 0.3s ease-out;
         }
         
-        .delete-notification-card {
+        /* Card styles */
+        .success-notification-card, .delete-notification-card {
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
@@ -421,34 +499,53 @@
             animation: slideIn 0.4s ease-out;
         }
         
-        .delete-icon-container {
+        /* Icon container styles */
+        .success-icon-container, .delete-icon-container {
             padding: 20px 0 10px;
             display: flex;
             justify-content: center;
         }
         
-        .delete-notification-content {
+        /* Content container styles */
+        .success-notification-content, .delete-notification-content {
             padding: 0 20px 20px;
             text-align: center;
         }
         
-        .delete-checkmark {
-            width: 60px; height: 60px;
+        /* Checkmark styles */
+        .success-checkmark, .delete-checkmark {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: block;
             stroke-width: 2;
-            stroke: #d32f2f;
             stroke-miterlimit: 10;
+            animation: scale .3s ease-in-out .9s both;
+        }
+        
+        /* Action-specific checkmark styles */
+        .success-checkmark {
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        
+        .delete-checkmark {
+            stroke: #d32f2f;
             box-shadow: inset 0px 0px 0px #d32f2f;
             animation: fill-red .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
         }
         
+        .add-icon { stroke: #4caf50; }
+        .add-icon .checkmark-circle, .add-icon .checkmark-check { stroke: #4caf50; }
+        
+        .update-icon { stroke: #ffc107; }
+        .update-icon .checkmark-circle, .update-icon .checkmark-check { stroke: #ffc107; }
+        
+        /* Circle and check animations */
         .checkmark-circle {
             stroke-dasharray: 166;
             stroke-dashoffset: 166;
             stroke-width: 2;
             stroke-miterlimit: 10;
-            stroke: #d32f2f;
             fill: none;
             animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
         }
@@ -458,22 +555,37 @@
             stroke-dasharray: 48;
             stroke-dashoffset: 48;
             stroke-width: 3;
-            stroke: #d32f2f;
             animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
         }
         
-        .delete-title {
-            color: #d32f2f;
+        /* Title styles */
+        .success-title, .delete-title {
             font-size: 20px;
             font-weight: 600;
             margin: 0 0 10px;
         }
         
-        .delete-message {
+        .success-title { color: #4caf50; }
+        .update-title { color: #ffc107; }
+        .delete-title { color: #d32f2f; }
+        
+        /* Message styles */
+        .success-message, .delete-message {
             color: #4a4a4a;
             font-size: 14px;
             line-height: 1.4;
             margin-bottom: 12px;
+        }
+        
+        /* Highlighted title styles */
+        .highlighted-title {
+            font-weight: 700;
+            color: #1e88e5;
+            background: linear-gradient(to bottom, transparent 60%, rgba(76, 175, 80, 0.2) 40%);
+            padding: 0 3px;
+            border-radius: 3px;
+            display: inline-block;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.7);
         }
         
         .highlighted-title-delete {
@@ -486,10 +598,8 @@
             text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
         }
         
-        .delete-action {
-            color: white;
-            background-color: #d32f2f;
-            box-shadow: 0 2px 5px rgba(211, 47, 47, 0.5);
+        /* Action highlight styles */
+        .action-highlight {
             font-weight: 800;
             font-size: 15px;
             padding: 2px 8px;
@@ -497,10 +607,23 @@
             display: inline-block;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            color: white;
+        }
+        
+        .add-action { background-color: #4caf50; }
+        .update-action { 
+            background-color: #ffc107; 
+            color: #212121; 
+        }
+        .delete-action {
+            color: white;
+            background-color: #d32f2f;
+            box-shadow: 0 2px 5px rgba(211, 47, 47, 0.5);
             animation: delete-action-pulse 2s infinite;
         }
         
-        .delete-countdown-container {
+        /* Countdown container */
+        .countdown-container, .delete-countdown-container {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -512,7 +635,8 @@
         .countdown-number {
             background-color: rgba(220, 53, 69, 0.1);
             color: #dc3545;
-            width: 22px; height: 22px;
+            width: 22px;
+            height: 22px;
             line-height: 22px;
             text-align: center;
             border-radius: 50%;
@@ -521,9 +645,8 @@
             animation: pulse 1s infinite;
         }
         
-        .delete-button {
-            background-color: #d32f2f;
-            color: white;
+        /* Button styles */
+        .success-button, .delete-button {
             border: none;
             border-radius: 6px;
             padding: 8px 24px;
@@ -531,6 +654,36 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+        }
+        
+        .success-button { color: white; }
+        
+        .add-button {
+            background-color: #4caf50;
+            box-shadow: 0 2px 6px rgba(76, 175, 80, 0.25);
+        }
+        
+        .add-button:hover {
+            background-color: #43a047;
+            box-shadow: 0 3px 8px rgba(76, 175, 80, 0.35);
+            transform: translateY(-1px);
+        }
+        
+        .update-button {
+            background-color: #ffc107;
+            box-shadow: 0 2px 6px rgba(255, 193, 7, 0.25);
+            color: #212121;
+        }
+        
+        .update-button:hover {
+            background-color: #ffb300;
+            box-shadow: 0 3px 8px rgba(255, 193, 7, 0.35);
+            transform: translateY(-1px);
+        }
+        
+        .delete-button {
+            background-color: #d32f2f;
+            color: white;
             box-shadow: 0 2px 6px rgba(211, 47, 47, 0.25);
         }
         
@@ -541,22 +694,28 @@
         }
         
         /* Animations */
+        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 30px rgba(76, 175, 80, 0.1); } }
         @keyframes fill-red { 100% { box-shadow: inset 0px 0px 0px 30px rgba(211, 47, 47, 0.1); } }
         @keyframes stroke { 100% { stroke-dashoffset: 0; } }
-        @keyframes scale { 
+        
+        @keyframes scale {
             0%, 100% { transform: none; }
             50% { transform: scale3d(1.1, 1.1, 1); }
         }
+        
         @keyframes delete-action-pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); box-shadow: 0 3px 8px rgba(211, 47, 47, 0.7); }
         }
+        
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        @keyframes slideIn { 
+        
+        @keyframes slideIn {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -564,41 +723,58 @@
     </style>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const popup = document.getElementById('deleteSuccessPopup');
-            const closeBtn = document.getElementById('closeDeleteBtn');
-            const countdownElement = document.getElementById('deleteCountdown');
-            let secondsLeft = 3;
-            
-            // Thiết lập sự kiện lắng nghe
-            if (closeBtn) closeBtn.addEventListener('click', closeDeleteNotification);
-            if (popup) popup.addEventListener('click', e => { if (e.target === popup) closeDeleteNotification(); });
-            document.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === 'Escape') closeDeleteNotification(); });
-            
-            // Bộ đếm ngược
-            const countdownInterval = setInterval(function() {
-                secondsLeft--;
-                if (countdownElement) countdownElement.textContent = secondsLeft;
-                if (secondsLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    closeDeleteNotification();
-                }
-            }, 1000);
-            
-            // Lưu ID interval toàn cục
-            window.deleteCountdownIntervalId = countdownInterval;
-            
-            function closeDeleteNotification() {
-                if (window.deleteCountdownIntervalId) clearInterval(window.deleteCountdownIntervalId);
-                
-                if (popup) {
-                    popup.style.animation = 'fadeOut 0.3s forwards';
-                    setTimeout(() => popup.style.display = 'none', 300);
-                }
-            }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Determine which popup is active based on action type
+        const isDeleteAction = "{{ session('action_type') }}" === "xóa";
+        
+        // Get the appropriate elements based on action type
+        const popup = document.getElementById(isDeleteAction ? 'deleteSuccessPopup' : 'successPopup');
+        const closeBtn = document.getElementById(isDeleteAction ? 'closeDeleteBtn' : 'closeSuccessBtn');
+        const countdownElement = document.getElementById(isDeleteAction ? 'deleteCountdown' : 'countdown');
+        
+        let secondsLeft = 3;
+        
+        // Set up event listeners
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeNotification);
+        }
+        
+        if (popup) {
+            popup.addEventListener('click', e => {
+                if (e.target === popup) closeNotification();
+            });
+        }
+        
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === 'Escape') closeNotification();
         });
+        
+        // Countdown timer
+        const countdownInterval = setInterval(function() {
+            secondsLeft--;
+            if (countdownElement) countdownElement.textContent = secondsLeft;
+            if (secondsLeft <= 0) {
+                clearInterval(countdownInterval);
+                closeNotification();
+            }
+        }, 1000);
+        
+        // Store interval ID in a global variable
+        window.notificationCountdownId = countdownInterval;
+        
+        // Unified close function
+        function closeNotification() {
+            if (window.notificationCountdownId) {
+                clearInterval(window.notificationCountdownId);
+            }
+            
+            if (popup) {
+                popup.style.animation = 'fadeOut 0.3s forwards';
+                setTimeout(() => popup.style.display = 'none', 300);
+            }
+        }
+    });
     </script>
     @endif
     
-
 @endsection

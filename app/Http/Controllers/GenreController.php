@@ -39,44 +39,21 @@ class GenreController extends Controller
 {
     $data = $request->all();
     
-    // Kiểm tra xem có thể loại đã xóa nào trùng tên không
-    $existingTrashed = Genre::onlyTrashed()
-        ->where('title', $data['title'])
-        ->first();
-
-    if ($existingTrashed) {
-        // Khôi phục thể loại đã xóa thay vì tạo mới
-        $existingTrashed->restore();
-        
-        // Cập nhật các thông tin khác
-        $existingTrashed->slug = $data['slug'];
-        $existingTrashed->description = $data['description'];
-        $existingTrashed->status = $data['status'];
-        $existingTrashed->save();
-        
-        return redirect()->back()->with([
-            'success' => true,
-            'action' => 'Khôi phục',
-            'item_name' => $existingTrashed->title,
-            'item_type' => 'thể loại đã xóa trước đó'
-        ]);
-    }
-
-    // Nếu không có thể loại trùng tên đã xóa, tạo mới như bình thường
-    $genre = new Genre();
-    $genre->title = $data['title'];
-    $genre->slug = $data['slug'];
-    $genre->description = $data['description'];
-    $genre->status = $data['status'];
-    $genre->save();
     
-    return redirect()->back()->with([
-        'success' => true,
-        'action' => 'thêm',
-        'item_name' => $genre->title,
-        'item_type' => 'thể loại'
-    ]);
-}
+            $genre = new Genre();
+            $genre->title = $data['title'];
+            $genre->slug = $data['slug'];
+            $genre->description = $data['description'];
+            $genre->status = $data['status'];
+            $genre->save();
+            
+            return redirect()->back()->with([
+                'success' => true,
+                'action' => 'thêm',
+                'item_name' => $genre->title,
+                'item_type' => 'thể loại'
+            ]);
+        }
 
 
     /**
@@ -110,20 +87,7 @@ class GenreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    //cũ//
-    // public function update(Request $request, $id)
-    // {
-    //     $data = $request->all();
-    //     $genre =  Genre::find($id);
-    //     $genre->title = $data['title'];
-    //     $genre->slug = $data['slug'];
-
-    //     $genre->description = $data['description'];
-    //     $genre->status = $data['status'];
-    //     $genre->save();
-    //     return redirect()->back();
-    // }
-
+   
     public function update(Request $request, $id)
     {
         $data = $request->all();
@@ -148,12 +112,7 @@ class GenreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    //cũ//
-    // public function destroy($id)
-    // {
-    //     Genre::find($id)->delete();
-    //     return redirect()->back();
-    // }
+    
     public function destroy($id)
     {
         $genre = Genre::find($id);

@@ -24,8 +24,9 @@
     <!-- CSS Files -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel='stylesheet' href='{{asset('css/bootstrap.min.css')}}'>
-    <link rel='stylesheet' href='{{asset('css/style.css')}}'>
     <link rel='stylesheet' href='{{asset('css/layout.css')}}'>
+    <link rel='stylesheet' href='{{asset('css/style.css')}}'>
+    
 
 
     <!-- Google Fonts -->
@@ -38,6 +39,7 @@
 </head>
 <body>
     <!-- Header -->
+
     <header id="header">
         <div class="container">
             <div class="header-inner">
@@ -210,6 +212,48 @@
     <div class="toast-container"></div>
 
     <!-- Scripts -->
+    <script type='text/javascript'>
+        $(document).ready(function() {
+           $.ajax({
+              url: "{{url('/filter-topview-default')}}",
+              method: "GET",
+              
+              success: function(data) {
+                    $('#show_data_default').html(data);
+              }
+           });
+        
+     
+        $('.filter-sidebar').click(function() {
+           var href = $(this).attr('href');
+           
+           // Xác định giá trị dựa trên href
+           if (href === '#ngay') {
+              var value = 0;
+           } else if (href === '#tuan') {
+              var value = 1;
+           } else {
+              var value = 2;
+           }
+           
+           // Thực hiện yêu cầu AJAX
+           $.ajax({
+              url: "{{url('/filter-topview-phim')}}",
+              method: "POST",
+              
+              data: { value: value },
+              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+
+              success: function(data) {
+                    $('#halim-ajax-popular-post-default').css("display", "none");
+
+                    $('#show_data').html(data);
+              }
+           });
+        });
+     })
+
+  </script>
     <script src='{{asset('js/bootstrap.min.js')}}'></script>
     <script src='{{asset('js/owl.carousel.min.js')}}'></script>
     <script src='{{asset('js/layout.js')}}'></script>

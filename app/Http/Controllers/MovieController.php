@@ -12,6 +12,7 @@ use App\Models\Genre;
 
 use App\Models\Country;
 use Carbon\Carbon;
+use App\Models\Movie_Genre;
 use Illuminate\Support\Facades\File; 
 
 use PHPUnit\Framework\Constraint\Count;
@@ -25,7 +26,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $list = Movie::with('category', 'genre', 'country')->orderBy('id', 'DESC')->get();
+        $list = Movie::with('category', 'movie_genre', 'country', 'genre')->orderBy('id', 'DESC')->get();
         $path = public_path("/json/");
         if(!is_dir($path)){
             mkdir($path, 0777, true);
@@ -160,9 +161,10 @@ public function filter_default(Request $request){
     {
         $category = Category::pluck('title', 'id');
         $genre = Genre::pluck('title', 'id');
+        $list_genre = Genre::all();
         $country = Country::pluck('title', 'id');
 
-        return view('admincp.movie.form', compact('genre', 'country', 'category'));
+        return view('admincp.movie.form', compact('genre', 'country', 'category', 'list_genre'));
     }
 
     /**
@@ -190,10 +192,13 @@ public function filter_default(Request $request){
         $movie->description = $data['description'];
         $movie->status = $data['status'];
         $movie->category_id = $data['category_id'];
-        $movie->genre_id = $data['genre_id'];
         $movie->country_id = $data['country_id'];
         $movie->ngaytao = Carbon::now('Asia/Ho_Chi_Minh');
         $movie->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
+        foreach($data['genre'] as $key => $gen) {
+            $movie->genre_id = $gen[0];
+        }
+        // $movie->genre_id = $data['genre_id'];
 
 
         // Xử lý upload hình ảnh
@@ -217,9 +222,11 @@ public function filter_default(Request $request){
         }
         
         $movie->save();
+        // them nhieu the loai cho phim
+        $movie->movie_genre()->attach($data['genre']);
         
         // Truyền thông tin để hiển thị thông báo
-        return redirect()->back()->with([
+        return redirect()->route('movie.index')->with([
             'success_message' => 'đã được',
             'action_type' => 'thêm',
             'success_end' => 'thành công!',
@@ -251,8 +258,11 @@ public function filter_default(Request $request){
         $category = Category::pluck('title', 'id');
         $genre = Genre::pluck('title', 'id');
         $country = Country::pluck('title', 'id');
+        $list_genre = Genre::all();
+
         $movie = Movie::find($id);
-        return view('admincp.movie.form', compact('genre', 'country', 'category', 'movie'));
+        $movie_genre = $movie->movie_genre;
+        return view('admincp.movie.form', compact('genre', 'country', 'category', 'movie', 'list_genre','movie_genre'));
     }
 
     /**
@@ -265,8 +275,9 @@ public function filter_default(Request $request){
     public function update(Request $request, $id)
 
     {
-        try {
+        try { 
             $data = $request->all();
+
             $movie = Movie::find($id);
             $movie->title = $data['title'];
             $movie->trailer = $data['trailer'];
@@ -281,11 +292,16 @@ public function filter_default(Request $request){
             $movie->description = $data['description'];
             $movie->status = $data['status'];
             $movie->category_id = $data['category_id'];
-            $movie->genre_id = $data['genre_id'];
+            // $movie->genre_id = $data['genre_id'];
             $movie->country_id = $data['country_id'];
             $movie->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
+            foreach($data['genre'] as $key => $gen) {
+                $movie->genre_id = $gen[0];
+            }
 
             $movie->save();
+            $movie->movie_genre()->sync($data['genre']);
+
 
             $get_image = $request->file('image');
 
@@ -312,8 +328,9 @@ public function filter_default(Request $request){
                 $movie->image = $new_image;
 
                 $movie->save();
+
             }
-            return redirect()->back()->with([
+            return redirect()->route('movie.index')->with([
                 'success_message' => 'đã được',
                 'action_type' => 'cập nhật',
                 'success_end' => 'thành công!',
@@ -321,7 +338,7 @@ public function filter_default(Request $request){
             ]);
         } catch (\Exception $e) {
             // Trả về thông báo lỗi nếu có vấn đề
-            return redirect()->back()->with('error', 'Lỗi: ' . $e->getMessage());
+            return redirect()->route('movie.index')->with('error', 'Lỗi: ' . $e->getMessage());
     }
 }
 
@@ -346,7 +363,9 @@ public function filter_default(Request $request){
                     unlink($image_path);
                 }
             }
+            // xóa nhieu the loai cho phim
             
+            Movie_Genre::whereIn('movie_id',[$movie->id])->delete();
             // Xóa movie trong database
             $movie->delete();
             
