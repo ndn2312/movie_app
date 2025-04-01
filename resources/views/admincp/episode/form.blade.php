@@ -65,18 +65,15 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <!-- Container sử dụng flex-start thay vì between -->
                 <div class="d-flex mb-3" style="gap: 15px;">
-                    <!-- Nút THÊM PHIM đặt trước -->
-                    @if(isset($movie))
-                    <a href="{{route('movie.create')}}" class="button-customadd">
+                    @if(isset($episode))
+                    <a href="{{route('episode.create')}}" class="button-customadd">
                         <i>➕ THÊM TẬP PHIM 🎬</i>
                     </a>
                     
                     @endif
                     
-                    <!-- Nút DANH SÁCH PHIM đặt sau -->
-                    <a href="{{route('movie.index')}}" class="button-custom">
+                    <a href="{{route('episode.index')}}" class="button-custom">
                         <i>🎬 DS.TẬP PHIM</i>
                     </a>
                 </div>
@@ -108,7 +105,7 @@
                             
                             <div class="form-group">
                                 {!! Form::label('movie','Chọn phim',['class' => 'd-block mb-2']) !!}
-                                {!! Form::select('movie_id',['0'=>'Chọn phim','Phim'=>$list_movie], isset($episode) ? $episode->movie_id : '', ['class'=>'form-control select-movie']) !!}
+                                {!! Form::select('movie_id',['0'=>'Chọn phim','Phim' => $list_movie], isset($episode) ? $episode->movie_id : '', ['class'=>'form-control select-movie']) !!}
 
                             </div>
                             <br>
@@ -118,16 +115,13 @@
                             </div>
                             <br>
                             <div class="form-group">
-                                {!! Form::label('link','Tập phim',[]) !!}
-                                    <select name="episode" class="form-control" id="episode">
-                                        
-
-                                    </select>
+                                {!! Form::label('episode','Tập phim',[]) !!}
+                                {!! Form::text('episode',isset($episode)? $episode->episode:'', ['class'=>'form-control ','placeholder'=>'Nhập vào dữ liệu...',isset($episode)? 'readonly':'']) !!}
                             </div>
                     
                             
                             <br>
-                            @if(!isset($movie))                    
+                            @if(!isset($episode))                    
 
                                 {!! Form::submit('Thêm tập phim',['class'=>'btn btn-success']) !!}
 

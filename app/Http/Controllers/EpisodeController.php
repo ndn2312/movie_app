@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
-
+use App\Models\Episode;
+use Carbon\Carbon;
 class EpisodeController extends Controller
 {
     /**
@@ -14,7 +15,9 @@ class EpisodeController extends Controller
      */
     public function index()
     {
-        //
+        $list_episode = Episode::with('movie')->orderBy('movie_id', 'DESC')->get();
+        // return response()->json($list_episode);
+        return view('admincp.episode.index',compact('list_episode'));
     }
 
     /**
@@ -36,7 +39,21 @@ class EpisodeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $ep = new Episode();
+        $ep->movie_id = $data['movie_id'];
+        $ep->linkphim = $data['link'];
+        $ep->episode = $data['episode'];
+        $ep->created_at = Carbon::now('Asia/Ho_Chi_Minh');
+        $ep->updated_at = Carbon::now('Asia/Ho_Chi_Minh');
+        $ep->save();
+        return redirect()->to('episode')->with([
+            'success_message' => 'đã được',
+            'action_type' => 'thêm',
+            'success_end' => 'thành công!',
+            'movie_title' => $data['episode']
+        ]);
     }
 
     /**
@@ -58,7 +75,10 @@ class EpisodeController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $list_movie = Movie::orderBy('id', 'DESC')->pluck('title', 'id');
+        $episode = Episode::find($id);
+        return view('admincp.episode.form', compact('episode', 'list_movie'));
     }
 
     /**
@@ -70,7 +90,20 @@ class EpisodeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $ep =  Episode::find($id);
+        $ep->movie_id = $data['movie_id'];
+        $ep->linkphim = $data['link'];
+        $ep->episode = $data['episode'];
+        $ep->created_at = Carbon::now('Asia/Ho_Chi_Minh');
+        $ep->updated_at = Carbon::now('Asia/Ho_Chi_Minh');
+        $ep->save(); 
+        return redirect()->to('episode')->with([
+            'success_message' => 'đã được',
+            'action_type' => 'cập nhật',
+            'success_end' => 'thành công!',
+            'movie_title' => $data['episode']
+        ]);
     }
 
     /**
@@ -81,7 +114,18 @@ class EpisodeController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        $ep = Episode::find($id);
+        $ep_id = $ep->episode;
+        $ep->delete();
+        return redirect()->to('episode')->with([
+            'movie_title' => $ep_id,
+            'delete_message' => 'đã được',
+            'action_type' => 'xóa',
+            'delete_end' => 'thành công!',
+            
+        ]);
+
     }
 
     public function select_movie()

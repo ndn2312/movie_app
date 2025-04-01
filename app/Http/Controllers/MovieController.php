@@ -14,6 +14,7 @@ use App\Models\Country;
 use Carbon\Carbon;
 use App\Models\Movie_Genre;
 use Illuminate\Support\Facades\File; 
+use App\Models\Episode;
 
 use PHPUnit\Framework\Constraint\Count;
 
@@ -368,6 +369,8 @@ public function filter_default(Request $request){
             // xóa nhieu the loai cho phim
             
             Movie_Genre::whereIn('movie_id',[$movie->id])->delete();
+            // Xóa tập phim
+            Episode::whereIn('movie_id', [$movie->id])->delete();
             // Xóa movie trong database
             $movie->delete();
             
