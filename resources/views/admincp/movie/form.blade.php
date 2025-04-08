@@ -172,6 +172,12 @@
                         </div>
                         <br>
                         <div class="form-group">
+                            {!! Form::label('thuocphim','Thuộc phim',['class' => 'd-block mb-2']) !!}
+                            {!! Form::select('thuocphim', ['phimle'=>'Phim lẻ','phimbo'=>'Phim bộ'],isset($movie) ? $movie->thuocphim : '', ['class'=>'form-control']) !!}
+
+                        </div>
+                        <br>
+                        <div class="form-group">
                             {!! Form::label('Country','Quốc gia',['class' => 'd-block mb-2']) !!}
                             {!! Form::select('country_id',$country, isset($movie) ? $movie->country_id : '', ['class'=>'form-control']) !!}
 

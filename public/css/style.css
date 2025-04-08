@@ -1011,13 +1011,14 @@ button.navbar-toggle.collapsed {
 }
 
 .popular-post .is_trailer {
-    background: #478413eb;
-    padding: 2px 4px;
-    color: #fff;
-    font-size: 11px;
+    background: green;
+    padding: 4px 7px;
+    color: #ffffff;
+    font-size: 12px;
     position: absolute;
     top: 0;
-    right: 0
+    right: 0;
+    border-radius: 10px 0 0 10px;
 }
 
 .popular-post p.title {
@@ -1558,7 +1559,7 @@ tr.title {
     z-index: 1
 }
 
-.grid-item .status:after {
+/* .grid-item .status:after {
     content: "";
     border: 5px solid transparent;
     border-bottom: 5px solid #365979;
@@ -1567,7 +1568,7 @@ tr.title {
     bottom: -5px;
     left: -5px;
     z-index: 999999
-}
+} */
 
 .grid-item .is_trailer {
     right: 3px;

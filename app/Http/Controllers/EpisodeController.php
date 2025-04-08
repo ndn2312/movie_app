@@ -38,24 +38,45 @@ class EpisodeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $data = $request->all();
-
-        $ep = new Episode();
-        $ep->movie_id = $data['movie_id'];
-        $ep->linkphim = $data['link'];
-        $ep->episode = $data['episode'];
-        $ep->created_at = Carbon::now('Asia/Ho_Chi_Minh');
-        $ep->updated_at = Carbon::now('Asia/Ho_Chi_Minh');
-        $ep->save();
-        return redirect()->to('episode')->with([
-            'success_message' => 'đã được',
-            'action_type' => 'thêm',
-            'success_end' => 'thành công!',
-            'movie_title' => $data['episode']
-        ]);
+{
+    $data = $request->all();
+    
+    $ep = new Episode();
+    $ep->movie_id = $data['movie_id'];
+    $ep->linkphim = $data['link'];
+    $ep->episode = $data['episode'];
+    $ep->created_at = Carbon::now('Asia/Ho_Chi_Minh');
+    $ep->updated_at = Carbon::now('Asia/Ho_Chi_Minh');
+    $ep->save();
+    
+    // Lấy URL trước đó và kiểm tra
+    $referer = request()->headers->get('referer');
+    
+    // Thông báo chung
+    $notification = [
+        'movie_title' => $data['episode'],
+        'success_message' => 'đã được',
+        'action_type' => 'thêm',
+        'success_end' => 'thành công! ',
+    ];
+    
+    // Nếu từ trang add_episode, giữ nguyên trang
+    if (strpos($referer, 'add_episode') !== false) {
+        return redirect()->back()->with($notification);
+    } else {
+        // Nếu từ trang khác, chuyển về index
+        return redirect()->to('episode')->with($notification);
     }
+}
 
+    public function add_episode($id)
+    
+    {
+        $movie = Movie::find($id);
+        $list_episode = Episode::with('movie')->where('movie_id', $id)->orderBy('episode','DESC')->get();
+        return view('admincp.episode.add_episode', compact('list_episode','movie'));
+       
+    }
     /**
      * Display the specified resource.
      *
@@ -118,7 +139,7 @@ class EpisodeController extends Controller
         $ep = Episode::find($id);
         $ep_id = $ep->episode;
         $ep->delete();
-        return redirect()->to('episode')->with([
+        return redirect()->back()->with([
             'movie_title' => $ep_id,
             'delete_message' => 'đã được',
             'action_type' => 'xóa',
@@ -133,9 +154,17 @@ class EpisodeController extends Controller
         $id = $_GET['id'];
         $movie = Movie::find($id);
         $output = '<option value="">---Chọn tập phim---</option>';
-        for ($i = 1; $i <= $movie->sotap; $i++) {
-            $output .= '<option value="' . $i . '">Tập ' . $i . '</option>';
-        };
+        if($movie->thuocphim == 'phimbo'){
+            for ($i = 1; $i <= $movie->sotap; $i++) {
+                $output .= '<option value="' . $i . '">Tập ' . $i . '</option>';
+            };
+        } else{
+            $output .= '<option value="HD">HD</option>
+            <option value="FullHD">FullHD</option>
+            <option value="Cam">Cam</option>';
+
+        }
+        
         echo $output;
     }
 }

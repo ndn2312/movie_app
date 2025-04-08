@@ -2,76 +2,73 @@
 
 @section('content')
 <style>
-    .button-custom {
-        width: 200px; /* Điều chỉnh kích thước theo ý muốn */
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 10px;
-        background: linear-gradient(90deg, #ff416c, #ff4b2b);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        color: white;
-        text-decoration: none;
-        transition: all 0.3s ease-in-out;
-        max-width: 400px;
-        margin:auto;
+     .button-custom {
+            width: 200px;
+            /* Điều chỉnh kích thước theo ý muốn */
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #ff416c, #ff4b2b);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            max-width: 400px;
+            margin: auto;
 
 
-    }
-    .button-custom:hover{
-        background: linear-gradient(90deg, #ff4b2b, #ff416c);
-        transform: scale(1.1);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    } 
-    /*css them phim*/
-    /*css them phim*/
-    .button-customadd {
-        width: 200px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        text-decoration: none;
-        transition: all 0.3s ease-in-out;
-        max-width: 400px;
-        margin: auto;
+
+        }
+
+        .button-custom:hover {
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        /*css them phim*/
+        .button-custom {
+            width: 200px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+            max-width: 400px;
+            margin: auto;
+        }
         
-        /* Thêm màu nền gradient xanh */
-        background: linear-gradient(90deg, #4CAF50, #2196F3);
-        /* Thêm màu chữ vàng */
-        color: #FFD700;
-        /* Thêm đổ bóng cho chữ */
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    }
-
-    /* Thêm hiệu ứng hover */
-    .button-customadd:hover {
-        background: linear-gradient(90deg, #2196F3, #4CAF50);
-        transform: scale(1.1);
-        box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
-    }
-
-
+        .button-add {
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            color: #FFD700; /* Màu vàng gold */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Thêm đổ bóng cho chữ */
+        }
+        
+        .button-add:hover {
+            background: linear-gradient(90deg, #2196F3, #4CAF50);
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
+        }
 </style>
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="d-flex mb-3" style="gap: 15px;">
-                    {{-- @if(isset($episode))
+                {{-- <div class="d-flex mb-3" style="gap: 15px;">
+                    @if(isset($episode))
                     <a href="{{route('episode.create')}}" class="button-customadd">
                         <i>➕ THÊM TẬP PHIM 🎬</i>
                     </a>
                     
-                    @endif --}}
+                    @endif
                     
                     <a href="{{route('episode.index')}}" class="button-custom">
                         <i>🎬 DS.TẬP PHIM</i>
@@ -79,7 +76,7 @@
                     <a href="{{route('movie.index')}}" class="button-custom">
                         <i>🎬 DANH SÁCH PHIM</i>
                     </a>
-                </div>
+                </div> --}}
 
                 <div class="card-header">Quản lý tập phim</div>
                 <!-- Phần còn lại của form -->
@@ -106,10 +103,11 @@
 
                         @endif
                             
+                     
                             <div class="form-group">
-                                {!! Form::label('movie','Chọn phim',['class' => 'd-block mb-2']) !!}
-                                {!! Form::select('movie_id',['0'=>'Chọn phim','Phim' => $list_movie], isset($episode) ? $episode->movie_id : '', ['class'=>'form-control select-movie']) !!}
-
+                                {!! Form::label('movie_title','Tên phim',['class' => 'd-block mb-2']) !!}
+                                {!! Form::text('movie_title',isset($movie)? $movie->title:'', ['class'=>'form-control ','readonly']) !!}
+                                {!! Form::hidden('movie_id',isset($movie)? $movie->id:'') !!}
                             </div>
                             <br>
                             <div class="form-group">
@@ -125,7 +123,7 @@
                             @else
                                 <div class="form-group">
                                     {!! Form::label('episode','Tập phim',[]) !!}
-                                    <select name="episode" class="form-control" id="episode"></select>
+                                    {!! Form::selectRange('episode',1, $movie->sotap, $movie->sotap, ['class'=>'form-control ']) !!}
                                 </div>
                             @endif             
                             <br>
@@ -141,6 +139,119 @@
                 </div>
             </div>
             
+        </div>
+        <!-- Phần này là danh sách tập phim -->
+        <div class="col-md-12">
+            {{-- <div class="card">
+                <div class="card-header">Quản lý danh mục</div>
+
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @if(!isset($category))                    
+                        {!! Form::open(['route' => 'category.store', 'method'=>'POST']) !!}
+                    @else    
+                        {!! Form::open(['route' => ['category.update', $category->id], 'method'=>'PUT']) !!}
+
+                    @endif
+                        <div class="form-group">
+                            {!! Form::label('title','Tiêu đề',['class' => 'd-block mb-2']) !!}
+                            {!! Form::text('title',isset($category)? $category->title:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'slug','onkeyup'=>'ChangeToSlug()']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('slug','Đường dẫn',['class' => 'd-block mb-2']) !!}
+                            {!! Form::text('slug',isset($category)? $category->slug :'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'convert_slug']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('description','Mô tả',['class' => 'd-block mb-2']) !!}
+                            
+                            {!! Form::textarea('description',isset($category)? $category->description:'', ['style'=>'resize:none','class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'description']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('Active','Trạng thái',['class' => 'd-block mb-2']) !!}
+                            {!! Form::select('status',['1'=>'Hiển thị','0'=>'Không'], isset($category) ? $category->status : '', ['class'=>'form-control']) !!}
+
+                        </div>
+                        <br>
+                        @if(!isset($category))                    
+
+                            {!! Form::submit('Thêm dữ liệu',['class'=>'btn btn-success']) !!}
+
+                        @else
+                            {!! Form::submit('Cập nhật',['class'=>'btn btn-success']) !!}
+                        @endif
+                    {!! Form::close() !!}
+
+                </div>
+            </div> --}}
+            <a href="{{route('episode.index')}}" class="button-custom">
+                <i>🎬 DS.TẬP PHIM</i>
+            </a>
+            <br>
+            <a href="{{route('movie.index')}}" class="button-custom">
+                <i>🎬 DANH SÁCH PHIM</i>
+            </a>
+            <table class="table table-responsive" id="tablephim">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tên phim</th>
+                    <th scope="col">Ảnh phim</th>
+                    <th scope="col">Tập phim</th>
+                    <th scope="col">Link phim</th>
+                    {{-- <th scope="col">Hoạt động/Không hoạt động</th>
+                    <th scope="col">Thời gian tạo</th>
+                    <th scope="col">Thời gian cập nhật</th> --}}
+                    <th scope="col">Quản lý</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    @foreach($list_episode as $key => $episode)
+                  <tr>
+                    <th scope="row">{{$key}}</th>
+                    <td>{{$episode->movie->title}}</td>
+                    <td>
+                        <img src="{{ asset('uploads/movie/'.$episode->movie->image) }}"
+                            style="width: 100px; height: auto; object-fit: cover;">
+                    </td>
+                    <td>{{$episode->episode}}</td>
+                    <td>{{$episode->linkphim}}</td>
+
+                    {{-- <td>
+                        @if($cate->status)
+                            Hiển thị
+                        @else
+                            Không hiển thị
+                        @endif
+                    </td> --}}
+                    {{-- <td>
+                        {{$cate->ngaytao}}
+                    </td>
+                    <td>
+                        {{$cate->ngaycapnhat}}
+                    </td> --}}
+                    <td>
+                        {!! Form::open([
+                            'method'=>'DELETE','route'=>['episode.destroy',$episode->id],])!!}
+                        
+                        {!! Form::submit('Xóa', ['class' => 'btn btn-danger', 'onsubmit' => 'return confirm()']) !!}
+
+                        {!! Form::close() !!}
+                        <br>
+                        <a href="{{route('episode.edit', $episode->id)}}" class="btn btn-warning">Sửa</a>
+                    </td>
+                  </tr>
+                    @endforeach
+                </tbody>
+                
+                    
+              </table>
         </div>
     </div>
 </div>
@@ -164,7 +275,7 @@
                 }}">Thành công!</h2>
                 
                 <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
-                    Phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
+                    Tập phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
                     {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }} 
                     <span class="action-highlight {{ 
                         session('action_type') == 'xóa' ? 'delete-action' : 
@@ -491,7 +602,6 @@
         }
     });
     </script>
-    @endif
-
+@endif
 @endsection
 

@@ -1,4 +1,4 @@
-@extends('layout')
+{{-- @extends('layout')
 @section('content')
 <div class="row container" id="wrapper">
          <div class="halim-panel-filter">
@@ -16,7 +16,7 @@
          <main id="main-contents" class="col-xs-12 col-sm-12 col-md-8">
             <section id="content" class="test">
                <div class="clearfix wrap-content">
-                  
+
                   <iframe width="100%" height="500" src="https://www.youtube.com/embed/r958O404e4U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   
                   <div class="button-watch">
@@ -311,4 +311,4 @@
                </div>
             </aside>
 </div>
-@endsection
+@endsection --}}

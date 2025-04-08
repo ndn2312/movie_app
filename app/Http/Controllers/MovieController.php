@@ -27,7 +27,8 @@ class MovieController extends Controller
      */
     public function index()
     {
-        $list = Movie::with('category', 'movie_genre', 'country', 'genre')->orderBy('id', 'DESC')->get();
+        $list = Movie::with('category', 'movie_genre', 'country', 'genre')->withCount('episode')->orderBy('id', 'DESC')->get();
+        
         $path = public_path("/json/");
         if(!is_dir($path)){
             mkdir($path, 0777, true);
@@ -194,6 +195,8 @@ public function filter_default(Request $request){
         $movie->description = $data['description'];
         $movie->status = $data['status'];
         $movie->category_id = $data['category_id'];
+        $movie->thuocphim = $data['thuocphim'];
+
         $movie->country_id = $data['country_id'];
         $movie->ngaytao = Carbon::now('Asia/Ho_Chi_Minh');
         $movie->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
@@ -295,6 +298,8 @@ public function filter_default(Request $request){
             $movie->description = $data['description'];
             $movie->status = $data['status'];
             $movie->category_id = $data['category_id'];
+            $movie->thuocphim = $data['thuocphim'];
+
             // $movie->genre_id = $data['genre_id'];
             $movie->country_id = $data['country_id'];
             $movie->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');

@@ -184,13 +184,20 @@
             <a href="{{route('movie.create')}}" class="button-custom button-add">
                 <i>➕ THÊM PHIM 🎬</i>
             </a>
+            <br>
+            {{-- <a href="{{route('episode.create')}}" class="button-custom button-add">
+                <i>➕ THÊM TẬP PHIM 🎬</i>
+            </a> --}}
             
 
-            <table class="table" id="tablephim">
+            <table class="table table-responsive" id="tablephim">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Tên phim</th>
+                        <th scope="col">Thêm tập phim</th>
+                        <th scope="col">Số tập</th>
+
                         <th scope="col">Tags</th>
                         <th scope="col">Thời lượng phim</th>
                         <th scope="col">Nổi bật</th>
@@ -202,9 +209,10 @@
                         <th scope="col">Đường dẫn</th>
                         <th scope="col">Hoạt động/Không hoạt động</th>
                         <th scope="col">Danh mục</th>
+                        <th scope="col">Thuộc phim</th>
+                        
                         <th scope="col">Thể loại</th>
                         <th scope="col">Quốc gia</th>
-                        <th scope="col">Số tập</th>
                         <th scope="col">Thời gian tạo</th>
                         <th scope="col">Thời gian cập nhật</th>
                         <th scope="col">Top view</th>
@@ -219,6 +227,12 @@
                     <tr>
                         <th scope="row">{{$key}}</th>
                         <td>{{$cate->title}}</td>
+                        <td><i><a href="{{route('add_episode',[$cate->id])}}" class="button-custom button-add">➕ THÊM TẬP PHIM</a></i></td>
+                        <!-- Số tập -->
+                    <td>
+                       {{$cate->episode_count}}/{{ $cate->sotap }} Tập
+                    </td>
+
                         <td>{{$cate->tags}}</td>
                         <td>{{$cate->thoiluong}}</td>
                         <td>
@@ -284,6 +298,13 @@
                             </span>
                         @endif
                     </td>
+                    <td>
+                        @if($cate->thuocphim=='phimle')
+                            Phim lẻ
+                        @else
+                            Phim bộ
+                        @endif
+                    </td>
                     <!-- Cho thể loại -->
                     <td>
                         @foreach($cate->movie_genre as $gen)
@@ -328,10 +349,7 @@
                             </span>
                         @endif
                     </td>
-                <!-- Số tập -->
-                    <td>
-                        {{ $cate->sotap }}
-                    </td>
+                
 
                 <!-- Ngày tạo, ngày cập nhật -->
                 <td>

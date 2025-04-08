@@ -46,7 +46,7 @@
     }
 
     .fullhd-tag {
-        background: linear-gradient(135deg, #e30404 0%, #dc2407 100%);
+        background: red;
     }
 
     .hd-tag {
@@ -66,22 +66,31 @@
     }
 
     .thuyetminh-tag {
-        background: linear-gradient(135deg, #16a085 0%, #2ecc71 100%);
+        background: green;
         /* margin-right: 3px; */
 
     }
 
     .phude-tag {
-        background: linear-gradient(135deg, #02f733 0%, #7ec544 100%);
+        background: gray;
         /* margin-right: 0; */
 
     }
-    .sotap-tag {
-        background: linear-gradient(135deg, #408BEA 30%, #080808 70%);
+    .ss-tag {
+        background: linear-gradient(135deg, #034ba8 30%, #04c1e7 70%);
         
         /* margin-right: 3px; */
 
     }
+    .sotap-tag {
+        background: linear-gradient(135deg, #ea8d40 30%, #e70404 70%);
+        /* background-color: #ea8d40; */
+
+        
+        /* margin-right: 3px; */
+
+    }
+    
 
 
     .season-tag {
@@ -153,17 +162,20 @@
                                      </span>
                                     
                                     <span class="episode">
+                                        <span class="tag-base sotap-tag">{{$hot->episode_count}}/{{$hot->sotap}}</span>
+
                                       @if($hot->phude==0)
-                                      <span class="tag-base phude-tag">Phụ đề</span>
+                                      <span class="tag-base phude-tag">Phụ Đề</span>
                                       @else
                                       <span class="tag-base thuyetminh-tag">T.Minh</span>
                                       @endif
                                       
                                     @if($hot->season!=0)
-                                        <span class="tag-base sotap-tag">S{{$hot->season}}-Tập{{$hot->sotap}}</span>
-                                    @else
-                                        <span class="tag-base sotap-tag">Tập{{$hot->sotap}}</span>
+                                        <span class="tag-base ss-tag">S{{$hot->season}}</span>
+                                            {{-- -Tập{{$hot->sotap}}</span> --}}
                                     @endif
+                                        {{-- <span class="tag-base sotap-tag">Tập{{$hot->sotap}}</span>
+                                    @endif --}}
 
                                     </span>
                                     
@@ -252,17 +264,19 @@
 
                               
                               <span class="episode">
+                                <span class="tag-base sotap-tag">{{$mov->episode_count}}/{{$mov->sotap}}</span>
                                 @if($mov->phude==0)
-                                <span class="tag-base phude-tag">Phụ đề</span>
+                                <span class="tag-base phude-tag">P.Đề</span>
                                 @else
                                 <span class="tag-base thuyetminh-tag">T.Minh</span>
                                 @endif
                                 
                                 @if($mov->season!=0)
-                                        <span class="tag-base sotap-tag">S{{$mov->season}}-Tập{{$mov->sotap}}</span>
-                                @else
-                                        <span class="tag-base sotap-tag">Tập{{$mov->sotap}}</span>
+                                        <span class="tag-base ss-tag">S{{$mov->season}}</span>
+                                        {{-- -Tập{{$mov->sotap}}</span> --}}
                                 @endif
+                                        {{-- <span class="tag-base sotap-tag">Tập{{$mov->sotap}}</span>
+                                @endif --}}
                                 
                               </span>
                               

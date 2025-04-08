@@ -109,10 +109,20 @@
 
                 </div>
             </div> --}}
+            <div class="d-flex mb-3" style="gap: 15px;">
+
             <a href="{{route('episode.create')}}" class="button-custom button-add">
                 <i>➕ THÊM TẬP PHIM 🎬</i>
             </a>
-            <table class="table">
+            <br>
+            <a href="{{route('movie.create')}}" class="button-custom button-add">
+                <i>➕ THÊM PHIM 🎬</i>
+            </a>
+            <a href="{{route('movie.index')}}" class="button-custom">
+                <i>🎬 DANH SÁCH PHIM</i>
+            </a>
+            </div>
+            <table class="table table-responsive" id="tablephim">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -136,7 +146,7 @@
                             style="width: 100px; height: auto; object-fit: cover;">
                     </td>
                     <td>{{$episode->episode}}</td>
-                    <td>{!!$episode->linkphim!!}</td>
+                    <td>{{$episode->linkphim}}</td>
 
                     {{-- <td>
                         @if($cate->status)
@@ -190,7 +200,7 @@
                 }}">Thành công!</h2>
                 
                 <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
-                    Tập phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
+                    Phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
                     {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }} 
                     <span class="action-highlight {{ 
                         session('action_type') == 'xóa' ? 'delete-action' : 

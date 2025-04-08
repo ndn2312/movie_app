@@ -4,7 +4,7 @@
    .tag-base {
        display: inline-block;
        padding: 4px 10px;
-       margin-right: 6px;
+       /* margin-right: 6px; */
        font-size: 11px;
        font-weight: 600;
        border-radius: 20px;  /* Bo tròn hoàn toàn */
@@ -14,7 +14,7 @@
        letter-spacing: 0.5px;
        transition: all 0.3s ease;
    }
- 
+
    /* Vị trí cho status và episode */
    .status {
        position: absolute;
@@ -22,7 +22,7 @@
        left: 10px;
        z-index: 10;
    }
- 
+
    .episode {
        position: absolute;
        top: 10px;
@@ -32,69 +32,96 @@
        padding: 0;
        margin: 0;
    }
- 
+   /* .sotap-position {
+   position: absolute;
+   top:40px;
+   left: 6px;
+   z-index: 10;
+   } */
+
+
    /* Style cho từng loại tag với gradient */
    .trailer-tag {
        background: linear-gradient(135deg, #e304af 0%, #dc07d5 100%);
    }
- 
+
    .fullhd-tag {
-       background: linear-gradient(135deg, #e30404 0%, #dc2407 100%);
+       background: red;
    }
- 
+
    .hd-tag {
        background: linear-gradient(135deg, #03f5fd 0%, #0f6060 100%);
    }
- 
+
    .sd-tag {
        background: linear-gradient(135deg, #0f3460 0%, #533483 100%);
    }
- 
+
    .hdcam-tag {
        background: linear-gradient(135deg, #533483 0%, #9896f1 100%);
    }
- 
+
    .cam-tag {
        background: linear-gradient(135deg, #9896f1 0%, #7579e7 100%);
    }
- 
+
    .thuyetminh-tag {
-       background: linear-gradient(135deg, #16a085 0%, #2ecc71 100%);
+       background: green;
+       /* margin-right: 3px; */
+
    }
- 
+
    .phude-tag {
-       background: linear-gradient(135deg, #5aa469 0%, #7ec544 100%);
+       background: gray;
+       /* margin-right: 0; */
+
    }
- 
+   .ss-tag {
+       background: linear-gradient(135deg, #034ba8 30%, #04c1e7 70%);
+       
+       /* margin-right: 3px; */
+
+   }
+   .sotap-tag {
+       background: linear-gradient(135deg, #ea8d40 30%, #e70404 70%);
+       /* background-color: #ea8d40; */
+
+       
+       /* margin-right: 3px; */
+
+   }
+   
+
+
    .season-tag {
        background: linear-gradient(135deg, #e74c3c 0%, #ff5e57 100%);
    }
- 
+
    /* Hiệu ứng hover */
    .halim-thumb:hover .tag-base {
        filter: brightness(1.1);
        transform: translateY(-1px);
        box-shadow: 0 3px 5px rgba(0,0,0,0.3);
    }
-     .halim-post-title .entry-title {
-         font-weight: 700;          
-         font-size: 15px;           
-         margin-bottom: 3px;       
-         line-height: 1.3;          
-     }
- 
-     .halim-post-title .original_title {
-         font-weight: 600;        
-         font-size: 13px;          
-         line-height: 1.2;          
-     }
- 
-     .halim-thumb:hover .entry-title,
-     .halim-thumb:hover .original_title {
-         color: #ff6600;        /
-     }
- 
- 
+       .halim-post-title .entry-title {
+           font-weight: 700;          
+           font-size: 15px;           
+           margin-bottom: 3px;       
+           line-height: 1.3;          
+       }
+
+       .halim-post-title .original_title {
+           font-weight: 600;        
+           font-size: 13px;          
+           line-height: 1.2;          
+       }
+
+       .halim-thumb:hover .entry-title,
+       .halim-thumb:hover .original_title {
+           color: #ff6600;        /
+       }
+
+
 </style>
 <div class="row container" id="wrapper">
     <div class="halim-panel-filter">
@@ -137,14 +164,15 @@
                       </span>
                       
                       <span class="episode">
-                        @if($mov->phude==0)
-                        <span class="tag-base phude-tag">Phụ đề</span>
-                        @else
-                        <span class="tag-base thuyetminh-tag">T.Minh</span>
-                        @endif
+                        <span class="tag-base sotap-tag">{{$mov->episode_count}}/{{$mov->sotap}}</span>
+                                @if($mov->phude==0)
+                                <span class="tag-base phude-tag">P.Đề</span>
+                                @else
+                                <span class="tag-base thuyetminh-tag">T.Minh</span>
+                                @endif
                         
                         @if($mov->season!=0)
-                        <span class="tag-base season-tag">S.{{$mov->season}}</span>
+                        <span class="tag-base ss-tag">S.{{$mov->season}}</span>
                         @endif
                       </span>
                      <div class="icon_overlay"></div>
