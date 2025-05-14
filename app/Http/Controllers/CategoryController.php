@@ -15,7 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $list = Category::orderBy('position', 'ASC')->get();
+        return view('admincp.category.index', compact('list'));
     }
 
     /**
@@ -25,45 +26,59 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $list = Category::orderBy('position','ASC')->get();
-        return view('admincp.category.form', compact('list'));
+        // $list = Category::orderBy('position', 'ASC')->get();
+        // return view('admincp.category.form', compact('list'));
+        return view('admincp.category.form');
     }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) 
+    public function store(Request $request)
     {
-        $data = $request->all();
-    
-        // Kiểm tra xem có danh mục đã xóa nào trùng tên không
+        // Đầu tiên, tìm danh mục đã xóa mềm nếu có
         $existingTrashed = Category::onlyTrashed()
-            ->where('title', $data['title'])
+            ->where('title', $request->title)
             ->first();
-    
+
         if ($existingTrashed) {
             // Khôi phục danh mục đã xóa thay vì tạo mới
             $existingTrashed->restore();
-    
+
             // Cập nhật các thông tin khác
-            $existingTrashed->slug = $data['slug'];
-            $existingTrashed->description = $data['description'];
-            $existingTrashed->status = $data['status'];
+            $existingTrashed->slug = $request->slug;
+            $existingTrashed->description = $request->description;
+            $existingTrashed->status = $request->status;
             $existingTrashed->position = Category::max('position') + 1; // Đặt ở cuối danh sách
+            $existingTrashed->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
             $existingTrashed->save();
-    
-            return redirect()->back()->with([
+
+            return redirect()->route('category.index')->with([
                 'success' => true,
                 'action' => 'Khôi phục',
                 'item_name' => $existingTrashed->title,
                 'item_type' => 'danh mục đã xóa trước đó'
             ]);
         }
-    
-        // Nếu không có danh mục trùng tên đã xóa, tạo mới như bình thường
+
+        // Nếu không có danh mục trùng tên đã xóa, tiến hành validation
+        $data = $request->validate([
+            'title' => 'required|unique:categories,title,NULL,id,deleted_at,NULL|max:255',
+            'slug' => 'required|unique:categories,slug,NULL,id,deleted_at,NULL|max:255',
+            'status' => 'required|boolean',
+            'description' => 'nullable|max:256',
+        ], [
+            'title.required' => 'Tên danh mục không được để trống',
+            'title.unique' => 'Tên danh mục đã tồn tại',
+            'slug.required' => 'Slug không được để trống',
+            'slug.unique' => 'Slug đã tồn tại',
+            'status.required' => 'Trạng thái không được để trống',
+            'status.boolean' => 'Trạng thái không hợp lệ',
+        ]);
+
+        // Tạo danh mục mới như bình thường
         $category = new Category();
         $category->title = $data['title'];
         $category->slug = $data['slug'];
@@ -71,19 +86,20 @@ class CategoryController extends Controller
         $category->status = $data['status'];
         $category->ngaytao = Carbon::now('Asia/Ho_Chi_Minh');
         $category->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
-        $category->position = Category::max('position')+1; // THÊM DÒNG NÀY để đặt vị trí mới ở cuối
+        $category->position = Category::max('position') + 1;
         $category->save();
-    
-        return redirect()->back()->with([
+
+        return redirect()->route('category.index')->with([
             'success' => true,
             'action' => 'thêm',
             'item_name' => $category->title,
             'item_type' => 'danh mục'
         ]);
     }
-    
 
-    
+
+
+
 
     /**
      * Display the specified resource.
@@ -105,7 +121,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::find($id);
-        $list = Category::orderBy('position','ASC')->get();
+        $list = Category::orderBy('position', 'ASC')->get();
         return view('admincp.category.form', compact('list', 'category'));
     }
 
@@ -127,7 +143,9 @@ class CategoryController extends Controller
         $category->status = $data['status'];
         $category->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
         $category->save();
-        return redirect()->back()->with([
+        return redirect()->route('category.index')->with([
+        // return redirect()->back()->with([
+
             'success' => true,
             'action' => 'cập nhật',
             'item_name' => $category->title,
@@ -141,8 +159,8 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    
-    
+
+
     public function destroy($id)
     {
 
@@ -150,23 +168,21 @@ class CategoryController extends Controller
         $categoryName = $category->title;
         $category->delete();
 
-        return redirect()->back()->with([
+        return redirect()->route('category.index')->with([
             'success' => true,
             'action' => 'xóa',
             'item_name' => $categoryName,
             'item_type' => 'danh mục'
         ]);
     }
-    public function resorting(Request $request) {
+    public function resorting(Request $request)
+    {
         $data = $request->all(); // Lấy toàn bộ dữ liệu từ request
-    
+
         foreach ($data['array_id'] as $key => $value) {
             $category = Category::find($value); // Tìm category theo ID
-            $category->position = $key ; // Gán vị trí mới
+            $category->position = $key; // Gán vị trí mới
             $category->save(); // Lưu vào database
         }
-        
     }
-
-    
 }

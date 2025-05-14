@@ -5,7 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Quản lý thể loại</div>
+            <h2 class="section-title"><i class="fas fa-masks-theater""></i>Quản lý thể loại phim</h2>
+            <br>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -37,7 +38,7 @@
                         <br>
                         <div class="form-group">
                             {!! Form::label('Active','Trạng thái',['class' => 'd-block mb-2']) !!}
-                            {!! Form::select('status',['1'=>'Hiển thị','0'=>'Không'], isset($genre) ? $genre->status : '', ['class'=>'form-control']) !!}
+                            {!! Form::select('status',['1'=>'Hiển thị','0'=>'Ẩn'], isset($genre) ? $genre->status : '', ['class'=>'form-control']) !!}
 
                         </div>
                         <br>
@@ -52,48 +53,7 @@
 
                 </div>
             </div>
-            <table class="table" id="tablephim">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Thể loại</th>
-                    <th scope="col">Mô tả</th>
-                    <th scope="col">Đường dẫn</th>
-                    <th scope="col">Hoạt động/Không hoạt động</th>
-                    <th scope="col">Quản lý</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    @foreach($list as $key => $cate)
-                  <tr>
-                    <th scope="row">{{$key}}</th>
-                    <td>{{$cate->title}}</td>
-                    <td>{{$cate->description}}</td>
-                    <td>{{$cate->slug}}</td>
-
-                    <td>
-                        @if($cate->status)
-                            Hiển thị
-                        @else
-                            Không hiển thị
-                        @endif
-                    </td>
-                    <td>
-                        {!! Form::open([
-                            'method'=>'DELETE','route'=>['genre.destroy',$cate->id],])!!}
-                        
-                        {!! Form::submit('Xóa', ['class' => 'btn btn-danger', 'onsubmit' => 'return confirm()']) !!}
-
-                        {!! Form::close() !!}
-                        <br>
-                        <a href="{{route('genre.edit', $cate->id)}}" class="btn btn-warning">Sửa</a>
-                    </td>
-                  </tr>
-                    @endforeach
-                </tbody>
-                
-                    
-              </table>
+           
         </div>
     </div>
 </div>

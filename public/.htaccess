@@ -1,5 +1,7 @@
 <IfModule mod_rewrite.c>
+
     <IfModule mod_negotiation.c>
+    
         Options -MultiViews -Indexes
     </IfModule>
 
@@ -18,4 +20,10 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+    
+</IfModule>
+
+# Bật hỗ trợ HTTP Range Requests để video tua được
+<IfModule mod_headers.c>
+    Header set Accept-Ranges bytes
 </IfModule>

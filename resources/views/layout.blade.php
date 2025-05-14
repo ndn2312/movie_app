@@ -24,7 +24,8 @@
     <!-- CSS Files -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel='stylesheet' href='{{asset('css/bootstrap.min.css')}}'>
-    <link rel='stylesheet' href='{{asset('css/layout.css')}}'>
+    {{-- <link rel='stylesheet' href='{{asset('css/layout.css')}}'> --}}
+ 
     <link rel='stylesheet' href='{{asset('css/style.css')}}'>
     
 
@@ -35,12 +36,26 @@
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v22.0"></script>
     <script src='{{asset('js/jquery.min.js')}}'></script>
 
-    
-</head>
-<body>
-    <!-- Header -->
+    <!-- Plyr CSS -->
+<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+<!-- Plyr JS -->
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
+<!-- HLS.js cho phát video m3u8 -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="{{asset('js/vendors/hls/hls-player.js')}}"></script>
+
+</head>
+
+<body>
+
+
+    @include('partials.loading-screen')
+
+    <!-- Header -->
+    
     <header id="header">
+
         <div class="container">
             <div class="header-inner">
                 <!-- Logo -->
@@ -97,6 +112,7 @@
 
     <!-- Navigation -->
     <div class="navbar-container">
+
         <div class="container">
             <nav class="main-nav">
                 <ul class="nav-menu">
@@ -141,7 +157,7 @@
                         </li>
                     @endforeach
                 </ul>
-                <a href="#" class="filter-btn" onclick="locphim()">
+                <a href="{{ route('advancedfilter') }}" class="filter-btn">
                     <i class="fas fa-filter"></i>Lọc Phim
                 </a>
             </nav>
@@ -254,9 +270,174 @@
      })
 
   </script>
+  
+  
     <script src='{{asset('js/bootstrap.min.js')}}'></script>
     <script src='{{asset('js/owl.carousel.min.js')}}'></script>
-    <script src='{{asset('js/layout.js')}}'></script>
+    <script src='{{asset('js/search.js')}}'></script>
+    <script>
+      
+        $(document).ready(function() {
+        // Khởi tạo hệ thống đánh giá popup
+        if ($('#movie-rating-system-popup').length) {
+            initPopupRatingSystem();
+        }
+        
+        function initPopupRatingSystem() {
+            const ratingSystem = $('#movie-rating-system-popup');
+            const movieId = ratingSystem.data('movie-id');
+            const stars = ratingSystem.find('.star');
+            const feedback = $('#rating-feedback-popup');
+            const currentRating = parseInt($('.rating-stats .average').text()) || 0;
+            
+            // Hiệu ứng hover
+            stars.on('mouseenter', function() {
+            const value = $(this).data('value');
+            resetStars();
+            highlightStars(value);
+            $(this).addClass('pulse');
+            });
+            
+            ratingSystem.on('mouseleave', function() {
+            resetStars();
+            highlightStars(currentRating);
+            stars.removeClass('pulse');
+            });
+            
+            // Click để đánh giá
+            stars.on('click', function() {
+            const value = $(this).data('value');
+            submitRating(movieId, value);
+            });
+            
+            // Các hàm tiện ích
+            function resetStars() {
+            stars.removeClass('hover');
+            }
+            
+            function highlightStars(count) {
+            stars.each(function(index) {
+                if (index < count) {
+                $(this).addClass('hover');
+                }
+            });
+            }
+            
+            function submitRating(movieId, rating) {
+            $.ajax({
+                url: '/add-rating',
+                method: 'POST',
+                data: {
+                movie_id: movieId,
+                index: rating
+                },
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                beforeSend: function() {
+                feedback.removeClass('success error')
+                        .addClass('loading')
+                        .text('Đang xử lý...')
+                        .fadeIn();
+                },
+                success: function(response) {
+                if (response === 'done') {
+                    feedback.removeClass('loading error')
+                        .addClass('success')
+                        .html('<i class="fas fa-check-circle"></i> Cảm ơn bạn đã đánh giá ' + rating + ' sao!');
+                    
+                    // Cập nhật UI mà không cần tải lại trang
+                    updateRatingDisplay(rating);
+                    
+                    // Đóng modal sau 2 giây
+                    setTimeout(function() {
+                    $('#ratingModal').modal('hide');
+                    }, 2000);
+                } else if (response === 'exist') {
+                    feedback.removeClass('loading success')
+                        .addClass('error')
+                        .html('<i class="fas fa-exclamation-circle"></i> Bạn đã đánh giá phim này trước đó');
+                } else {
+                    feedback.removeClass('loading success')
+                        .addClass('error')
+                        .html('<i class="fas fa-exclamation-triangle"></i> Có lỗi xảy ra, vui lòng thử lại sau');
+                }
+                
+                setTimeout(function() {
+                    feedback.fadeOut();
+                }, 5000);
+                },
+                error: function() {
+                feedback.removeClass('loading success')
+                        .addClass('error')
+                        .html('<i class="fas fa-exclamation-triangle"></i> Lỗi kết nối, vui lòng thử lại sau');
+                
+                setTimeout(function() {
+                    feedback.fadeOut();
+                }, 5000);
+                }
+            });
+            }
+    
+            function updateRatingDisplay(newRating) {
+            // Cập nhật đánh giá trung bình trên trang và trong popup
+            $('.rating-stats .average, .current-rating .average').text(newRating);
+            
+            // Cập nhật số lượt đánh giá
+            let currentCount = parseInt($('.rating-stats .count').text().replace(/[()]/g, '')) || 0;
+            $('.rating-stats .count, .current-rating small').text('(' + (currentCount + 1) + ' lượt đánh giá)');
+            
+            // Cập nhật sao trong popup
+            resetStars();
+            highlightStars(newRating);
+            stars.removeClass('active');
+            stars.each(function(index) {
+                if (index < newRating) {
+                $(this).addClass('active');
+                }
+            });
+            }
+        }
+        
+        // Hiển thị đánh giá khi mở modal
+        $('#ratingModal').on('shown.bs.modal', function () {
+            const currentRating = parseInt($('.rating-stats .average').text()) || 0;
+            $('#movie-rating-system-popup .star').removeClass('active hover');
+            $('#movie-rating-system-popup .star').each(function(index) {
+            if (index < currentRating) {
+                $(this).addClass('active');
+            }
+            });
+        });
+        });
+
+    
+// Đồng bộ lượt xem từ sessionStorage
+$(document).ready(function() {
+    // Lấy dữ liệu cập nhật lượt xem từ sessionStorage
+    const viewUpdates = JSON.parse(sessionStorage.getItem('viewUpdates') || '{}');
+    
+    // Cập nhật các mục trong sidebar
+    if (Object.keys(viewUpdates).length > 0) {
+        $('#sidebar .popular-post .item').each(function() {
+            const itemHref = $(this).find('a').attr('href');
+            if (itemHref) {
+                // Lấy slug từ href
+                const slugMatch = itemHref.match(/\/phim\/([^\/]+)$/);
+                if (slugMatch && slugMatch[1]) {
+                    const movieSlug = slugMatch[1];
+                    // Nếu có cập nhật cho phim này
+                    if (viewUpdates[movieSlug]) {
+                        $(this).find('.viewsCount').text(viewUpdates[movieSlug] + ' lượt xem');
+                    }
+                }
+            }
+        });
+    }
+});
+
+
+  </script>
 
 </body>
 </html>

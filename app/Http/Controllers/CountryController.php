@@ -13,9 +13,74 @@ class CountryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        // Lấy từ khóa tìm kiếm từ request
+        $search = $request->input('search');
+
+        // Khởi tạo query builder
+        $query = Country::orderBy('id', 'DESC');
+
+        // Nếu có từ khóa tìm kiếm, thêm điều kiện tìm kiếm
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', '%' . $search . '%')
+                    ->orWhere('slug', 'LIKE', '%' . $search . '%')
+                    ->orWhere('description', 'LIKE', '%' . $search . '%');
+            });
+        }
+
+        // Lấy danh sách quốc gia với phân trang, mỗi trang 6 mục
+        $list = $query->paginate(6);
+
+        // Giữ lại thông tin tìm kiếm khi phân trang
+        $list->appends(['search' => $search]);
+
+        // Nếu là request Ajax, trả về JSON
+        if ($request->ajax() || $request->input('ajax') == 1) {
+            // Tạo HTML cho grid quốc gia
+            $html = '';
+            foreach ($list as $country) {
+                $html .= '<div class="country-card">';
+                $html .= '<div class="country-card-header">';
+                $html .= '<h4 class="country-title">' . $country->title . '</h4>';
+                $html .= '<div class="country-status ' . ($country->status == 1 ? 'active' : 'inactive') . '">';
+                $html .= '<i class="fas fa-circle"></i> ' . ($country->status == 1 ? 'Hiển thị' : 'Ẩn') . '</div>';
+                $html .= '</div>';
+
+                $html .= '<div class="country-info">';
+                $html .= '<div class="info-group">';
+                $html .= '<label><i class="fas fa-info-circle"></i> Mô tả:</label>';
+                $html .= '<p class="description">' . ($country->description ? $country->description : 'Chưa có mô tả') . '</p>';
+                $html .= '</div>';
+
+                $html .= '<div class="info-group">';
+                $html .= '<label><i class="fas fa-link"></i> Đường dẫn:</label>';
+                $html .= '<p class="slug">' . $country->slug . '</p>';
+                $html .= '</div></div>';
+
+                $html .= '<div class="country-actions">';
+                $html .= '<a href="' . route('country.edit', $country->id) . '" class="btn btn-warning btn-sm">';
+                $html .= '<i class="fas fa-edit"></i> Sửa</a>';
+
+                $html .= '<form method="POST" action="' . route('country.destroy', $country->id) . '" class="d-inline delete-form">';
+                $html .= csrf_field();
+                $html .= method_field('DELETE');
+                $html .= '<button type="submit" class="btn btn-danger btn-sm delete-btn">';
+                $html .= '<i class="fas fa-trash-alt"></i> Xóa</button>';
+                $html .= '</form>';
+                $html .= '</div>';
+                $html .= '</div>';
+            }
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $list->links()->toHtml(),
+                'total' => $list->total()
+            ]);
+        }
+
+        return view('admincp.country.index', compact('list'));
     }
 
     /**
@@ -25,8 +90,7 @@ class CountryController extends Controller
      */
     public function create()
     {
-        $list = Country::all();
-        return view('admincp.country.form', compact('list'));
+        return view('admincp.country.form');
     }
 
     /**
@@ -37,47 +101,59 @@ class CountryController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        
-        // Kiểm tra xem có thể loại đã xóa nào trùng tên không
+        // Đầu tiên, tìm quốc gia đã xóa mềm nếu có
         $existingTrashed = Country::onlyTrashed()
-            ->where('title', $data['title'])
+            ->where('title', $request->title)
             ->first();
-    
+
         if ($existingTrashed) {
-            // Khôi phục thể loại đã xóa thay vì tạo mới
+            // Khôi phục quốc gia đã xóa thay vì tạo mới
             $existingTrashed->restore();
-            
+
             // Cập nhật các thông tin khác
-            $existingTrashed->slug = $data['slug'];
-            $existingTrashed->description = $data['description'];
-            $existingTrashed->status = $data['status'];
+            $existingTrashed->slug = $request->slug;
+            $existingTrashed->description = $request->description;
+            $existingTrashed->status = $request->status;
             $existingTrashed->save();
-            
-            return redirect()->back()->with([
+
+            return redirect()->route('country.index')->with([
                 'success' => true,
                 'action' => 'Khôi phục',
                 'item_name' => $existingTrashed->title,
-                'item_type' => 'thể loại đã xóa trước đó'
+                'item_type' => 'quốc gia đã xóa trước đó'
             ]);
         }
-    
-        // Nếu không có thể loại trùng tên đã xóa, tạo mới như bình thường
+
+        // Nếu không có quốc gia trùng tên đã xóa, tiến hành validation
+        $data = $request->validate([
+            'title' => 'required|unique:countries,title,NULL,id,deleted_at,NULL|max:255',
+            'slug' => 'required|unique:countries,slug,NULL,id,deleted_at,NULL|max:255',
+            'status' => 'required|boolean',
+            'description' => 'nullable|max:256',
+        ], [
+            'title.required' => 'Tên quốc gia không được để trống',
+            'title.unique' => 'Tên quốc gia đã tồn tại',
+            'slug.required' => 'Slug không được để trống',
+            'slug.unique' => 'Slug đã tồn tại',
+            'status.required' => 'Trạng thái không được để trống',
+            'status.boolean' => 'Trạng thái không hợp lệ',
+        ]);
+
+        // Tạo quốc gia mới
         $country = new Country();
         $country->title = $data['title'];
         $country->slug = $data['slug'];
         $country->description = $data['description'];
         $country->status = $data['status'];
         $country->save();
-        
-        return redirect()->back()->with([
+
+        return redirect()->route('country.index')->with([
             'success' => true,
             'action' => 'thêm',
             'item_name' => $country->title,
             'item_type' => 'quốc gia'
         ]);
     }
-
 
     /**
      * Display the specified resource.
@@ -111,7 +187,7 @@ class CountryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-   
+
     {
         $data = $request->all();
         $country = Country::find($id);
@@ -120,8 +196,8 @@ class CountryController extends Controller
         $country->description = $data['description'];
         $country->status = $data['status'];
         $country->save();
-        
-        return redirect()->back()->with([
+
+        return redirect()->route('country.index')->with([
             'success' => true,
             'action' => 'cập nhật',
             'item_name' => $country->title,
@@ -140,8 +216,8 @@ class CountryController extends Controller
         $country = Country::find($id);
         $countryName = $country->title;
         $country->delete();
-        
-        return redirect()->back()->with([
+
+        return redirect()->route('country.index')->with([
             'success' => true,
             'action' => 'xóa',
             'item_name' => $countryName,

@@ -113,9 +113,29 @@
                             </div>
                             <br>
                             <div class="form-group">
-                                {!! Form::label('link','Link phim',['class' => 'd-block mb-2']) !!}
-                                {!! Form::text('link',isset($episode)? $episode->linkphim:'', ['class'=>'form-control ','placeholder'=>'Nhập vào dữ liệu...']) !!}
+                                {!! Form::label('link','Link phim hoặc video',['class' => 'd-block mb-2']) !!}
+                                {!! Form::text('link',isset($episode)? $episode->linkphim:'', ['class'=>'form-control', 'placeholder'=>'Dán link video (YouTube, Vimeo, m3u8, mp4...) hoặc mã nhúng iframe']) !!}
+                                <small class="form-text text-muted mt-1">
+                                    <strong>Hỗ trợ tự động nhận diện:</strong><br>
+                                    - <i>Link YouTube:</i> https://www.youtube.com/watch?v=XXXX hoặc https://youtu.be/XXXX<br>
+                                    - <i>Link Vimeo:</i> https://vimeo.com/XXXX<br>
+                                    - <i>Link m3u8:</i> https://example.com/video.m3u8<br>
+                                    - <i>Link trực tiếp MP4:</i> https://example.com/video.mp4<br>
+                                    - <i>Link nhúng:</i> Tự động tạo iframe cho các link có chứa từ "embed" hoặc "player"<br>
+                                    - <i>Mã iframe đầy đủ:</i> Có thể dán trọn mã <code>&lt;iframe src="..."&gt;&lt;/iframe&gt;</code> nếu muốn
+                                </small>
                             </div>
+                            
+                            <div class="form-group mt-3">
+                                <label for="video_file" class="d-block mb-2">Hoặc upload video</label>
+                                <input type="file" name="video_file" id="video_file" class="form-control" accept="video/mp4,video/x-m4v,video/*">
+                                @if(isset($episode) && strpos($episode->linkphim, '<iframe') === false)
+                                    <div class="mt-2">
+                                        <small class="text-success">Video hiện tại: {{ basename($episode->linkphim) }}</small>
+                                    </div>
+                                @endif
+                            </div>
+                            
                             <br>
                             @if(isset($episode))
                                 <div class="form-group">
@@ -164,7 +184,7 @@
                 }}">Thành công!</h2>
                 
                 <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
-                    Phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
+                    Tập Phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
                     {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }} 
                     <span class="action-highlight {{ 
                         session('action_type') == 'xóa' ? 'delete-action' : 

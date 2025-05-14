@@ -1,170 +1,156 @@
 @extends('layouts.app')
-
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/indexmovie.css') }}">
+<link rel="stylesheet" href="{{ asset('css/movie-grid.css') }}">
+<script src="{{asset('js/movie-grid.js')}}"></script>
 <style>
-        .button-custom {
-            width: 200px;
-            /* Điều chỉnh kích thước theo ý muốn */
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #ff416c, #ff4b2b);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            max-width: 400px;
-            margin: auto;
-
-
-
-        }
-
-        .button-custom:hover {
-            background: linear-gradient(90deg, #ff4b2b, #ff416c);
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-        }
-        /*css them phim*/
-        .button-custom {
-            width: 200px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            max-width: 400px;
-            margin: auto;
-        }
-        
-        .button-add {
-            background: linear-gradient(90deg, #4CAF50, #2196F3);
-            color: #FFD700; /* Màu vàng gold */
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Thêm đổ bóng cho chữ */
-        }
-        
-        .button-add:hover {
-            background: linear-gradient(90deg, #2196F3, #4CAF50);
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
-        }
-
-        /* Css xóa admin */
-        .deleted-item {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            animation: soft-pulse 2s infinite;
-        }
-
-        .deleted-item i {
-            margin-right: 5px;
-            font-size: 0.85rem;
-        }
-
-        .deleted-type {
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        margin-right: 3px;
-        color: #fff; 
-        text-shadow: 0px 1px 1px rgba(0,0,0,0.3); /* Thêm đổ bóng nhẹ để nổi bật hơn */
+    /* Checkbox styling */
+    .select-checkbox {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
     }
 
-
-        .deleted-item:hover {
-            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.5);
-            transform: translateY(-2px);
-        }
-        .deleted-name {
-        color: #e5f508;
-        font-weight: 600;
-        font-style: italic;
+    .select-checkbox input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+        border: 2px solid #06f2e6;
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.5);
+        accent-color: #ff4a4a;
     }
 
+    /* Hiệu ứng khi chọn */
+    .movie-card.selected {
+        box-shadow: 0 0 0 3px #ff4a4a;
+        transform: translateY(-5px);
+    }
 
-        @keyframes soft-pulse {
-            0% {
-                opacity: 1;
-            }
+    .dashboard-actions {
+        display: flex;
+        align-items: center;
+    }
 
-            50% {
-                opacity: 0.85;
-            }
+    /* Nút API cho tập phim */
+    .add-episode-btn.api-btn {
+        background: linear-gradient(135deg, #4a6bff, #2563eb);
+        margin-left: 5px;
+    }
 
-            100% {
-                opacity: 1;
-            }
-        }
-        /* Kiểu cơ bản cho huy hiệu thể loại phim */
-        .genre-badge {
-            display: inline-block;
-            padding: 0.35em 0.65em;
-            font-size: 0.85em;
-            font-weight: 600;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: 0.375rem;
-            margin: 0.2rem;
-            color: white;
-            background-color: #6c757d;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-            transition: all 0.2s ease;
-        }
+    .add-episode-btn.api-btn:hover {
+        background: linear-gradient(135deg, #3b5bef, #1d4ed8);
+    }
 
-        .genre-badge:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-        }
+    /* Confirmation dialog */
+    .delete-confirmation-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
 
-        /* Các biến thể màu cho những thể loại khác nhau */
-        .genre-badge:nth-child(8n+1) { background: linear-gradient(45deg, #FF5722, #F44336); }
-        .genre-badge:nth-child(8n+2) { background: linear-gradient(45deg, #9C27B0, #673AB7); }
-        .genre-badge:nth-child(8n+3) { background: linear-gradient(45deg, #FFEB3B, #FFC107); color: #212529; }
-        .genre-badge:nth-child(8n+4) { background: linear-gradient(45deg, #212121, #424242); }
-        .genre-badge:nth-child(8n+5) { background: linear-gradient(45deg, #00BCD4, #03A9F4); }
-        .genre-badge:nth-child(8n+6) { background: linear-gradient(45deg, #E91E63, #F48FB1); }
-        .genre-badge:nth-child(8n+7) { background: linear-gradient(45deg, #4CAF50, #8BC34A); }
-        .genre-badge:nth-child(8n+8) { background: linear-gradient(45deg, #3F51B5, #2196F3); }
-        /* Hiệu ứng chuyển động tùy chọn khi di chuột */
-        @keyframes badge-pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+    .delete-confirmation-dialog.active {
+        opacity: 1;
+        visibility: visible;
+    }
 
-        .genre-badge:hover {
-            animation: badge-pulse 1s infinite;
-            cursor: pointer;
-        }
+    .confirmation-content {
+        background: #171f30;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transform: translateY(30px);
+        transition: transform 0.4s ease;
+    }
 
-        /* Thêm biểu tượng nhỏ trước mỗi tên thể loại */
-        .genre-badge::before {
-            content: "🎬";
-            margin-right: 4px;
-            font-size: 0.9em;
-        }
+    .delete-confirmation-dialog.active .confirmation-content {
+        transform: translateY(0);
+    }
 
+    .confirmation-title {
+        color: #ff4a4a;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .confirmation-message {
+        color: #fff;
+        margin-bottom: 30px;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .selected-movies-list {
+        max-height: 150px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        text-align: left;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+    }
+
+    .selected-movie-item {
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e0e0e0;
+    }
+
+    .confirmation-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .confirm-delete-btn {
+        background: linear-gradient(135deg, #ff4a4a, #d32f2f);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .confirm-delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 74, 74, 0.4);
+    }
+
+    .cancel-delete-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .cancel-delete-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
 </style>
 <!-- Thêm vào phần head của layout -->
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -173,579 +159,608 @@
         });
     });
 </script>
-
-
-
 <div class="container-fluid">
-
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-
+    <div class="dashboard-header">
+        <h2 class="page-title"><i class="fas fa-film"></i> Quản Lý Phim</h2>
+        <div class="dashboard-actions">
             <a href="{{route('movie.create')}}" class="button-custom button-add">
-                <i>➕ THÊM PHIM 🎬</i>
+                <i class="fas fa-plus-circle"></i> Thêm Phim Mới
             </a>
-            <br>
-            {{-- <a href="{{route('episode.create')}}" class="button-custom button-add">
-                <i>➕ THÊM TẬP PHIM 🎬</i>
-            </a> --}}
-            
-
-            <table class="table table-responsive" id="tablephim">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Tên phim</th>
-                        <th scope="col">Thêm tập phim</th>
-                        <th scope="col">Số tập</th>
-
-                        <th scope="col">Tags</th>
-                        <th scope="col">Thời lượng phim</th>
-                        <th scope="col">Nổi bật</th>
-                        <th scope="col">Định dạng</th>
-                        <th scope="col">Phiên bản</th>
-                        <th scope="col">Ảnh</th>
-
-                        {{-- <th scope="col">Description</th> --}}
-                        <th scope="col">Đường dẫn</th>
-                        <th scope="col">Hoạt động/Không hoạt động</th>
-                        <th scope="col">Danh mục</th>
-                        <th scope="col">Thuộc phim</th>
-                        
-                        <th scope="col">Thể loại</th>
-                        <th scope="col">Quốc gia</th>
-                        <th scope="col">Thời gian tạo</th>
-                        <th scope="col">Thời gian cập nhật</th>
-                        <th scope="col">Top view</th>
-                        <th scope="col">Năm phim</th>
-                        <th scope="col">Season</th>
-
-                        <th scope="col">Quản lý</th>
-                    </tr>
-                </thead>
-            <tbody>
-                    @foreach($list as $key => $cate)
-                    <tr>
-                        <th scope="row">{{$key}}</th>
-                        <td>{{$cate->title}}</td>
-                        <td><i><a href="{{route('add_episode',[$cate->id])}}" class="button-custom button-add">➕ THÊM TẬP PHIM</a></i></td>
-                        <!-- Số tập -->
-                    <td>
-                       {{$cate->episode_count}}/{{ $cate->sotap }} Tập
-                    </td>
-
-                        <td>{{$cate->tags}}</td>
-                        <td>{{$cate->thoiluong}}</td>
-                        <td>
-                            @if($cate->phim_hot==0)
-                            Không
-                            @else
-                            Có
-                            @endif
-                        </td>
-                        <td>
-                            @if($cate->resolution==0)
-                                HD
-                            @elseif($cate->resolution==1)
-                                SD
-                            @elseif($cate->resolution==2)
-                                HDCam
-                            @elseif($cate->resolution==3)
-                                Cam
-                            @elseif($cate->resolution==4)
-                                FullHD
-                            @else
-                                Trailer
-                            @endif
-                        </td>
-                        <td>
-                            @if($cate->phude==0)
-                            Phụ đề
-                            @else
-                            Thuyết minh
-                            @endif
-                        </td>
-                        {{-- <td><img width="70%" src="{{asset('uploads/movie/'.$cate->image)}}"></td> --}}
-                        <td>
-                            <img src="{{ asset('uploads/movie/'.$cate->image) }}"
-                                style="width: 100px; height: auto; object-fit: cover;">
-                        </td>
-
-                        {{-- <td>{{$cate->description}}</td> --}}
-                        <td>{{$cate->slug}}</td>
-
-                        <td>
-                            @if($cate->status)
-                            Hiển thị
-                            @else
-                            Không hiển thị
-                            @endif
-                        </td>
-                       
-                    <td>
-                        @if($cate->category)
-                            {{ $cate->category->title }}
-                        @else
-                            @php
-                                $deleted_category = \App\Models\Category::withTrashed()
-                                    ->find($cate->category_id);
-                            @endphp
-                            
-                            <span class="position-relative deleted-item" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Danh mục này đã bị xóa khỏi hệ thống">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <span class="deleted-type">DANH MỤC</span> 
-                                <span class="deleted-name">{{ $deleted_category ? $deleted_category->title : '' }}</span> đã bị xóa
-                            </span>
-                        @endif
-                    </td>
-                    <td>
-                        @if($cate->thuocphim=='phimle')
-                            Phim lẻ
-                        @else
-                            Phim bộ
-                        @endif
-                    </td>
-                    <!-- Cho thể loại -->
-                    <td>
-                        @foreach($cate->movie_genre as $gen)
-                        <span class="genre-badge">{{ $gen->title }}</span>
-                    @endforeach
-                    
-                    </td>
-                    
-
-                        {{-- 
-                            @if($gen->genre)
-                                @else
-                                    @php
-                                        $deleted_genre = \App\Models\Genre::withTrashed()
-                                            ->find($gen->genre_id);
-                                    @endphp
-                                    
-                                    <span class="position-relative deleted-item" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Thể loại này đã bị xóa khỏi hệ thống">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <span class="deleted-type">THỂ LOẠI</span> 
-                                        <span class="deleted-name">{{ $deleted_genre ? $deleted_genre->title : '' }}</span> đã bị xóa
-                                    </span>
-                            @endif --}}
-
-               
-                <!-- Cho quốc gia -->
-                    <td>
-                        @if($cate->country)
-                            {{ $cate->country->title }}
-                        @else
-                            @php
-                                $deleted_country = \App\Models\Country::withTrashed()
-                                    ->find($cate->country_id);
-                            @endphp
-                            
-                            <span class="position-relative deleted-item" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Quốc gia này đã bị xóa khỏi hệ thống">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <span class="deleted-type">QUỐC GIA</span> 
-                                <span class="deleted-name">{{ $deleted_country ? $deleted_country->title : '' }}</span> đã bị xóa
-                            </span>
-                        @endif
-                    </td>
-                
-
-                <!-- Ngày tạo, ngày cập nhật -->
-                <td>
-                    @php
-                    date_default_timezone_set('Asia/Ho_Chi_Minh');
-
-                    \Carbon\Carbon::setLocale('vi');
-
-                    $ngaytao = \Carbon\Carbon::parse($cate->ngaytao);
-                
-                    // Xác định thứ trong tuần
-                    $dayOfWeek = $ngaytao->dayOfWeek;  // 0 = Chủ nhật, 6 = Thứ 7
-                
-                    // Xác định màu cho thứ trong tuần
-                    $dayColor = ($dayOfWeek == 0 || $dayOfWeek == 6) ? '#FF0000' : '#000000';
-                
-                    // Lấy riêng phần ngày tháng năm và giờ phút giây
-                    $dateOnly = $ngaytao->format('d/m/Y');
-                    $timeOnly = $ngaytao->format('H:i:s');
-                
-                    // Lấy tên thứ trong tuần tiếng Việt
-                    $thuViettat = ucfirst($ngaytao->locale('vi')->isoFormat('dddd'));
-                    
-                    // Tạo chuỗi diffForHumans bằng tiếng Việt
-                    $diffHumans = $ngaytao->locale('vi')->diffForHumans();
-                
-                    // Hiển thị với màu sắc theo yêu cầu
-                    echo "<span style='color: {$dayColor};'>{$thuViettat}, </span>";
-                    echo "<span style='color: #000000;'>{$dateOnly}</span> ";
-                    echo "<span style='color: #4CAF50;'>{$timeOnly}</span><br>";
-                    echo "<span style='color: #0066CC; font-style: italic;'>{$diffHumans}</span>";
-                    @endphp
-                </td>
-                <td>
-                    @php
-                    date_default_timezone_set('Asia/Ho_Chi_Minh');
-
-                    \Carbon\Carbon::setLocale('vi');
-
-                    $ngaycapnhat = \Carbon\Carbon::parse($cate->ngaycapnhat);
-                
-                    // Xác định thứ trong tuần
-                    $dayOfWeek = $ngaycapnhat->dayOfWeek;  // 0 = Chủ nhật, 6 = Thứ 7
-                
-                    // Xác định màu cho thứ trong tuần
-                    $dayColor = ($dayOfWeek == 0 || $dayOfWeek == 6) ? '#FF0000' : '#000000';
-                
-                    // Lấy riêng phần ngày tháng năm và giờ phút giây
-                    $dateOnly = $ngaycapnhat->format('d/m/Y');
-                    $timeOnly = $ngaycapnhat->format('H:i:s');
-                
-                    // Lấy tên thứ trong tuần tiếng Việt
-                    $thuViettat = ucfirst($ngaycapnhat->locale('vi')->isoFormat('dddd'));
-                    
-                    // Tạo chuỗi diffForHumans bằng tiếng Việt
-                    $diffHumans = $ngaycapnhat->locale('vi')->diffForHumans();
-                
-                    // Hiển thị với màu sắc theo yêu cầu
-                    echo "<span style='color: {$dayColor};'>{$thuViettat}, </span>";
-                    echo "<span style='color: #000000;'>{$dateOnly}</span> ";
-                    echo "<span style='color: #4CAF50;'>{$timeOnly}</span><br>";
-                    echo "<span style='color: #0066CC; font-style: italic;'>{$diffHumans}</span>";
-                    @endphp
-                </td>
-                
-                    
-                    <td>
-                        {!! Form::select('topview',['0'=>'Ngày','1'=>'Tuần', '2'=>'Tháng'], isset($cate->topview) ? $cate->topview : '', ['class'=>'select-topview','id'=>$cate->id,'title'=>$cate->title]) !!}
-                    </form>
-                    </td>
-                    <!--Năm phim -->
-                    <td>
-                           
-                            {!! Form::selectYear('year',2000,2025,isset($cate->year) ? $cate->year:'',['class'=>'select-year','id'=>$cate->id, 'title'=>$cate->title] ) !!}
-                    </td>
-                    <td>
-                        <form action="" method="post">
-                            @csrf
-                            
-                            {!! Form::selectRange('season',0,20,isset($cate->season) ? $cate->season:'',['class'=>'select-season','id'=>$cate->id, 'title'=>$cate->title] ) !!}
-                        </form>
-                    </td>
-                    <td>
-                        {!! Form::open([
-                            'method'=>'DELETE','route'=>['movie.destroy',$cate->id]])!!}
-
-                        {!! Form::submit('Xóa', ['class' => 'btn btn-danger','onsubmit' => 'return confirm()']) !!}
-
-                        {!! Form::close() !!}
-                            <br>
-                            <a href="{{route('movie.edit', $cate->id)}}" class="btn btn-warning">Sửa</a>    
-                    </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-
-
-            </table>
+            <button type="button" class="button-custom button-delete" id="delete-selected-btn"
+                style="display: none; background: linear-gradient(135deg, #ff4a4a, #d32f2f); margin-left: 10px;">
+                <i class="fas fa-trash"></i> Xóa phim đã chọn (<span id="selected-count">0</span>)
+            </button>
         </div>
     </div>
-    @if(session('action_type') == 'xóa' || session('action_type') == 'thêm' || session('action_type') == 'cập nhật')
-    <div class="success-notification-overlay" id="{{ session('action_type') == 'xóa' ? 'deleteSuccessPopup' : 'successPopup' }}">
-        <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-card' : 'success-notification-card' }}">
-            <div class="{{ session('action_type') == 'xóa' ? 'delete-icon-container' : 'success-icon-container' }}">
-                <svg class="{{ 
+
+    <!-- Form xóa nhiều phim -->
+    <form id="delete-multiple-form" action="{{ route('movie.delete_multiple') }}" method="POST" style="display: none;">
+        @csrf
+        <input type="hidden" name="movie_ids" id="movie_ids_to_delete">
+    </form>
+
+    <!-- Bộ lọc và tìm kiếm -->
+    <div class="filter-section">
+        <div class="search-box">
+            <input type="text" id="movie-search" placeholder="Tìm kiếm phim...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all"><i class="fas fa-list"></i> Tất cả</button>
+            <button class="filter-btn" data-filter="hot"><i class="fas fa-fire"></i> Phim Hot</button>
+            <button class="filter-btn" data-filter="series"><i class="fas fa-tv"></i> Phim Bộ</button>
+            <button class="filter-btn" data-filter="single"><i class="fas fa-film"></i> Phim Lẻ</button>
+            <button class="filter-btn" data-filter="newest"><i class="fas fa-calendar-alt"></i> Mới Nhất</button>
+        </div>
+    </div>
+
+    <!-- Grid Layout thay thế DataTable -->
+    <div class="movie-grid" id="movie-grid-container">
+        @foreach($list as $key => $movie)
+        <div class="movie-card" data-id="{{ $movie->id }}" id="movie-{{ $movie->id }}">
+            <div class="movie-card-header">
+                <div class="select-checkbox">
+                    <input type="checkbox" class="movie-checkbox" data-id="{{ $movie->id }}"
+                        data-title="{{ $movie->title }}">
+                </div>
+                <div class="movie-image">
+                    @php
+                    $image_check = substr($movie->image,0,5);
+                    @endphp
+                    @if($image_check == 'https')
+                    <img src="{{ $movie->image }}" alt="{{ $movie->title }}">
+                    @else
+                    <img src="{{ asset('uploads/movie/'.$movie->image) }}" alt="{{ $movie->title }}">
+                    @endif
+                    <div class="image-overlay">
+                        <label for="file-{{$movie->id}}" class="image-upload-btn">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" data-movie_id="{{$movie->id}}" data-movie_title="{{$movie->title}}"
+                            name="image_choose" id="file-{{$movie->id}}" class="form-control-file file_image"
+                            accept="image/*">
+                    </div>
+                </div>
+
+                <h3 class="movie-title">{{ $movie->title }}</h3>
+
+                <div class="movie-status">
+                    <div class="status-badge {{ $movie->status == 1 ? 'active' : 'inactive' }}">
+                        <i class="fas {{ $movie->status == 1 ? 'fa-eye' : 'fa-eye-slash' }}"></i>
+                        <span>{{ $movie->status == 1 ? 'Hiển thị' : 'Ẩn' }}</span>
+                    </div>
+
+                    <div class="status-badge {{ $movie->phim_hot == 1 ? 'hot' : 'regular' }}">
+                        <i class="fas {{ $movie->phim_hot == 1 ? 'fa-fire' : 'fa-snowflake' }}"></i>
+                        <span>{{ $movie->phim_hot == 1 ? 'Hot' : 'Thường' }}</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="movie-info" id="movie-info-{{ $movie->id }}">
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-list"></i> Danh mục:</div>
+                    <div class="info-value category-select">
+                        @if($movie->category)
+                        {!! Form::select('category_id', $category, isset($movie) ? $movie->category->id : '',
+                        ['class'=>'form-select category_choose','id'=>$movie->id,'title'=>$movie->title]) !!}
+                        @else
+                        @php
+                        $deleted_category = \App\Models\Category::withTrashed()->find($movie->category_id);
+                        @endphp
+                        <span class="deleted-item">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Danh mục đã bị xóa: {{ $deleted_category ? $deleted_category->title : '' }}
+                        </span>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-globe"></i> Quốc gia:</div>
+                    <div class="info-value country-select">
+                        @if($movie->country)
+                        {!! Form::select('country_id', $country, isset($movie) ? $movie->country->id : '',
+                        ['class'=>'form-select country_choose','id'=>$movie->id,'title'=>$movie->title]) !!}
+                        @else
+                        @php
+                        $deleted_country = \App\Models\Country::withTrashed()->find($movie->country_id);
+                        @endphp
+                        <span class="deleted-item">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Quốc gia đã bị xóa: {{ $deleted_country ? $deleted_country->title : '' }}
+                        </span>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-film"></i> Loại phim:</div>
+                    <div class="info-value">
+                        <select id="{{$movie->id}}" title="{{$movie->title}}" class="form-select thuocphim_choose">
+                            <option value="phimle" {{ $movie->thuocphim == 'phimle' ? 'selected' : '' }}>Phim lẻ
+                            </option>
+                            <option value="phimbo" {{ $movie->thuocphim == 'phimbo' ? 'selected' : '' }}>Phim bộ
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-closed-captioning"></i> Phiên bản:</div>
+                    <div class="info-value">
+                        <select id="{{$movie->id}}" title="{{$movie->title}}" class="form-select phude_choose">
+                            <option value="1" {{ $movie->phude == 1 ? 'selected' : '' }}>Thuyết minh</option>
+                            <option value="0" {{ $movie->phude == 0 ? 'selected' : '' }}>Phụ đề</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-video"></i> Độ phân giải:</div>
+                    <div class="info-value">
+                        <select id="{{$movie->id}}" title="{{$movie->title}}" class="form-select resolution_choose">
+                            @php
+                            $options = [
+                            0 => 'HD',
+                            1 => 'SD',
+                            2 => 'HDCam',
+                            3 => 'Cam',
+                            4 => 'FullHD',
+                            5 => 'Trailer'
+                            ];
+                            @endphp
+                            @foreach($options as $key => $resolution)
+                            <option {{ $movie->resolution == $key ? 'selected' : '' }} value="{{$key}}">
+                                {{$resolution}}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-tags"></i> Thể loại:</div>
+                    <div class="info-value genre-badges">
+                        @foreach($movie->movie_genre as $gen)
+                        <span class="genre-badge">{{ $gen->title }}</span>
+                        @endforeach
+                    </div>
+                </div>
+
+                @if(isset($movie->director) && !empty($movie->director))
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-video"></i> Đạo diễn:</div>
+                    <div class="info-value">{{ $movie->director }}</div>
+                </div>
+                @endif
+
+                @if(isset($movie->actors) && !empty($movie->actors))
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-users"></i> Diễn viên:</div>
+                    <div class="info-value">{{ $movie->actors }}</div>
+                </div>
+                @endif
+
+                <div class="info-group episodes-info">
+                    <div class="info-label"><i class="fas fa-list-ol"></i> Tập phim:</div>
+                    <div class="info-value">
+                        <span class="episode-count">{{$movie->episode_count}}/{{ $movie->sotap }}
+                            Tập</span>
+                        <div class="mt-2">
+                            <a href="{{route('add_episode',[$movie->id])}}" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus-circle"></i> Thêm tập
+                            </a>
+                            <a href="{{route('leech-episode', $movie->slug)}}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-cloud-download-alt"></i> API
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label"><i class="fas fa-eye"></i> Top view:</div>
+                    <div class="info-value">
+                        {!! Form::select('topview',[''=>'--Chọn Top View--', '0'=>'Ngày','1'=>'Tuần', '2'=>'Tháng'],
+                        isset($movie->topview) && $movie->topview !== '' ? $movie->topview : '',
+                        ['class'=>'form-select select-topview','id'=>$movie->id,'title'=>$movie->title]) !!}
+
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-group half">
+                        <div class="info-label"><i class="fas fa-calendar-alt"></i> Năm:</div>
+                        <div class="info-value">
+                            @php
+                            $years = ['' => '--Chọn năm sản xuất--'];
+                            for ($i = 2025; $i >= 2000; $i--) {
+                            $years[$i] = $i;
+                            }
+                            @endphp
+
+                            {!! Form::select('year', $years,
+                            isset($movie->year) && $movie->year !== '' ? $movie->year : '',
+                            ['class'=>'form-select select-year','id'=>$movie->id,'title'=>$movie->title]) !!}
+
+                        </div>
+                    </div>
+
+                    <div class="info-group half">
+                        <div class="info-label"><i class="fas fa-layer-group"></i> Season:</div>
+                        <div class="info-value">
+                            {!! Form::selectRange('season', 0, 20,
+                            isset($movie->season) ? $movie->season : '',
+                            ['class'=>'form-select select-season','id'=>$movie->id,'title'=>$movie->title]) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-footer">
+                <div class="update-info">
+                    <div class="update-time">
+                        <i class="fas fa-clock"></i> Cập nhật:
+                        @php
+                        $updatedAt = \Carbon\Carbon::parse($movie->ngaycapnhat)->locale('vi');
+                        echo $updatedAt->diffForHumans();
+                        @endphp
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="{{route('movie.edit', $movie->id)}}" class="edit-btn action-btn">
+                        <i class="fas fa-edit"></i> Sửa
+                    </a>
+
+                    {!! Form::open(['method' => 'DELETE', 'route' => ['movie.destroy', $movie->id],
+                    'class' => 'delete-form', 'data-movie-title' => $movie->title]) !!}
+                    <button type="submit" class="delete-btn action-btn">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+        <!-- Modal cho phim {{ $movie->title }} -->
+        <div class="modal fade" id="movieModal-{{ $movie->id }}" tabindex="-1"
+            aria-labelledby="movieModalLabel-{{ $movie->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="movieModalLabel-{{ $movie->id }}">
+                            <i class="fas fa-film"></i> {{ $movie->title }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="{{ asset('uploads/movie/'.$movie->image) }}" alt="{{ $movie->title }}"
+                                    class="img-fluid rounded">
+                            </div>
+                            <div class="col-md-8">
+                                <!-- Nội dung movie-info sẽ chuyển vào đây -->
+                                <div class="movie-info-modal">
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-list"></i> Danh mục:</div>
+                                        <div class="info-value">
+                                            @if($movie->category)
+                                            {{ $movie->category->title }}
+                                            @else
+                                            @php
+                                            $deleted_category =
+                                            \App\Models\Category::withTrashed()->find($movie->category_id);
+                                            @endphp
+                                            <span class="deleted-item">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                Danh mục đã bị xóa: {{ $deleted_category ? $deleted_category->title : ''
+                                                }}
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-globe"></i> Quốc gia:</div>
+                                        <div class="info-value">
+                                            @if($movie->country)
+                                            {{ $movie->country->title }}
+                                            @else
+                                            @php
+                                            $deleted_country =
+                                            \App\Models\Country::withTrashed()->find($movie->country_id);
+                                            @endphp
+                                            <span class="deleted-item">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                Quốc gia đã bị xóa: {{ $deleted_country ? $deleted_country->title : ''
+                                                }}
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-film"></i> Loại phim:</div>
+                                        <div class="info-value">
+                                            {{ $movie->thuocphim == 'phimle' ? 'Phim lẻ' : 'Phim bộ' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-closed-captioning"></i> Phiên bản:
+                                        </div>
+                                        <div class="info-value">
+                                            {{ $movie->phude == 1 ? 'Thuyết minh' : 'Phụ đề' }}
+                                        </div>
+                                    </div>
+
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-video"></i> Độ phân giải:</div>
+                                        <div class="info-value">
+                                            @php
+                                            $options = [
+                                            0 => 'HD',
+                                            1 => 'SD',
+                                            2 => 'HDCam',
+                                            3 => 'Cam',
+                                            4 => 'FullHD',
+                                            5 => 'Trailer'
+                                            ];
+                                            echo $options[$movie->resolution] ?? '';
+                                            @endphp
+                                        </div>
+                                    </div>
+
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-tags"></i> Thể loại:</div>
+                                        <div class="info-value genre-badges">
+                                            @foreach($movie->movie_genre as $gen)
+                                            <span class="genre-badge">{{ $gen->title }}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    @if(isset($movie->director) && !empty($movie->director))
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-video"></i> Đạo diễn:</div>
+                                        <div class="info-value">{{ $movie->director }}</div>
+                                    </div>
+                                    @endif
+
+                                    @if(isset($movie->actors) && !empty($movie->actors))
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-users"></i> Diễn viên:</div>
+                                        <div class="info-value">{{ $movie->actors }}</div>
+                                    </div>
+                                    @endif
+
+                                    <div class="info-group episodes-info">
+                                        <div class="info-label"><i class="fas fa-list-ol"></i> Tập phim:</div>
+                                        <div class="info-value">
+                                            <span class="episode-count">{{$movie->episode_count}}/{{ $movie->sotap }}
+                                                Tập</span>
+                                            <div class="mt-2">
+                                                <a href="{{route('add_episode',[$movie->id])}}"
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fas fa-plus-circle"></i> Thêm tập
+                                                </a>
+                                                <a href="{{route('leech-episode', $movie->slug)}}"
+                                                    class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-cloud-download-alt"></i> API
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-group">
+                                        <div class="info-label"><i class="fas fa-eye"></i> Top view:</div>
+                                        <div class="info-value">
+                                            @if($movie->topview == 0)
+                                            Ngày
+                                            @elseif($movie->topview == 1)
+                                            Tuần
+                                            @elseif($movie->topview == 2)
+                                            Tháng
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <div class="info-row">
+                                        <div class="info-group half">
+                                            <div class="info-label"><i class="fas fa-calendar-alt"></i> Năm:</div>
+                                            <div class="info-value">
+                                                {{ $movie->year }}
+                                            </div>
+                                        </div>
+                                        <div class="info-group half">
+                                            <div class="info-label"><i class="fas fa-layer-group"></i> Season:</div>
+                                            <div class="info-value">
+                                                {{ $movie->season }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{route('movie.edit', $movie->id)}}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Sửa phim
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @endforeach
+    </div>
+
+    <div class="pagination-container">
+        <!-- Pagination sẽ được thêm bằng JavaScript -->
+    </div>
+</div>
+
+<!-- Dialog xác nhận xóa nhiều phim -->
+<div class="delete-confirmation-dialog" id="deleteMultipleConfirmation">
+    <div class="confirmation-content">
+        <h3 class="confirmation-title"><i class="fas fa-exclamation-triangle"></i> Xác nhận xóa phim</h3>
+        <p class="confirmation-message">Bạn sắp xóa <span id="movie-count">0</span> phim. Hành động này không thể hoàn
+            tác.</p>
+
+        <div class="selected-movies-list" id="selectedMoviesList">
+            <!-- Danh sách phim sẽ được thêm vào bằng JavaScript -->
+        </div>
+
+        <div class="confirmation-buttons">
+            <button type="button" class="cancel-delete-btn" id="cancelDeleteBtn">Hủy bỏ</button>
+            <button type="button" class="confirm-delete-btn" id="confirmDeleteBtn">Xóa phim</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Biến lưu trữ ID các phim đã chọn
+    let selectedMovies = [];
+    
+    // Các phần tử DOM
+    const checkboxes = document.querySelectorAll('.movie-checkbox');
+    const deleteSelectedBtn = document.getElementById('delete-selected-btn');
+    const selectedCountEl = document.getElementById('selected-count');
+    const deleteForm = document.getElementById('delete-multiple-form');
+    const movieIdsInput = document.getElementById('movie_ids_to_delete');
+    
+    // Dialog xác nhận
+    const deleteConfirmation = document.getElementById('deleteMultipleConfirmation');
+    const movieCountEl = document.getElementById('movie-count');
+    const selectedMoviesList = document.getElementById('selectedMoviesList');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    
+    // Thêm sự kiện cho các checkbox
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const movieId = this.getAttribute('data-id');
+            const movieTitle = this.getAttribute('data-title');
+            const movieCard = document.getElementById('movie-' + movieId);
+            
+            if (this.checked) {
+                // Thêm vào danh sách đã chọn
+                selectedMovies.push({id: movieId, title: movieTitle});
+                movieCard.classList.add('selected');
+            } else {
+                // Xóa khỏi danh sách đã chọn
+                selectedMovies = selectedMovies.filter(movie => movie.id !== movieId);
+                movieCard.classList.remove('selected');
+            }
+            
+            // Cập nhật số lượng đã chọn
+            selectedCountEl.textContent = selectedMovies.length;
+            
+            // Hiển thị/ẩn nút xóa
+            if (selectedMovies.length > 0) {
+                deleteSelectedBtn.style.display = 'block';
+            } else {
+                deleteSelectedBtn.style.display = 'none';
+            }
+        });
+    });
+    
+    // Mở dialog xác nhận khi nhấn nút xóa
+    deleteSelectedBtn.addEventListener('click', function() {
+        if (selectedMovies.length === 0) return;
+        
+        // Cập nhật nội dung dialog
+        movieCountEl.textContent = selectedMovies.length;
+        
+        // Hiển thị danh sách phim sẽ xóa
+        selectedMoviesList.innerHTML = '';
+        selectedMovies.forEach(movie => {
+            const movieEl = document.createElement('div');
+            movieEl.className = 'selected-movie-item';
+            movieEl.innerHTML = `<i class="fas fa-film"></i> ${movie.title}`;
+            selectedMoviesList.appendChild(movieEl);
+        });
+        
+        // Hiển thị dialog
+        deleteConfirmation.classList.add('active');
+    });
+    
+    // Đóng dialog khi nhấn nút hủy
+    cancelDeleteBtn.addEventListener('click', function() {
+        deleteConfirmation.classList.remove('active');
+    });
+    
+    // Đóng dialog khi click ra ngoài
+    deleteConfirmation.addEventListener('click', function(e) {
+        if (e.target === deleteConfirmation) {
+            deleteConfirmation.classList.remove('active');
+        }
+    });
+    
+    // Thực hiện xóa khi xác nhận
+    confirmDeleteBtn.addEventListener('click', function() {
+        // Chuẩn bị danh sách ID
+        const movieIds = selectedMovies.map(movie => movie.id);
+        movieIdsInput.value = JSON.stringify(movieIds);
+        
+        // Submit form
+        deleteForm.submit();
+    });
+});
+</script>
+
+@if(session('action_type') == 'xóa' || session('action_type') == 'thêm' || session('action_type') == 'cập nhật')
+<div class="success-notification-overlay"
+    id="{{ session('action_type') == 'xóa' ? 'deleteSuccessPopup' : 'successPopup' }}">
+    <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-card' : 'success-notification-card' }}">
+        <div class="{{ session('action_type') == 'xóa' ? 'delete-icon-container' : 'success-icon-container' }}">
+            <svg class="{{ 
                     session('action_type') == 'xóa' ? 'delete-checkmark' : 
                     (session('action_type') == 'thêm' ? 'success-checkmark add-icon' : 'success-checkmark update-icon') 
                 }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
-                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-                </svg>
-            </div>
-            
-            <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-content' : 'success-notification-content' }}">
-                <h2 class="{{ 
+                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
+        </div>
+
+        <div
+            class="{{ session('action_type') == 'xóa' ? 'delete-notification-content' : 'success-notification-content' }}">
+            <h2 class="{{ 
                     session('action_type') == 'xóa' ? 'delete-title' : 
                     (session('action_type') == 'cập nhật' ? 'success-title update-title' : 'success-title') 
                 }}">Thành công!</h2>
-                
-                <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
-                    Phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
-                    {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }} 
-                    <span class="action-highlight {{ 
+
+            <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
+                Phim "<span
+                    class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{
+                    session('movie_title') }}</span>"
+                {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }}
+                <span class="action-highlight {{ 
                         session('action_type') == 'xóa' ? 'delete-action' : 
                         (session('action_type') == 'thêm' ? 'add-action' : 'update-action') 
-                    }}">{{ session('action_type') }}</span> 
-                    {{ session('action_type') == 'xóa' ? session('delete_end') : session('success_end') }}
-                </p>
-                
-                <div class="{{ session('action_type') == 'xóa' ? 'delete-countdown-container' : 'countdown-container' }}">
-                    <span>Tự động đóng sau </span>
-                    <span class="countdown-number" id="{{ session('action_type') == 'xóa' ? 'deleteCountdown' : 'countdown' }}">3</span>
-                    <span> giây</span>
-                </div>
-                
-                <button class="{{ 
+                    }}">{{ session('action_type') }}</span>
+                {{ session('action_type') == 'xóa' ? session('delete_end') : session('success_end') }}
+            </p>
+
+            <div class="{{ session('action_type') == 'xóa' ? 'delete-countdown-container' : 'countdown-container' }}">
+                <span>Tự động đóng sau </span>
+                <span class="countdown-number"
+                    id="{{ session('action_type') == 'xóa' ? 'deleteCountdown' : 'countdown' }}">3</span>
+                <span> giây</span>
+            </div>
+
+            <button class="{{ 
                     session('action_type') == 'xóa' ? 'delete-button' : 
                     (session('action_type') == 'thêm' ? 'success-button add-button' : 'success-button update-button') 
                 }}" id="{{ session('action_type') == 'xóa' ? 'closeDeleteBtn' : 'closeSuccessBtn' }}">OK</button>
-            </div>
         </div>
     </div>
-    
-    <style>
-        /* Common notification overlay */
-        .success-notification-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.65);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            backdrop-filter: blur(8px);
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        /* Card styles */
-        .success-notification-card, .delete-notification-card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            width: 320px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            animation: slideIn 0.4s ease-out;
-        }
-        
-        /* Icon container styles */
-        .success-icon-container, .delete-icon-container {
-            padding: 20px 0 10px;
-            display: flex;
-            justify-content: center;
-        }
-        
-        /* Content container styles */
-        .success-notification-content, .delete-notification-content {
-            padding: 0 20px 20px;
-            text-align: center;
-        }
-        
-        /* Checkmark styles */
-        .success-checkmark, .delete-checkmark {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: block;
-            stroke-width: 2;
-            stroke-miterlimit: 10;
-            animation: scale .3s ease-in-out .9s both;
-        }
-        
-        /* Action-specific checkmark styles */
-        .success-checkmark {
-            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-        }
-        
-        .delete-checkmark {
-            stroke: #d32f2f;
-            box-shadow: inset 0px 0px 0px #d32f2f;
-            animation: fill-red .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-        }
-        
-        .add-icon { stroke: #4caf50; }
-        .add-icon .checkmark-circle, .add-icon .checkmark-check { stroke: #4caf50; }
-        
-        .update-icon { stroke: #ffc107; }
-        .update-icon .checkmark-circle, .update-icon .checkmark-check { stroke: #ffc107; }
-        
-        /* Circle and check animations */
-        .checkmark-circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            stroke-width: 2;
-            stroke-miterlimit: 10;
-            fill: none;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
-        
-        .checkmark-check {
-            transform-origin: 50% 50%;
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            stroke-width: 3;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-        }
-        
-        /* Title styles */
-        .success-title, .delete-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0 0 10px;
-        }
-        
-        .success-title { color: #4caf50; }
-        .update-title { color: #ffc107; }
-        .delete-title { color: #d32f2f; }
-        
-        /* Message styles */
-        .success-message, .delete-message {
-            color: #4a4a4a;
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-        
-        /* Highlighted title styles */
-        .highlighted-title {
-            font-weight: 700;
-            color: #1e88e5;
-            background: linear-gradient(to bottom, transparent 60%, rgba(76, 175, 80, 0.2) 40%);
-            padding: 0 3px;
-            border-radius: 3px;
-            display: inline-block;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.7);
-        }
-        
-        .highlighted-title-delete {
-            font-weight: 700;
-            color: #c62828;
-            background: linear-gradient(to bottom, transparent 60%, rgba(220, 53, 69, 0.2) 40%);
-            padding: 0 3px;
-            border-radius: 3px;
-            display: inline-block;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
-        }
-        
-        /* Action highlight styles */
-        .action-highlight {
-            font-weight: 800;
-            font-size: 15px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: white;
-        }
-        
-        .add-action { background-color: #4caf50; }
-        .update-action { 
-            background-color: #ffc107; 
-            color: #212121; 
-        }
-        .delete-action {
-            color: white;
-            background-color: #d32f2f;
-            box-shadow: 0 2px 5px rgba(211, 47, 47, 0.5);
-            animation: delete-action-pulse 2s infinite;
-        }
-        
-        /* Countdown container */
-        .countdown-container, .delete-countdown-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 15px;
-            color: #757575;
-            font-size: 13px;
-        }
-        
-        .countdown-number {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            width: 22px;
-            height: 22px;
-            line-height: 22px;
-            text-align: center;
-            border-radius: 50%;
-            font-weight: bold;
-            margin: 0 4px;
-            animation: pulse 1s infinite;
-        }
-        
-        /* Button styles */
-        .success-button, .delete-button {
-            border: none;
-            border-radius: 6px;
-            padding: 8px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .success-button { color: white; }
-        
-        .add-button {
-            background-color: #4caf50;
-            box-shadow: 0 2px 6px rgba(76, 175, 80, 0.25);
-        }
-        
-        .add-button:hover {
-            background-color: #43a047;
-            box-shadow: 0 3px 8px rgba(76, 175, 80, 0.35);
-            transform: translateY(-1px);
-        }
-        
-        .update-button {
-            background-color: #ffc107;
-            box-shadow: 0 2px 6px rgba(255, 193, 7, 0.25);
-            color: #212121;
-        }
-        
-        .update-button:hover {
-            background-color: #ffb300;
-            box-shadow: 0 3px 8px rgba(255, 193, 7, 0.35);
-            transform: translateY(-1px);
-        }
-        
-        .delete-button {
-            background-color: #d32f2f;
-            color: white;
-            box-shadow: 0 2px 6px rgba(211, 47, 47, 0.25);
-        }
-        
-        .delete-button:hover {
-            background-color: #b71c1c;
-            box-shadow: 0 3px 8px rgba(211, 47, 47, 0.35);
-            transform: translateY(-1px);
-        }
-        
-        /* Animations */
-        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 30px rgba(76, 175, 80, 0.1); } }
-        @keyframes fill-red { 100% { box-shadow: inset 0px 0px 0px 30px rgba(211, 47, 47, 0.1); } }
-        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
-        
-        @keyframes scale {
-            0%, 100% { transform: none; }
-            50% { transform: scale3d(1.1, 1.1, 1); }
-        }
-        
-        @keyframes delete-action-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); box-shadow: 0 3px 8px rgba(211, 47, 47, 0.7); }
-        }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-    </style>
-    
-    <script>
+</div>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         // Determine which popup is active based on action type
         const isDeleteAction = "{{ session('action_type') }}" === "xóa";
@@ -797,7 +812,7 @@
             }
         }
     });
-    </script>
-    @endif
-    
+</script>
+@endif
+
 @endsection

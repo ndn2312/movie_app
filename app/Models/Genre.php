@@ -14,6 +14,6 @@ class Genre extends Model
     public function movie(){
         return $this->belongsTo(Movie::class);
     }
-    // use SoftDeletes;
+    use SoftDeletes;
 
 }

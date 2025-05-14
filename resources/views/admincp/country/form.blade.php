@@ -5,7 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Quản lý quốc gia phim</div>
+            <h2 class="section-title"><i class="fas fa-globe-asia me-2"></i>Quản lý quốc gia</h2>
+            <br>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -37,7 +38,7 @@
                         <br>
                         <div class="form-group">
                             {!! Form::label('Active','Trạng thái',['class' => 'd-block mb-2']) !!}
-                            {!! Form::select('status',['1'=>'Hiển thị','0'=>'Không'], isset($country) ? $country->status : '', ['class'=>'form-control']) !!}
+                            {!! Form::select('status',['1'=>'Hiển thị','0'=>'Ẩn'], isset($country) ? $country->status : '', ['class'=>'form-control']) !!}
 
                         </div>
                         <br>
@@ -52,48 +53,7 @@
 
                 </div>
             </div>
-            <table class="table" id="tablephim">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Quốc gia</th>
-                    <th scope="col">Mô tả</th>
-                    <th scope="col">Đường dẫn</th>
-                    <th scope="col">Hoạt động/Không hoạt động</th>
-                    <th scope="col">Quản lý</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    @foreach($list as $key => $cate)
-                  <tr>
-                    <th scope="row">{{$key}}</th>
-                    <td>{{$cate->title}}</td>
-                    <td>{{$cate->description}}</td>
-                    <td>{{$cate->slug}}</td>
-
-                    <td>
-                        @if($cate->status)
-                            Hiển thị
-                        @else
-                            Không hiển thị
-                        @endif
-                    </td>
-                    <td>
-                        {!! Form::open([
-                            'method'=>'DELETE','route'=>['country.destroy',$cate->id],])!!}
-                        
-                        {!! Form::submit('Xóa', ['class' => 'btn btn-danger', 'onsubmit' => 'return confirm()']) !!}
-
-                        {!! Form::close() !!}
-                        <br>
-                        <a href="{{route('country.edit', $cate->id)}}" class="btn btn-warning">Sửa</a>
-                    </td>
-                  </tr>
-                    @endforeach
-                </tbody>
-                
-                    
-              </table>
+            
         </div>
     </div>
 </div>
