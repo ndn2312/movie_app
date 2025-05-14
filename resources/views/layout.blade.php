@@ -158,7 +158,7 @@
                     @endforeach
                 </ul>
                 <a href="{{ route('advancedfilter') }}" class="filter-btn">
-                    <i class="fas fa-filter"></i>Lọc Phim
+                    <i class="fas fa-filter"></i>Lọc Phim Nâng Cao
                 </a>
             </nav>
         </div>
