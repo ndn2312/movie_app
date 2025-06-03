@@ -430,115 +430,7 @@
         padding: 0;
         margin-left: 10px;
     }
-</style>
 
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <h2 class="section-title">
-                <i class="fas fa-tags"></i> Quản lý thể loại phim
-            </h2>
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <a href="{{route('genre.create')}}" class="button-custom button-add">
-                    <i class="fas fa-plus-circle"></i> Thêm thể loại
-                </a>
-            </div>
-
-            <!-- Form tìm kiếm thể loại -->
-            <div class="search-container">
-                <form id="searchForm" class="search-form">
-                    <div class="input-group">
-                        <input type="text" name="search" id="searchInput" class="form-control"
-                            placeholder="Tìm kiếm thể loại..." value="{{ request('search') }}" autocomplete="off">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-search"></i> Tìm kiếm
-                        </button>
-                        <button type="button" id="clearSearch" class="btn btn-secondary"
-                            style="{{ request('search') ? '' : 'display: none;' }}">
-                            <i class="fas fa-times"></i> Xóa
-                        </button>
-                    </div>
-                    <div class="search-spinner" id="searchSpinner"></div>
-                </form>
-            </div>
-
-            <!-- Thông báo kết quả tìm kiếm -->
-            <div class="search-result-msg" id="searchResultMsg" style="display: none;">
-                <i class="fas fa-info-circle"></i>
-                <div id="searchResultText"></div>
-            </div>
-
-            <!-- Hiển thị thể loại dạng grid -->
-            <div id="genreGrid" class="genre-grid">
-                @foreach($list as $key => $genre)
-                <div class="genre-card">
-                    <div class="genre-card-header">
-                        <h3 class="genre-title">{{ $genre->title }}</h3>
-                        <div class="genre-status {{ $genre->status == 1 ? 'active' : 'inactive' }}">
-                            <i class="fas fa-circle"></i>
-                            {{ $genre->status == 1 ? 'Hiển thị' : 'Ẩn' }}
-                        </div>
-                    </div>
-
-                    <div class="genre-info">
-                        <div>
-                            <div class="info-group">
-                                <label><i class="fas fa-link"></i> Slug</label>
-                                <p class="slug">{{ $genre->slug }}</p>
-                            </div>
-
-                            <div class="info-group">
-                                <label><i class="fas fa-align-left"></i> Mô tả</label>
-                                <p class="description">{{ $genre->description ? $genre->description : 'Không có mô tả'
-                                    }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="genre-actions">
-                        <a href="{{ route('genre.edit', $genre->id) }}" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Sửa
-                        </a>
-                        <form method="POST" action="{{ route('genre.destroy', $genre->id) }}" class="delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger delete-btn">
-                                <i class="fas fa-trash"></i> Xóa
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-
-            <!-- Phần hiển thị không có kết quả -->
-            <div class="no-results" id="noResults" style="display: none;">
-                <i class="fas fa-search"></i>
-                <h3>Không tìm thấy thể loại phim nào</h3>
-                <p>Vui lòng thử lại với từ khóa khác hoặc tạo thể loại mới</p>
-                <a href="{{ route('genre.create') }}" class="btn btn-primary mt-3">
-                    <i class="fas fa-plus-circle"></i> Thêm thể loại mới
-                </a>
-            </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center" id="paginationContainer">
-                {{ $list->links() }}
-            </div>
-
-            <!-- Loading overlay -->
-            <div class="loading-overlay" id="loadingOverlay">
-                <div class="loading-spinner"></div>
-            </div>
-
-            <!-- Toast container -->
-            <div class="toast-container" id="toastContainer"></div>
-        </div>
-    </div>
-</div>
-@if (session('success'))
-<style>
     .notification-modal {
         position: fixed;
         inset: 0;
@@ -825,6 +717,114 @@
         }
     }
 </style>
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <h2 class="section-title">
+                <i class="fas fa-tags"></i> Quản lý thể loại phim
+            </h2>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <a href="{{route('genre.create')}}" class="button-custom button-add">
+                    <i class="fas fa-plus-circle"></i> Thêm thể loại
+                </a>
+            </div>
+
+            <!-- Form tìm kiếm thể loại -->
+            <div class="search-container">
+                <form id="searchForm" class="search-form">
+                    <div class="input-group">
+                        <input type="text" name="search" id="searchInput" class="form-control"
+                            placeholder="Tìm kiếm thể loại..." value="{{ request('search') }}" autocomplete="off">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Tìm kiếm
+                        </button>
+                        <button type="button" id="clearSearch" class="btn btn-secondary"
+                            style="{{ request('search') ? '' : 'display: none;' }}">
+                            <i class="fas fa-times"></i> Xóa
+                        </button>
+                    </div>
+                    <div class="search-spinner" id="searchSpinner"></div>
+                </form>
+            </div>
+
+            <!-- Thông báo kết quả tìm kiếm -->
+            <div class="search-result-msg" id="searchResultMsg" style="display: none;">
+                <i class="fas fa-info-circle"></i>
+                <div id="searchResultText"></div>
+            </div>
+
+            <!-- Hiển thị thể loại dạng grid -->
+            <div id="genreGrid" class="genre-grid">
+                @foreach($list as $key => $genre)
+                <div class="genre-card">
+                    <div class="genre-card-header">
+                        <h3 class="genre-title">{{ $genre->title }}</h3>
+                        <div class="genre-status {{ $genre->status == 1 ? 'active' : 'inactive' }}">
+                            <i class="fas fa-circle"></i>
+                            {{ $genre->status == 1 ? 'Hiển thị' : 'Ẩn' }}
+                        </div>
+                    </div>
+
+                    <div class="genre-info">
+                        <div>
+                            <div class="info-group">
+                                <label><i class="fas fa-link"></i> Slug</label>
+                                <p class="slug">{{ $genre->slug }}</p>
+                            </div>
+
+                            <div class="info-group">
+                                <label><i class="fas fa-align-left"></i> Mô tả</label>
+                                <p class="description">{{ $genre->description ? $genre->description : 'Không có mô tả'
+                                    }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="genre-actions">
+                        <a href="{{ route('genre.edit', $genre->id) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Sửa
+                        </a>
+                        <form method="POST" action="{{ route('genre.destroy', $genre->id) }}" class="delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger delete-btn">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+            <!-- Phần hiển thị không có kết quả -->
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>Không tìm thấy thể loại phim nào</h3>
+                <p>Vui lòng thử lại với từ khóa khác hoặc tạo thể loại mới</p>
+                <a href="{{ route('genre.create') }}" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus-circle"></i> Thêm thể loại mới
+                </a>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center" id="paginationContainer">
+                {{ $list->links() }}
+            </div>
+
+            <!-- Loading overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner"></div>
+            </div>
+
+            <!-- Toast container -->
+            <div class="toast-container" id="toastContainer"></div>
+        </div>
+    </div>
+</div>
+@if (session('success'))
+
 
 <div id="successModal" class="notification-modal">
     <div class="notification-dialog">

@@ -109,6 +109,15 @@ class EpisodeController extends Controller
             $ep->updated_at = Carbon::now('Asia/Ho_Chi_Minh');
             $ep->save();
 
+            // Lấy thông tin phim để thêm vào thông báo
+            $movie = Movie::find($data['movie_id']);
+
+            // Tạo thông báo mới cho người dùng
+            \App\Http\Controllers\NotificationController::createNotification('new_episode', [
+                'movie' => $movie,
+                'episode' => $ep
+            ]);
+
             // Mã trả về giữ nguyên
             $referer = request()->headers->get('referer');
             $notification = [
@@ -316,6 +325,9 @@ class EpisodeController extends Controller
             }
         }
 
+        // Xóa thông báo liên quan đến tập phim
+        \App\Models\Notification::where('episode_id', $ep->id)->delete();
+
         $ep->delete();
         return redirect()->back()->with([
             'movie_title' => $ep->episode,
@@ -323,6 +335,74 @@ class EpisodeController extends Controller
             'action_type' => 'xóa',
             'delete_end' => 'thành công! ',
         ]);
+    }
+
+    /**
+     * Xóa nhiều tập phim cùng lúc
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteMultiple(Request $request)
+    {
+        // Lấy danh sách ID các tập phim đã chọn
+        $episodeIds = json_decode($request->input('episode_ids'), true);
+
+        if (empty($episodeIds) || !is_array($episodeIds)) {
+            return redirect()->back()->with('error', 'Không có tập phim nào được chọn để xóa');
+        }
+
+        $count = 0;
+        $movieTitles = [];
+        $maxMoviesToShow = 3; // Số lượng tên phim hiển thị trong thông báo
+
+        foreach ($episodeIds as $id) {
+            $episode = Episode::find($id);
+
+            if ($episode) {
+                $movieTitle = $episode->movie->title . ' - ' . $episode->episode;
+
+                if (count($movieTitles) < $maxMoviesToShow) {
+                    $movieTitles[] = $movieTitle;
+                }
+
+                // Nếu là video tự upload, xóa file
+                if (strpos($episode->linkphim, '<video') !== false) {
+                    // Trích xuất đường dẫn file từ thẻ video
+                    preg_match('/src="([^"]+)"/', $episode->linkphim, $matches);
+                    if (isset($matches[1])) {
+                        $filePath = public_path(str_replace(asset(''), '', $matches[1]));
+                        if (file_exists($filePath)) {
+                            unlink($filePath); // Xóa file
+                        }
+                    }
+                }
+
+                // Xóa thông báo liên quan đến tập phim này
+                \App\Models\Notification::where('episode_id', $episode->id)->delete();
+
+                // Xóa tập phim
+                $episode->delete();
+                $count++;
+            }
+        }
+
+        if ($count > 0) {
+            $titleDisplay = implode(', ', $movieTitles);
+
+            if ($count > $maxMoviesToShow) {
+                $titleDisplay .= ' và ' . ($count - $maxMoviesToShow) . ' tập phim khác';
+            }
+
+            return redirect()->back()->with([
+                'movie_title' => $titleDisplay,
+                'delete_message' => 'đã được',
+                'action_type' => 'xóa',
+                'delete_end' => 'thành công!',
+            ]);
+        } else {
+            return redirect()->back()->with('error', 'Không thể xóa các tập phim đã chọn');
+        }
     }
 
     public function select_movie()
@@ -341,5 +421,22 @@ class EpisodeController extends Controller
         }
 
         echo $output;
+    }
+
+    /**
+     * Lấy danh sách ID tất cả các tập phim trong hệ thống
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllIds()
+    {
+        // Lấy tất cả ID của tập phim
+        $episodeIds = Episode::pluck('id')->toArray();
+
+        return response()->json([
+            'success' => true,
+            'episode_ids' => $episodeIds,
+            'count' => count($episodeIds)
+        ]);
     }
 }

@@ -144,7 +144,7 @@ class CategoryController extends Controller
         $category->ngaycapnhat = Carbon::now('Asia/Ho_Chi_Minh');
         $category->save();
         return redirect()->route('category.index')->with([
-        // return redirect()->back()->with([
+            // return redirect()->back()->with([
 
             'success' => true,
             'action' => 'cập nhật',

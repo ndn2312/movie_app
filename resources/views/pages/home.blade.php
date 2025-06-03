@@ -2,7 +2,6 @@
 
 @section('content')
 <style>
-    /* ==================== RESET & BASE STYLES ==================== */
     .tag-base {
         display: inline-block;
         padding: 4px 10px;
@@ -186,14 +185,7 @@
     }
 
     /* ==================== MOVIE CONTAINER ==================== */
-    .halim-item {
-        margin-bottom: 20px;
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    }
+
 
     .halim-item:hover {
         transform: translateY(-5px);
@@ -201,7 +193,6 @@
     }
 
     /* ==================== SECTION HEADINGS ==================== */
-    /* Common style for all section headings */
     .section-heading,
     .section-bar {
         position: relative;
@@ -352,11 +343,11 @@
 
     /* ==================== CATEGORY SECTION STYLES ==================== */
     /* Container for movie grid */
-    #halim-advanced-widget-2-ajax-box {
+    /* #halim-advanced-widget-2-ajax-box {
         display: flex;
         flex-wrap: wrap;
         padding: 15px 0;
-    }
+    } */
 
     /* Customize category section headings */
     #halim-advanced-widget-2 .section-heading span.h-text {
@@ -725,13 +716,13 @@
                     <span class="h-text">{{$cate_home->title}}</span>
                 </div>
                 @if(count($cate_home->movie) > 12)
-                <a href="#" class="view-all-link">
+                {{-- <a href="{{route('category', $cate_home->slug)}}" class="view-all-link">
                     Xem tất cả <i class="fas fa-chevron-right"></i>
-                </a>
+                </a> --}}
                 @endif
             </div>
             <div id="halim-advanced-widget-2-ajax-box" class="halim_box movie-grid">
-                @foreach($cate_home->movie->take(8) as $key => $mov)
+                @foreach($cate_home->movie->take(9) as $key => $mov)
                 <article class="thumb grid-item post-37606">
                     <div class="halim-item">
                         <a class="halim-thumb" href="{{route('movie',$mov->slug)}}" title="{{$mov->title}}">
@@ -762,9 +753,9 @@
                                 <span class="tag-base thuyetminh-tag">T.M</span>
                                 @endif
 
-                                {{-- @if($mov->season!=0)
+                                @if($mov->season!=0)
                                 <span class="tag-base ss-tag">{{$mov->season}}.S</span>
-                                @endif --}}
+                                @endif
                             </span>
 
                             <!-- Play button -->

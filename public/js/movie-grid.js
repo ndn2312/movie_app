@@ -20,41 +20,85 @@
 
         // Tạo phân trang
         const paginationContainer = document.querySelector('.pagination-container');
-        let paginationHTML = '<div class="pagination">';
-        paginationHTML += '<button class="page-nav prev-page" disabled><i class="fas fa-angle-left"></i></button>';
 
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<button class="page-number ${i === 1 ? 'active' : ''}" data-page="${i}">${i}</button>`;
-        }
+        // Kiểm tra xem paginationContainer có tồn tại không
+        if (!paginationContainer) return;
 
-        paginationHTML += '<button class="page-nav next-page"><i class="fas fa-angle-right"></i></button>';
-        paginationHTML += '</div>';
-
-        paginationContainer.innerHTML = paginationHTML;
+        // Tạo phân trang ban đầu với trang 1 là active
+        createPaginationControls(1, totalPages);
 
         // Hiển thị trang đầu tiên
         showPage(1);
 
-        // Xử lý sự kiện click phân trang
+        // Đăng ký sự kiện cho phân trang - được gọi trong createPaginationControls()
+    }
+
+    // Hàm tạo điều khiển phân trang với currentPage là trang hiện tại
+    function createPaginationControls(currentPage, totalPages) {
+        const paginationContainer = document.querySelector('.pagination-container');
+
+        // Xác định số lượng trang hiển thị ở mỗi bên của trang hiện tại
+        const visiblePages = 2;
+
+        let paginationHTML = '<div class="pagination">';
+
+        // Nút Previous
+        paginationHTML += `<button class="page-nav prev-page" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-angle-left"></i></button>`;
+
+        // Nút trang đầu tiên
+        if (currentPage > visiblePages + 1) {
+            paginationHTML += `<button class="page-number" data-page="1">1</button>`;
+
+            // Dấu chấm lửng nếu cần
+            if (currentPage > visiblePages + 2) {
+                paginationHTML += `<span class="page-ellipsis">...</span>`;
+            }
+        }
+
+        // Các nút trang ở giữa
+        for (let i = Math.max(1, currentPage - visiblePages); i <= Math.min(totalPages, currentPage + visiblePages); i++) {
+            paginationHTML += `<button class="page-number ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+
+        // Dấu chấm lửng và nút trang cuối cùng
+        if (currentPage < totalPages - visiblePages) {
+            // Dấu chấm lửng nếu cần
+            if (currentPage < totalPages - visiblePages - 1) {
+                paginationHTML += `<span class="page-ellipsis">...</span>`;
+            }
+
+            paginationHTML += `<button class="page-number" data-page="${totalPages}">${totalPages}</button>`;
+        }
+
+        // Nút Next
+        paginationHTML += `<button class="page-nav next-page" ${currentPage === totalPages ? 'disabled' : ''}><i class="fas fa-angle-right"></i></button>`;
+
+        paginationHTML += '</div>';
+
+        paginationContainer.innerHTML = paginationHTML;
+
+        // Đăng ký sự kiện click cho các nút phân trang
         document.querySelectorAll('.page-number').forEach(button => {
             button.addEventListener('click', function () {
                 const page = parseInt(this.dataset.page);
                 showPage(page);
+                createPaginationControls(page, totalPages); // Tạo lại điều khiển phân trang
             });
         });
 
-        // Xử lý nút prev/next
+        // Đăng ký sự kiện cho nút Prev
         document.querySelector('.prev-page').addEventListener('click', function () {
-            const activePage = parseInt(document.querySelector('.page-number.active').dataset.page);
-            if (activePage > 1) {
-                showPage(activePage - 1);
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+                createPaginationControls(currentPage - 1, totalPages);
             }
         });
 
+        // Đăng ký sự kiện cho nút Next
         document.querySelector('.next-page').addEventListener('click', function () {
-            const activePage = parseInt(document.querySelector('.page-number.active').dataset.page);
-            if (activePage < totalPages) {
-                showPage(activePage + 1);
+            if (currentPage < totalPages) {
+                showPage(currentPage + 1);
+                createPaginationControls(currentPage + 1, totalPages);
             }
         });
     }
@@ -73,18 +117,6 @@
                 card.style.display = 'none';
             }
         });
-
-        // Cập nhật trạng thái nút phân trang
-        document.querySelectorAll('.page-number').forEach(button => {
-            button.classList.remove('active');
-            if (parseInt(button.dataset.page) === page) {
-                button.classList.add('active');
-            }
-        });
-
-        // Cập nhật trạng thái nút prev/next
-        document.querySelector('.prev-page').disabled = (page === 1);
-        document.querySelector('.next-page').disabled = (page === Math.ceil(movieCards.length / moviesPerPage));
     }
 
     function setupSearchAndFilter() {
@@ -159,44 +191,11 @@
         const moviesPerPage = 6;
         const totalPages = Math.ceil(visibleCards.length / moviesPerPage);
 
-        // Cập nhật HTML phân trang
-        const paginationContainer = document.querySelector('.pagination-container');
-        let paginationHTML = '<div class="pagination">';
-        paginationHTML += '<button class="page-nav prev-page" disabled><i class="fas fa-angle-left"></i></button>';
-
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<button class="page-number ${i === 1 ? 'active' : ''}" data-page="${i}">${i}</button>`;
-        }
-
-        paginationHTML += '<button class="page-nav next-page"><i class="fas fa-angle-right"></i></button>';
-        paginationHTML += '</div>';
-
-        paginationContainer.innerHTML = paginationHTML;
+        // Tạo lại điều khiển phân trang với trang 1 là active
+        createPaginationControls(1, totalPages);
 
         // Hiển thị trang đầu tiên của kết quả lọc
         showFilteredPage(1);
-
-        // Đăng ký lại sự kiện cho phân trang
-        document.querySelectorAll('.page-number').forEach(button => {
-            button.addEventListener('click', function () {
-                const page = parseInt(this.dataset.page);
-                showFilteredPage(page);
-            });
-        });
-
-        document.querySelector('.prev-page').addEventListener('click', function () {
-            const activePage = parseInt(document.querySelector('.page-number.active').dataset.page);
-            if (activePage > 1) {
-                showFilteredPage(activePage - 1);
-            }
-        });
-
-        document.querySelector('.next-page').addEventListener('click', function () {
-            const activePage = parseInt(document.querySelector('.page-number.active').dataset.page);
-            if (activePage < totalPages) {
-                showFilteredPage(activePage + 1);
-            }
-        });
     }
 
     function showFilteredPage(page) {
@@ -213,18 +212,6 @@
                 card.style.display = 'none';
             }
         });
-
-        // Cập nhật trạng thái nút phân trang
-        document.querySelectorAll('.page-number').forEach(button => {
-            button.classList.remove('active');
-            if (parseInt(button.dataset.page) === page) {
-                button.classList.add('active');
-            }
-        });
-
-        // Cập nhật trạng thái nút prev/next
-        document.querySelector('.prev-page').disabled = (page === 1);
-        document.querySelector('.next-page').disabled = (page === Math.ceil(visibleCards.length / moviesPerPage));
     }
 
     function setupDeleteConfirmation() {

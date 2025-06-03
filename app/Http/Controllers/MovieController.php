@@ -46,6 +46,7 @@ class MovieController extends Controller
     public function category_choose(Request $request)
     {
         $data = $request->all();
+
         $movie = movie::find($data['movie_id']);
         $movie->category_id = $data['category_id'];
         $movie->save();
@@ -151,7 +152,10 @@ class MovieController extends Controller
             mkdir($path, 0777, true);
         }
 
-        File::put($path . 'movies.json', json_encode($list));
+        File::put(
+            $path . 'movies.json',
+            json_encode($list, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+        );
 
         return view('admincp.movie.index', compact('list', 'category', 'country'));
     }
@@ -164,6 +168,11 @@ class MovieController extends Controller
 
         $movie->year = $data['year'];
         $movie->save();
+
+        // Cập nhật file JSON
+        $this->updateMovieJson();
+
+        return response()->json(['success' => true]);
     }
     public function update_season(Request $request)
     {
@@ -173,6 +182,9 @@ class MovieController extends Controller
         $movie->season = $data['season'];
         $movie->save();
 
+        // Cập nhật file JSON
+        $this->updateMovieJson();
+
         return response()->json(['success' => true, 'message' => 'Đã cập nhật season thành công']);
     }
     public function update_topview(Request $request)
@@ -180,14 +192,39 @@ class MovieController extends Controller
         $data = $request->all();
         $movie = Movie::find($data['id_phim']);
 
-        $movie->topview = $data['topview'];
-        $movie->save();
+        if ($movie) {
+            $movie->topview = $data['topview'];
+            $movie->save();
+
+            // Cập nhật file JSON
+            $this->updateMovieJson();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Không tìm thấy phim']);
     }
 
     public function filter_topview(Request $request)
     {
-
         $data = $request->all();
+
+        // Nếu là request từ trang admin cập nhật top view cho phim
+        if (isset($data['id']) && isset($data['topview'])) {
+            $movie = Movie::find($data['id']);
+            if ($movie) {
+                $movie->topview = $data['topview'];
+                $movie->save();
+
+                // Cập nhật file JSON
+                $this->updateMovieJson();
+
+                return response()->json(['success' => true]);
+            }
+            return response()->json(['success' => false, 'message' => 'Không tìm thấy phim']);
+        }
+
+        // Xử lý mặc định cho trang frontend
         $movie = Movie::where('topview', $data['value'])
             ->orderBy('ngaycapnhat', 'DESC')
             ->take(5)
@@ -431,6 +468,11 @@ class MovieController extends Controller
         // them nhieu the loai cho phim
         $movie->movie_genre()->attach($data['genre']);
 
+        // Tạo thông báo mới cho người dùng
+        \App\Http\Controllers\NotificationController::createNotification('new_movie', [
+            'movie' => $movie
+        ]);
+
         // Truyền thông tin để hiển thị thông báo
         return redirect()->route('movie.index')->with([
             'success_message' => 'đã được',
@@ -599,10 +641,14 @@ class MovieController extends Controller
                 }
             }
             // xóa nhieu the loai cho phim
-
             Movie_Genre::whereIn('movie_id', [$movie->id])->delete();
+
             // Xóa tập phim
             Episode::whereIn('movie_id', [$movie->id])->delete();
+
+            // Xóa thông báo liên quan đến phim
+            \App\Models\Notification::where('movie_id', $movie->id)->delete();
+
             // Xóa movie trong database
             $movie->delete();
 
@@ -660,6 +706,9 @@ class MovieController extends Controller
                     // Xóa tập phim
                     Episode::whereIn('movie_id', [$movie->id])->delete();
 
+                    // Xóa thông báo liên quan đến phim
+                    \App\Models\Notification::where('movie_id', $movie->id)->delete();
+
                     // Xóa phim
                     $movie->delete();
 
@@ -684,5 +733,40 @@ class MovieController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Lỗi: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Cập nhật thông tin trong file JSON
+     */
+    private function updateMovieJson()
+    {
+        // Lấy danh sách phim mới nhất với thông tin đã cập nhật
+        $list = Movie::with('category', 'movie_genre', 'country', 'genre')
+            ->withCount('episode')
+            ->orderBy('id', 'DESC')
+            ->get()
+            ->map(function ($movie) {
+                // Tính toán rating trung bình cho mỗi phim
+                $avgRating = Rating::where('movie_id', $movie->id)->avg('rating');
+                $ratingCount = Rating::where('movie_id', $movie->id)->count();
+
+                // Thêm thông tin vào đối tượng phim
+                $movie->rating = round($avgRating, 1) ?: 0;
+                $movie->rating_count = $ratingCount;
+
+                return $movie;
+            });
+
+        // Đảm bảo thư mục tồn tại
+        $path = public_path("/json/");
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        // Ghi dữ liệu mới vào file JSON với options đảm bảo encoding đúng
+        file_put_contents(
+            $path . 'movies.json',
+            json_encode($list, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+        );
     }
 }

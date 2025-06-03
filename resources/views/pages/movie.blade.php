@@ -1,7 +1,6 @@
 @extends('layout')
 @section('content')
 <style>
-   /* ==================== RESET & BASE STYLES ==================== */
    .tag-base {
       display: inline-block;
       padding: 4px 10px;
@@ -1879,6 +1878,193 @@
          grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
       }
    }
+
+   /* ===== Styles cho phần bình luận ===== */
+   .comment-section {
+      background: rgba(20, 30, 48, 0.5);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+   }
+
+   .comment-form textarea {
+      background: rgba(20, 30, 48, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #fff;
+      resize: none;
+   }
+
+   .comment-form textarea:focus {
+      background: rgba(20, 30, 48, 0.8);
+      border-color: rgba(4, 193, 231, 0.5);
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(4, 193, 231, 0.25);
+   }
+
+   .comment {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+   }
+
+   .comment:hover {
+      background: rgba(15, 23, 42, 0.7);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+   }
+
+   .comment-avatar img {
+      border: 2px solid rgba(4, 193, 231, 0.3);
+      transition: all 0.3s ease;
+   }
+
+   .comment:hover .comment-avatar img {
+      border-color: rgba(4, 193, 231, 0.7);
+      box-shadow: 0 0 10px rgba(4, 193, 231, 0.5);
+   }
+
+   .comment-author {
+      color: #ffed4d;
+      font-weight: 600;
+      margin-bottom: 0;
+   }
+
+   .comment-date {
+      font-size: 12px;
+      color: #aaa;
+   }
+
+   .comment-body {
+      margin-top: 8px;
+      color: #fff;
+   }
+
+   .comment-actions {
+      margin-top: 8px;
+   }
+
+   .comment-actions .btn-link {
+      color: #04c1e7;
+      padding: 2px 5px;
+      font-size: 12px;
+      transition: all 0.3s ease;
+   }
+
+   .comment-actions .btn-link:hover {
+      color: #ffed4d;
+      text-decoration: none;
+   }
+
+   .comment-actions .text-danger:hover {
+      color: #ff5252 !important;
+   }
+
+   .reply-comment {
+      background: rgba(15, 23, 42, 0.3);
+      border-left: 3px solid rgba(4, 193, 231, 0.5);
+   }
+
+   .reply-comment:hover {
+      border-left-color: rgba(4, 193, 231, 1);
+   }
+
+   .comment-author.admin {
+      color: #ff5e94;
+   }
+
+   .comment-author.admin:after {
+      content: '(Admin)';
+      font-size: 10px;
+      background: rgba(255, 94, 148, 0.2);
+      color: #ff5e94;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 5px;
+      vertical-align: middle;
+   }
+
+   .edit-form,
+   .reply-form {
+      background: rgba(10, 17, 30, 0.5);
+      border-radius: 8px;
+      padding: 15px;
+   }
+
+   .section-bar {
+      margin-bottom: 15px;
+   }
+
+   /* CSS cho nút yêu thích */
+   .social-action-button.favorite {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+   }
+
+   .social-action-button.favorite.active {
+      background-color: #f8d7da;
+      color: #dc3545;
+      border-color: #f5c6cb;
+   }
+
+   .social-action-button.favorite.active i {
+      color: #dc3545;
+   }
+
+   .social-action-button.favorite:hover {
+      background-color: #f8d7da;
+      color: #dc3545;
+   }
+
+   /* Hiệu ứng khi click vào nút yêu thích */
+   .social-action-button.favorite::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+      transform: scale(0);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.5s ease;
+   }
+
+   .social-action-button.favorite:active::after {
+      transform: scale(2);
+      opacity: 1;
+      transition: 0s;
+   }
+
+   /* Animation cho icon trái tim */
+   @keyframes heartbeat {
+      0% {
+         transform: scale(1);
+      }
+
+      25% {
+         transform: scale(1.2);
+      }
+
+      50% {
+         transform: scale(1);
+      }
+
+      75% {
+         transform: scale(1.2);
+      }
+
+      100% {
+         transform: scale(1);
+      }
+   }
+
+   .social-action-button.favorite.active i {
+      animation: heartbeat 1s ease-in-out;
+   }
 </style>
 <!-- <link rel="stylesheet" href="{{asset('css/movie.css')}}"> -->
 <div class="row container" id="wrapper">
@@ -1890,11 +2076,6 @@
                      <span>
                         <a href="{{route('category',[$movie->category->slug])}}">{{$movie->category->title}}</a> »
                         <span>
-                           {{-- <a href="{{route('country',[$movie->country->slug])}}">{{$movie->country->title}}</a> »
-                           @foreach($movie->movie_genre as $gen)
-                           <a href="{{route('genre',[$gen->slug])}}">{{$gen->title}}</a> »
-                           @endforeach --}}
-
                            <span class="breadcrumb_last"
                               aria-current="page">{{$movie->title}}</span></span></span></span></div>
             </div>
@@ -1966,7 +2147,8 @@
                         <!-- Thanh tương tác -->
                         <div class="social-action-bar-container">
                            <div class="social-action-bar">
-                              <button class="social-action-button favorite" id="favoriteBtn">
+                              <button class="social-action-button favorite" id="favoriteBtn"
+                                 data-movie-id="{{$movie->id}}">
                                  <i class="far fa-heart"></i>
                                  <span>Yêu thích</span>
                               </button>
@@ -2346,11 +2528,175 @@
                   <!-- Tab bình luận -->
                   <div role="tabpanel" class="tab-pane" id="movie-comments">
                      <div class="movie-comments-panel">
-                        @php
-                        $current_url = Request::url();
-                        @endphp
                         <div class="comments-content">
-                           <div class="fb-comments" data-href="{{$current_url}}" data-width="100%" data-numposts="3">
+                           <div class="comment-section">
+                              <div class="section-bar clearfix">
+                                 <h2 class="section-title"><span style="color:#ffed4d">Bình luận phim:
+                                       {{$movie->title}}</span></h2>
+                              </div>
+
+                              @if(Auth::check())
+                              <div class="comment-form mb-4">
+                                 <form method="POST" action="{{ route('comment.store') }}">
+                                    @csrf
+                                    <input type="hidden" name="movie_id" value="{{ $movie->id }}">
+                                    <div class="form-group">
+                                       <textarea class="form-control" name="content" rows="3"
+                                          placeholder="Viết bình luận của bạn về phim..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                                 </form>
+                              </div>
+                              @else
+                              <div class="alert alert-info">
+                                 <p>Vui lòng <a href="#" data-toggle="modal" data-target="#loginModal">đăng nhập</a> để
+                                    bình luận.</p>
+                              </div>
+                              @endif
+
+                              <div class="comments-list mt-4">
+                                 @if(isset($comments) && count($comments) > 0)
+                                 @foreach($comments as $comment)
+                                 <div class="comment mb-4" id="comment-{{ $comment->id }}">
+                                    <div class="comment-avatar float-left mr-3">
+                                       <img
+                                          src="https://www.gravatar.com/avatar/{{ md5($comment->user->email) }}?d=mp&s=50"
+                                          class="rounded-circle" width="50" height="50"
+                                          alt="{{ $comment->user->name }}">
+                                    </div>
+                                    <div class="comment-content">
+                                       <div class="comment-header">
+                                          <h5 class="comment-author">{{ $comment->user->name }}</h5>
+                                          <span class="comment-date text-muted">{{ $comment->created_at->diffForHumans()
+                                             }}</span>
+                                       </div>
+                                       <div class="comment-body">
+                                          <p>{{ $comment->content }}</p>
+                                       </div>
+                                       @if(Auth::check())
+                                       <div class="comment-actions">
+                                          <button class="btn btn-sm btn-link reply-btn"
+                                             data-comment-id="{{ $comment->id }}">Trả lời</button>
+                                          @if(Auth::id() == $comment->user_id || (Auth::check() && Auth::user()->role ==
+                                          '1'))
+                                          <button class="btn btn-sm btn-link edit-btn"
+                                             data-comment-id="{{ $comment->id }}"
+                                             data-content="{{ $comment->content }}">Sửa</button>
+                                          <form method="POST" action="{{ route('comment.delete', $comment->id) }}"
+                                             class="d-inline"
+                                             onsubmit="return confirm('Bạn có chắc muốn xóa bình luận này?')">
+                                             @csrf
+                                             <button type="submit" class="btn btn-sm btn-link text-danger">Xóa</button>
+                                          </form>
+                                          @endif
+                                       </div>
+                                       @endif
+
+                                       <!-- Form trả lời comment (ẩn ban đầu) -->
+                                       <div class="reply-form mt-3" id="reply-form-{{ $comment->id }}"
+                                          style="display:none;">
+                                          <form method="POST" action="{{ route('comment.store') }}">
+                                             @csrf
+                                             <input type="hidden" name="movie_id" value="{{ $movie->id }}">
+                                             <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                             <div class="form-group">
+                                                <textarea class="form-control" name="content" rows="2"
+                                                   placeholder="Trả lời..."></textarea>
+                                             </div>
+                                             <button type="submit" class="btn btn-sm btn-primary">Gửi</button>
+                                             <button type="button" class="btn btn-sm btn-secondary cancel-reply"
+                                                data-comment-id="{{ $comment->id }}">Hủy</button>
+                                          </form>
+                                       </div>
+
+                                       <!-- Form sửa comment (ẩn ban đầu) -->
+                                       <div class="edit-form mt-3" id="edit-form-{{ $comment->id }}"
+                                          style="display:none;">
+                                          <form method="POST" action="{{ route('comment.update', $comment->id) }}">
+                                             @csrf
+                                             <div class="form-group">
+                                                <textarea class="form-control" name="content"
+                                                   rows="2">{{ $comment->content }}</textarea>
+                                             </div>
+                                             <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
+                                             <button type="button" class="btn btn-sm btn-secondary cancel-edit"
+                                                data-comment-id="{{ $comment->id }}">Hủy</button>
+                                          </form>
+                                       </div>
+
+                                       <!-- Danh sách trả lời -->
+                                       @if(count($comment->replies) > 0)
+                                       <div class="replies ml-5 mt-3">
+                                          @foreach($comment->replies as $reply)
+                                          <div class="comment reply-comment mb-3" id="comment-{{ $reply->id }}">
+                                             <div class="comment-avatar float-left mr-3">
+                                                <img
+                                                   src="https://www.gravatar.com/avatar/{{ md5($reply->user->email) }}?d=mp&s=40"
+                                                   class="rounded-circle" width="40" height="40"
+                                                   alt="{{ $reply->user->name }}">
+                                             </div>
+                                             <div class="comment-content">
+                                                <div class="comment-header">
+                                                   <h6 class="comment-author">{{ $reply->user->name }}</h6>
+                                                   <span class="comment-date text-muted">{{
+                                                      $reply->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                <div class="comment-body">
+                                                   <p>{{ $reply->content }}</p>
+                                                </div>
+                                                @if(Auth::check())
+                                                <div class="comment-actions">
+                                                   @if(Auth::id() == $reply->user_id || (Auth::check() &&
+                                                   Auth::user()->role == '1'))
+                                                   <button class="btn btn-sm btn-link edit-btn"
+                                                      data-comment-id="{{ $reply->id }}"
+                                                      data-content="{{ $reply->content }}">Sửa</button>
+                                                   <form method="POST"
+                                                      action="{{ route('comment.delete', $reply->id) }}"
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Bạn có chắc muốn xóa bình luận này?')">
+                                                      @csrf
+                                                      <button type="submit"
+                                                         class="btn btn-sm btn-link text-danger">Xóa</button>
+                                                   </form>
+                                                   @endif
+                                                </div>
+                                                @endif
+
+                                                <!-- Form sửa reply (ẩn ban đầu) -->
+                                                <div class="edit-form mt-3" id="edit-form-{{ $reply->id }}"
+                                                   style="display:none;">
+                                                   <form method="POST"
+                                                      action="{{ route('comment.update', $reply->id) }}">
+                                                      @csrf
+                                                      <div class="form-group">
+                                                         <textarea class="form-control" name="content"
+                                                            rows="2">{{ $reply->content }}</textarea>
+                                                      </div>
+                                                      <button type="submit" class="btn btn-sm btn-primary">Cập
+                                                         nhật</button>
+                                                      <button type="button" class="btn btn-sm btn-secondary cancel-edit"
+                                                         data-comment-id="{{ $reply->id }}">Hủy</button>
+                                                   </form>
+                                                </div>
+                                             </div>
+                                             <div class="clearfix"></div>
+                                          </div>
+                                          @endforeach
+                                       </div>
+                                       @endif
+                                    </div>
+                                    <div class="clearfix"></div>
+                                 </div>
+                                 @endforeach
+                                 @else
+                                 <div class="text-center py-5">
+                                    <i class="fas fa-comments fa-3x mb-3 text-muted"></i>
+                                    <p class="text-muted">Chưa có bình luận nào cho phim này.<br>Hãy là người đầu tiên
+                                       bình luận!</p>
+                                 </div>
+                                 @endif
+                              </div>
                            </div>
                         </div>
                      </div>
@@ -2383,8 +2729,8 @@
                   <div class="halim-item">
                      <a class="halim-thumb" href="{{route('movie',$hot->slug)}}" title="{{$hot->title}}">
                         <figure><img class="lazy img-responsive"
-                           src="@if(Str::startsWith($hot->image, ['http://', 'https://'])){{$hot->image}}@else{{asset('uploads/movie/'.$hot->image)}}@endif"
-                           alt="{{$hot->title}}" title="{{$hot->title}}"></figure>
+                              src="@if(Str::startsWith($hot->image, ['http://', 'https://'])){{$hot->image}}@else{{asset('uploads/movie/'.$hot->image)}}@endif"
+                              alt="{{$hot->title}}" title="{{$hot->title}}"></figure>
                         <span class="status">
                            @if($hot->resolution==0)
                            <span class="tag-base hd-tag">HD</span>
@@ -2716,11 +3062,11 @@ $(document).ready(function() {
         if ($(this).hasClass('active')) {
             $(this).find('i').removeClass('far').addClass('fas');
             localStorage.setItem('favorite_' + movieId, 'true');
-            showToast('Đã thêm vào danh sách yêu thích');
+            // showToast('Đã thêm vào danh sách yêu thích');
         } else {
             $(this).find('i').removeClass('fas').addClass('far');
             localStorage.setItem('favorite_' + movieId, 'false');
-            showToast('Đã xóa khỏi danh sách yêu thích');
+            // showToast('Đã xóa khỏi danh sách yêu thích');
         }
     });
 
@@ -2784,9 +3130,12 @@ $(document).ready(function() {
 
     // Xử lý nút Bình luận
     commentBtn.click(function() {
-        // Cuộn xuống phần bình luận
+        // Kích hoạt tab bình luận
+        $('a[href="#movie-comments"]').tab('show');
+        
+        // Cuộn đến vị trí tab
         $('html, body').animate({
-            scrollTop: $(".fb-comments").offset().top - 100
+            scrollTop: $('.movie-details-tabs').offset().top - 70
         }, 500);
     });
     
@@ -2804,19 +3153,87 @@ $(document).ready(function() {
         const rating = $(this).data('value');
         const movieId = $('#movie-rating-system-popup').data('movie-id');
         
-        // Gửi đánh giá đến server - giả lập
-        console.log(`Đánh giá ${rating} sao cho phim ID: ${movieId}`);
-        
-        // Hiển thị phản hồi
-        $('#rating-feedback-popup')
-            .addClass('success')
-            .text('Cảm ơn bạn đã đánh giá phim!')
-            .slideDown();
-        
-        // Ẩn phản hồi sau 3 giây
-        setTimeout(() => {
-            $('#rating-feedback-popup').slideUp();
-        }, 3000);
+        // Gửi đánh giá đến server qua AJAX
+        $.ajax({
+            url: '{{ route("add-rating") }}',
+            type: 'POST',
+            data: {
+                movie_id: movieId,
+                rating: rating,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Hiển thị phản hồi thành công
+                    $('#rating-feedback-popup')
+                        .removeClass('error')
+                        .addClass('success')
+                        .text(response.message || 'Cảm ơn bạn đã đánh giá phim!')
+                        .slideDown();
+                    
+                    // Cập nhật hiển thị rating trên giao diện
+                    if (response.avg_rating) {
+                        $('.current-rating .average').text(response.avg_rating);
+                        $('.current-rating small').text('(' + response.count_total + ' lượt đánh giá)');
+                        
+                        // Cập nhật active stars
+                        $('.star').removeClass('active');
+                        $('.star').each(function() {
+                            if ($(this).data('value') <= response.avg_rating) {
+                                $(this).addClass('active');
+                            }
+                        });
+                    }
+                } else {
+                    // Hiển thị phản hồi lỗi
+                    $('#rating-feedback-popup')
+                        .removeClass('success')
+                        .addClass('error')
+                        .text(response.message || 'Đã xảy ra lỗi khi đánh giá phim.')
+                        .slideDown();
+                    
+                    // Nếu có thông tin về đánh giá hiện tại, làm nổi bật sao tương ứng
+                    if (response.rating) {
+                        $('.star').removeClass('active');
+                        $('.star').each(function() {
+                            if ($(this).data('value') <= response.rating) {
+                                $(this).addClass('active');
+                            }
+                        });
+                    }
+                }
+                
+                // Ẩn phản hồi sau 5 giây
+                setTimeout(() => {
+                    $('#rating-feedback-popup').slideUp();
+                }, 5000);
+            },
+            error: function(xhr) {
+                // Xử lý lỗi chi tiết
+                let errorMessage = 'Đã xảy ra lỗi khi đánh giá phim.';
+                
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.status === 500) {
+                    errorMessage = 'Lỗi máy chủ, vui lòng thử lại sau.';
+                    console.error('Server error:', xhr.responseText);
+                } else if (xhr.status === 404) {
+                    errorMessage = 'Không tìm thấy phương thức xử lý đánh giá.';
+                } else if (xhr.status === 422) {
+                    errorMessage = 'Dữ liệu không hợp lệ, vui lòng thử lại.';
+                }
+                
+                $('#rating-feedback-popup')
+                    .removeClass('success')
+                    .addClass('error')
+                    .text(errorMessage)
+                    .slideDown();
+                    
+                setTimeout(() => {
+                    $('#rating-feedback-popup').slideUp();
+                }, 5000);
+            }
+        });
     });
 
     // Hover effect cho star
@@ -3008,4 +3425,142 @@ $(document).ready(function() {
 });
 </script>
 
+<script>
+   // Xử lý các chức năng bình luận
+$(document).ready(function() {
+   // Xử lý nút trả lời bình luận
+   $(document).on('click', '.reply-btn', function() {
+      var commentId = $(this).data('comment-id');
+      $('#reply-form-' + commentId).slideToggle();
+   });
+   
+   // Xử lý nút hủy trả lời
+   $(document).on('click', '.cancel-reply', function() {
+      var commentId = $(this).data('comment-id');
+      $('#reply-form-' + commentId).slideUp();
+   });
+   
+   // Xử lý nút sửa bình luận
+   $(document).on('click', '.edit-btn', function() {
+      var commentId = $(this).data('comment-id');
+      $('#edit-form-' + commentId).slideToggle();
+   });
+   
+   // Xử lý nút hủy sửa
+   $(document).on('click', '.cancel-edit', function() {
+      var commentId = $(this).data('comment-id');
+      $('#edit-form-' + commentId).slideUp();
+   });
+});
+</script>
+
 @endsection
+
+<script>
+   // Script mới để xử lý phim yêu thích với database
+$(document).ready(function() {
+    const favoriteBtn = $('#favoriteBtn');
+    const movieId = favoriteBtn.data('movie-id');
+    
+    // Kiểm tra phim đã yêu thích chưa khi trang tải
+    checkFavoriteStatus();
+    
+    // Xử lý khi click vào nút yêu thích
+    favoriteBtn.click(function() {
+        @if(Auth::check())
+            toggleFavorite();
+        @else
+            // Hiển thị modal đăng nhập nếu chưa đăng nhập
+            $('#loginModal').modal('show');
+            showToast('Vui lòng đăng nhập để sử dụng tính năng này');
+        @endif
+    });
+    
+    // Hàm kiểm tra trạng thái yêu thích
+    function checkFavoriteStatus() {
+        @if(Auth::check())
+            $.ajax({
+                url: '{{ route("favorites.check") }}',
+                type: 'GET',
+                data: {
+                    movie_id: movieId
+                },
+                success: function(response) {
+                    if (response.is_favorite) {
+                        favoriteBtn.addClass('active');
+                        favoriteBtn.find('i').removeClass('far').addClass('fas');
+                    } else {
+                        favoriteBtn.removeClass('active');
+                        favoriteBtn.find('i').removeClass('fas').addClass('far');
+                    }
+                }
+            });
+        @endif
+    }
+    
+    // Hàm toggle yêu thích
+    function toggleFavorite() {
+        $.ajax({
+            url: '{{ route("favorites.add") }}',
+            type: 'POST',
+            data: {
+                movie_id: movieId,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.status === 'added') {
+                    favoriteBtn.addClass('active');
+                    favoriteBtn.find('i').removeClass('far').addClass('fas');
+                    showToast(response.message);
+                } else {
+                    favoriteBtn.removeClass('active');
+                    favoriteBtn.find('i').removeClass('fas').addClass('far');
+                    showToast(response.message);
+                }
+            },
+            error: function() {
+                showToast('Có lỗi xảy ra, vui lòng thử lại sau');
+            }
+        });
+    }
+});
+</script>
+
+<script>
+   // Biến toàn cục cho favorites.js
+const isLoggedIn = @json(Auth::check());
+const csrfToken = '{{ csrf_token() }}';
+const checkFavoriteUrl = '{{ route("favorites.check") }}';
+const toggleFavoriteUrl = '{{ route("favorites.add") }}';
+
+// Hàm hiển thị toast message
+function showToast(message) {
+    // Kiểm tra xem đã tạo container cho toast chưa
+    if ($('.toast-container').length === 0) {
+        $('body').append('<div class="toast-container"></div>');
+    }
+
+    // Tạo toast mới
+    const toast = $(`
+    <div class="toast">
+      <div class="toast-content">${message}</div>
+    </div>
+    `);
+
+    // Thêm toast vào container
+    $('.toast-container').append(toast);
+
+    // Hiển thị toast với hiệu ứng và tự động ẩn sau 3 giây
+    setTimeout(() => {
+        toast.addClass('show');
+        setTimeout(() => {
+            toast.removeClass('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }, 10);
+}
+</script>
+
+<script src="{{ asset('js/favorites.js') }}"></script>

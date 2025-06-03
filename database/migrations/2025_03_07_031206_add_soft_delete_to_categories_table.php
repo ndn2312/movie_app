@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSoftDeleteToCategoriesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,9 @@ class AddSoftDeleteToCategoriesTable extends Migration
     public function up()
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->softDeletes(); // Thêm cột deleted_at
+            if (!Schema::hasColumn('categories', 'deleted_at')) {
+                $table->softDeletes();
+            }
         });
     }
 
@@ -26,7 +28,7 @@ class AddSoftDeleteToCategoriesTable extends Migration
     public function down()
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->dropSoftDeletes(); // Xóa cột deleted_at khi rollback
+            $table->dropSoftDeletes();
         });
     }
-}
+};

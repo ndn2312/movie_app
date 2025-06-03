@@ -7,28 +7,45 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model
 {
-    
+
     public $timestamps = false;
     use HasFactory;
-    public function category(){
-        return $this->belongsTo(Category::class,'category_id');
-        
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
-    public function country(){
-        return $this->belongsTo(Country::class,'country_id');
-
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
     }
-    public function genre(){
-        return $this->belongsTo(Genre::class,'genre_id');
-
-    }
-
-    public function movie_genre(){
-        return $this->belongsToMany(Genre::class,'movie_genre','movie_id','genre_id');
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class, 'genre_id');
     }
 
-    public function episode(){
+    public function movie_genre()
+    {
+        return $this->belongsToMany(Genre::class, 'movie_genre', 'movie_id', 'genre_id');
+    }
+
+    public function episode()
+    {
         return $this->hasMany(Episode::class);
     }
-   
+
+    /**
+     * Lấy các bình luận của phim
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->whereNull('parent_id');
+    }
+
+    /**
+     * Lấy các người dùng đã yêu thích phim này
+     */
+    public function favoriteByUsers()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'movie_id', 'user_id')->withTimestamps();
+    }
 }

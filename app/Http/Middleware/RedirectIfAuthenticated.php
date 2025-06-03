@@ -23,7 +23,18 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                // Kiểm tra vai trò người dùng
+                $user = Auth::guard($guard)->user();
+
+                // Chỉ chuyển hướng admin vào trang admin
+                if ($user->role === 'admin' && !$request->is('home') && !$request->is('admin*')) {
+                    return redirect()->route('home');
+                }
+
+                // User thường luôn chuyển hướng về homepage
+                if ($user->role !== 'admin' && ($request->is('home') || $request->is('admin*'))) {
+                    return redirect()->route('homepage');
+                }
             }
         }
 

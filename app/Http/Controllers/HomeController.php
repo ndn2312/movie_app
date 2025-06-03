@@ -11,6 +11,7 @@ use App\Models\Genre;
 use App\Models\Country;
 use App\Models\Rating;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -22,6 +23,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        // Middleware admin sẽ được áp dụng trong các route
     }
 
     /**
@@ -31,6 +33,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Không cần kiểm tra admin trong này vì middleware đã kiểm tra
         $statistics = $this->getStatistics();
         return view('home', compact('statistics'));
     }
@@ -44,25 +47,25 @@ class HomeController extends Controller
     {
         // Tổng số người dùng
         $totalUsers = User::count();
-        
+
         // Tổng số phim
         $totalMovies = Movie::count();
-        
+
         // Tổng số tập phim
         $totalEpisodes = Episode::count();
-        
+
         // Tổng lượt xem phim
         $totalViews = Movie::sum('count_views');
-        
+
         // Tổng số danh mục
         $totalCategories = Category::count();
-        
+
         // Tổng số thể loại
         $totalGenres = Genre::count();
-        
+
         // Tổng số quốc gia
         $totalCountries = Country::count();
-        
+
         return [
             'total_users' => $totalUsers,
             'total_movies' => $totalMovies,

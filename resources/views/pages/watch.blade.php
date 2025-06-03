@@ -526,7 +526,22 @@
       <section id="content" class="test">
          <div class="clearfix wrap-content">
             <div class="iframe-video" data-episode-id="{{ $movie->id }}_{{ $tapphim }}">
+               @if(isset($episode) && $episode)
                {!!$episode->linkphim!!}
+               @else
+               <div
+                  style="background: #000; display: flex; align-items: center; justify-content: center; height: 400px; border-radius: 8px;">
+                  <div class="text-center">
+                     <i class="fas fa-exclamation-triangle"
+                        style="font-size: 50px; color: #f8c200; margin-bottom: 20px;"></i>
+                     <h4 style="color: #fff; font-size: 18px;">Không tìm thấy tập phim này</h4>
+                     <p style="color: #aaa; margin: 10px 0 20px;">Tập phim này có thể đã bị xóa hoặc thay đổi</p>
+                     <a href="{{ route('movie', $movie->slug) }}" class="btn btn-primary">
+                        <i class="fas fa-film"></i> Xem các tập khác
+                     </a>
+                  </div>
+               </div>
+               @endif
             </div>
 
             <!-- Keyboard Shortcuts Guide -->
@@ -671,8 +686,8 @@
                   <div class="halim-item">
                      <a class="halim-thumb" href="{{route('movie',$hot->slug)}}" title="{{$hot->title}}">
                         <figure><img class="lazy img-responsive"
-                           src="@if(Str::startsWith($hot->image, ['http://', 'https://'])){{$hot->image}}@else{{asset('uploads/movie/'.$hot->image)}}@endif"
-                           alt="{{$hot->title}}" title="{{$hot->title}}"></figure>
+                              src="@if(Str::startsWith($hot->image, ['http://', 'https://'])){{$hot->image}}@else{{asset('uploads/movie/'.$hot->image)}}@endif"
+                              alt="{{$hot->title}}" title="{{$hot->title}}"></figure>
                         <span class="status">
                            @if($hot->resolution==0)
                            <span class="tag-base hd-tag">HD</span>
@@ -736,7 +751,8 @@
 <!-- Modal Tiếp tục xem phim -->
 <div class="modal fade" id="resumeModal" tabindex="-1" role="dialog" aria-labelledby="resumeModalLabel"
    aria-hidden="true">
-   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+   <div class="modal-dialog modal-sm modal-dialog-centered" role="document"
+      style="margin: 0 auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
       <div class="modal-content"
          style="background: rgba(27, 46, 67, 0.95); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1);">
          <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 15px;">
@@ -773,8 +789,15 @@
    $(document).ready(function() {
        // Lấy ID phim từ dữ liệu trang
        const movieId = "{{ $movie->id }}";
+       const episodeSlug = "{{ $tapphim }}";
        const movieSlug = "{{ $movie->slug }}";
        const viewedKey = "viewed_movie_" + movieId;
+       const isAuthenticated = {{ Auth::check() ? 'true' : 'false' }};
+       let player = null;
+       let playerReady = false;
+       let currentTime = 0;
+       let duration = 0;
+       let watchIntervalId = null;
        let viewTimer = null;
        
        // Chỉ đếm lượt xem nếu chưa đếm trong phiên này
@@ -813,8 +836,230 @@
                if (viewTimer) {
                    clearTimeout(viewTimer);
                }
+               
+               // Lưu tiến độ xem trước khi đóng trang
+               saveWatchingProgress();
            });
        }
+       
+       // Hàm định dạng thời gian (chuyển giây thành hh:mm:ss)
+       function formatTime(seconds) {
+           const h = Math.floor(seconds / 3600);
+           const m = Math.floor((seconds % 3600) / 60);
+           const s = Math.floor(seconds % 60);
+           
+           return [
+               h > 0 ? h : null,
+               h > 0 ? (m < 10 ? '0' + m : m) : m,
+               s < 10 ? '0' + s : s
+           ].filter(Boolean).join(':');
+       }
+       
+       // Hàm lấy tiến độ xem từ server cho người dùng đã đăng nhập
+       function getWatchingProgressFromServer() {
+           if (!isAuthenticated) return;
+           
+           $.ajax({
+               url: "{{ url('/history/get') }}/" + movieId + "/" + episodeSlug,
+               type: "GET",
+               headers: {
+                   'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+               },
+               success: function(response) {
+                   if (response.success && response.history) {
+                       const savedTime = response.history.current_time;
+                       
+                       // Hiển thị thời gian đã lưu trong modal
+                       $('#resumeTimeDisplay').text(formatTime(savedTime));
+                       
+                       // Hiển thị modal tiếp tục xem
+                       setTimeout(function() {
+                           $('#resumeModal').modal('show');
+                       }, 800);
+                       
+                       // Xử lý sự kiện khi người dùng nhấn "Tiếp tục xem"
+                       $('#resumeWatchingBtn').on('click', function() {
+                           // Đóng modal trước
+                           $('#resumeModal').modal('hide');
+                           
+                           // Chờ 500ms để modal đóng hoàn toàn rồi mới seek
+                           setTimeout(function() {
+                               if (player) {
+                                   player.currentTime = parseFloat(savedTime);
+                                   player.play().catch(error => {
+                                       console.error("Lỗi khi phát video: ", error);
+                                   });
+                               }
+                           }, 500);
+                       });
+                       
+                       // Xử lý sự kiện khi người dùng nhấn "Xem lại từ đầu"
+                       $('#restartWatchingBtn').on('click', function() {
+                           $('#resumeModal').modal('hide');
+                           
+                           setTimeout(function() {
+                               if (player) {
+                                   player.currentTime = 0;
+                                   player.play().catch(error => {
+                                       console.error("Lỗi khi phát video: ", error);
+                                   });
+                               }
+                           }, 500);
+                       });
+                   } else {
+                       console.log("Không có lịch sử xem cho phim này");
+                   }
+               },
+               error: function(xhr) {
+                   // Có thể không có lịch sử xem hoặc lỗi khác
+                   console.log("Không tìm thấy lịch sử xem", xhr);
+                   
+                   // Nếu không có lịch sử trên server, kiểm tra localStorage
+                   checkLocalStorage();
+               }
+           });
+       }
+       
+       // Kiểm tra localStorage (dành cho người dùng chưa đăng nhập hoặc khi server không có dữ liệu)
+       function checkLocalStorage() {
+           const savedTime = localStorage.getItem('movie_{{$movie->id}}_{{$tapphim}}_time');
+           if (savedTime && savedTime > 10) {
+               // Hiển thị thời gian đã lưu trong modal
+               $('#resumeTimeDisplay').text(formatTime(savedTime));
+               
+               // Hiển thị modal tiếp tục xem
+               setTimeout(function() {
+                   $('#resumeModal').modal('show');
+               }, 800);
+               
+               // Xử lý sự kiện khi người dùng nhấn "Tiếp tục xem"
+               $('#resumeWatchingBtn').on('click', function() {
+                   // Đóng modal trước
+                   $('#resumeModal').modal('hide');
+                   
+                   // Chờ 500ms để modal đóng hoàn toàn rồi mới seek
+                   setTimeout(function() {
+                       if (player) {
+                           player.currentTime = parseFloat(savedTime);
+                           player.play().catch(error => {
+                               console.error("Lỗi khi phát video: ", error);
+                           });
+                       }
+                   }, 500);
+               });
+               
+               // Xử lý sự kiện khi người dùng nhấn "Xem lại từ đầu"
+               $('#restartWatchingBtn').on('click', function() {
+                   localStorage.removeItem('movie_{{$movie->id}}_{{$tapphim}}_time');
+                   $('#resumeModal').modal('hide');
+                   
+                   setTimeout(function() {
+                       if (player) {
+                           player.currentTime = 0;
+                           player.play().catch(error => {
+                               console.error("Lỗi khi phát video: ", error);
+                           });
+                       }
+                   }, 500);
+               });
+           }
+       }
+       
+       // Hàm lưu tiến độ xem lên server
+       function saveWatchingProgress() {
+           if (!isAuthenticated || !player || player.currentTime < 10) return;
+           
+           currentTime = player.currentTime;
+           duration = player.duration || 0;
+           
+           // Không lưu nếu thời gian xem quá ngắn
+           if (currentTime < 10) return;
+           
+           // Lưu lên server nếu đã đăng nhập
+           if (isAuthenticated) {
+               $.ajax({
+                   url: "{{ route('history.save') }}",
+                   type: "POST",
+                   data: {
+                       movie_id: movieId,
+                       episode: episodeSlug,
+                       current_time: currentTime,
+                       duration: duration,
+                       _token: "{{ csrf_token() }}"
+                   },
+                   success: function(response) {
+                       console.log("Đã lưu tiến độ xem lên server", response);
+                   },
+                   error: function(xhr) {
+                       console.error("Lỗi khi lưu tiến độ xem", xhr);
+                       
+                       // Fallback: lưu vào localStorage nếu lưu server thất bại
+                       localStorage.setItem('movie_{{$movie->id}}_{{$tapphim}}_time', currentTime);
+                   }
+               });
+           } else {
+               // Lưu vào localStorage cho người dùng chưa đăng nhập
+               localStorage.setItem('movie_{{$movie->id}}_{{$tapphim}}_time', currentTime);
+           }
+       }
+       
+       // Setup theo dõi player và lưu tiến độ định kỳ
+       function setupProgressTracking(plyrInstance) {
+           player = plyrInstance;
+           
+           // Lắng nghe sự kiện timeupdate để cập nhật thời gian hiện tại
+           player.on('timeupdate', function() {
+               currentTime = player.currentTime;
+               duration = player.duration || 0;
+           });
+           
+           // Lưu tiến độ định kỳ mỗi 30 giây
+           watchIntervalId = setInterval(saveWatchingProgress, 30000);
+           
+           // Lưu tiến độ khi dừng video
+           player.on('pause', saveWatchingProgress);
+           
+           // Lưu tiến độ khi kết thúc video
+           player.on('ended', function() {
+               // Khi video kết thúc, đặt thời gian hiện tại về 0 để lần sau xem lại từ đầu
+               if (isAuthenticated) {
+                   $.ajax({
+                       url: "{{ route('history.save') }}",
+                       type: "POST",
+                       data: {
+                           movie_id: movieId,
+                           episode: episodeSlug,
+                           current_time: 0,
+                           duration: duration,
+                           _token: "{{ csrf_token() }}"
+                       }
+                   });
+               } else {
+                   localStorage.removeItem('movie_{{$movie->id}}_{{$tapphim}}_time');
+               }
+           });
+       }
+   
+       // Lấy tiến độ xem khi trang load xong
+       if (isAuthenticated) {
+           getWatchingProgressFromServer();
+       } else {
+           checkLocalStorage();
+       }
+       
+       // Đăng ký hàm setup với player
+       document.addEventListener('plyr_ready', function(e) {
+           console.log('Plyr đã sẵn sàng, thiết lập theo dõi tiến độ');
+           setupProgressTracking(e.detail.player);
+       });
+       
+       // Cleanup khi rời trang
+       $(window).on('beforeunload', function() {
+           if (watchIntervalId) {
+               clearInterval(watchIntervalId);
+           }
+           saveWatchingProgress();
+       });
    });
    
    // Hàm cập nhật hiển thị lượt xem trên toàn trang
@@ -923,6 +1168,14 @@
                         player = plyrInstance;
                         playerReady = true;
                         
+                        // Thông báo player đã sẵn sàng thông qua sự kiện tùy chỉnh
+                        document.dispatchEvent(new CustomEvent('plyr_ready', { 
+                            detail: { 
+                                player: plyrInstance,
+                                hls: hls
+                            }
+                        }));
+                        
                         // Nếu có seek đang chờ xử lý, thực hiện nó
                         if (pendingSeek !== null) {
                             setTimeout(() => {
@@ -931,15 +1184,8 @@
                             }, 800);
                         }
                         
-                        // Gắn sự kiện timeupdate
-                        player.on('timeupdate', function() {
-                            // Lưu thời điểm xem phim
-                            const currentTime = player.currentTime;
-                            const duration = player.duration;
-                            if (currentTime > 10 && duration > 0) {
-                                localStorage.setItem('movie_{{$movie->id}}_{{$tapphim}}_time', currentTime);
-                            }
-                        });
+                        // Lưu thời điểm hiện tại để phát hiện seek
+                        localStorage.setItem('_last_known_time', 0);
                         
                         // Bắt sự kiện seeked để hiển thị thông báo
                         player.on('seeked', function() {
@@ -1006,44 +1252,6 @@
                         }
                     }
                 });
-                
-                // Kiểm tra nếu người dùng đã xem phim này trước đó
-                const savedTime = localStorage.getItem('movie_{{$movie->id}}_{{$tapphim}}_time');
-                if (savedTime && savedTime > 10) {
-                    // Hiển thị thời gian đã lưu trong modal
-                    $('#resumeTimeDisplay').text(formatTime(savedTime));
-                    
-                    // Hiển thị modal tiếp tục xem
-                    setTimeout(function() {
-                        $('#resumeModal').modal('show');
-                    }, 800);
-                    
-                    // Xử lý sự kiện khi người dùng nhấn "Tiếp tục xem"
-                    $('#resumeWatchingBtn').on('click', function() {
-                        // Đóng modal trước
-                        $('#resumeModal').modal('hide');
-                        
-                        // Chờ 500ms để modal đóng hoàn toàn rồi mới seek
-                        setTimeout(function() {
-                            seekToTime(parseFloat(savedTime));
-                        }, 500);
-                    });
-                    
-                    // Xử lý sự kiện khi người dùng nhấn "Xem lại từ đầu"
-                    $('#restartWatchingBtn').on('click', function() {
-                        localStorage.removeItem('movie_{{$movie->id}}_{{$tapphim}}_time');
-                        $('#resumeModal').modal('hide');
-                        
-                        setTimeout(function() {
-                            player.currentTime = 0;
-                            player.play().then(() => {
-                                showNotification('Đang phát từ đầu', 'success');
-                            }).catch(error => {
-                                console.error("Lỗi khi phát video: ", error);
-                            });
-                        }, 500);
-                    });
-                }
             } else {
                 // Video không phải HLS, khởi tạo Plyr thông thường
                 // Định nghĩa thời gian nhảy mỗi lần tiến/lùi
@@ -1070,7 +1278,11 @@
                 // Xử lý các sự kiện
                 player.on('ready', function() {
                     playerReady = true;
-                    // Code xử lý player thông thường
+                    
+                    // Thông báo player đã sẵn sàng
+                    document.dispatchEvent(new CustomEvent('plyr_ready', { 
+                        detail: { player: player }
+                    }));
                 });
             }
         }

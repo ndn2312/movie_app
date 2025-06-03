@@ -157,14 +157,35 @@
 
     .main-title {
         font-size: 32px;
-        color: #da251d;
         font-weight: 800;
         letter-spacing: 1px;
-        line-height: 1.2;
+        line-height: 1.4;
         margin: 0 0 15px;
         text-transform: uppercase;
         font-family: 'Be Vietnam Pro', sans-serif;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .main-title .yellow-line {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .main-title .red-line {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .main-title .connector {
+        margin: 0 15px;
+        display: inline-block;
     }
 
     .date-container {
@@ -329,6 +350,24 @@
             padding: 20px 15px;
         }
     }
+
+    .yellow-text {
+        background: linear-gradient(to right, #FFD700);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: none;
+        display: inline-block;
+    }
+
+    .red-text {
+        background: linear-gradient(to right, #FF0000);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: none;
+        display: inline-block;
+    }
 </style>
 <!-- Màn hình loading -->
 <div id="page-loader" class="page-loader">
@@ -347,9 +386,12 @@
             <div class="anniversary-content">
                 <div class="top-line"></div>
                 <h2 class="celebration-title">CHÀO MỪNG</h2>
-                <h1 class="main-title">50 NĂM THỐNG NHẤT ĐẤT NƯỚC</h1>
+                <h1 class="main-title">
+                    <div class="yellow-line"><span class="yellow-text">80 NĂM CÁCH MẠNG THÁNG 8</span></div>
+                    <div class="red-line"><span class="red-text">QUỐC KHÁNH 2/9</span></div>
+                </h1>
                 <div class="date-container">
-                    <span class="anniversary-date">30/04/1975 - 30/04/2025</span>
+                    <span class="anniversary-date">02/09/1945 - 02/09/2025</span>
                 </div>
                 <div class="bottom-line"></div>
             </div>
@@ -367,8 +409,8 @@
     </div>
 </div>
 <!-- Script điều khiển màn hình loading -->
- <script>
-document.addEventListener('DOMContentLoaded', function() {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
     const pageLoader = document.getElementById('page-loader');
     let isNavigatingAway = false;
 
@@ -399,13 +441,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Navigate after showing animation
                 setTimeout(function() {
                     window.location.href = href;
-                }, 1000);
+                }, 4000);
             }
         });
     });
 
     // Form submissions
-    document.querySelectorAll('form:not(.ajax-form)').forEach(form => {
+    document.querySelectorAll('form:not(.ajax-form):not(#loginForm):not(#registerForm):not(#account-form)').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             isNavigatingAway = true;
@@ -417,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             setTimeout(() => {
                 this.submit();
-            }, 1000);
+            }, 2000);
         });
     });
 
@@ -446,5 +488,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
-

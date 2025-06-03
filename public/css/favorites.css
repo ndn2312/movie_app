@@ -1,0 +1,93 @@
+/* CSS cho tính năng yêu thích */
+
+/* Toast container */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+/* Toast message */
+.toast {
+    background: rgba(33, 43, 54, 0.9);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+    transform: translateY(30px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Nút yêu thích */
+.social-action-button.favorite {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.social-action-button.favorite.active {
+    background-color: #f8d7da;
+    color: #dc3545;
+    border-color: #f5c6cb;
+}
+
+.social-action-button.favorite.active i {
+    color: #dc3545;
+}
+
+.social-action-button.favorite:hover {
+    background-color: #f8d7da;
+    color: #dc3545;
+}
+
+/* Hiệu ứng khi click vào nút yêu thích */
+.social-action-button.favorite::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.social-action-button.favorite:active::after {
+    transform: scale(2);
+    opacity: 1;
+    transition: 0s;
+}
+
+/* Animation cho icon trái tim */
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.2);
+    }
+    50% {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.social-action-button.favorite.active i {
+    animation: heartbeat 1s ease-in-out;
+} 

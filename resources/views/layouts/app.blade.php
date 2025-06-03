@@ -1,10 +1,3 @@
-<!--
-## Author: W3layouts
-## Author URL: http://w3layouts.com
-## License: Creative Commons Attribution 3.0 Unported
-## License URL: http://creativecommons.org/licenses/by/3.0/
--->
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -246,117 +239,18 @@
             <aside class="sidebar-left">
                 <nav class="navbar navbar-inverse">
                     <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                            data-target=".collapse" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
+
                         <h1>
                             <a class="navbar-brand" href="{{url('/home')}}">
-                                <span class="fa fa-area-chart"></span> Glance
-                                <span class="dashboard_text">Design dashboard</span>
+                                <span class="fa fa-area-chart"></span> Admin
+                                <span class="dashboard_text">Quản Trị NDN Phim</span>
                             </a>
                         </h1>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="sidebar-menu">
-                            <li class="header">Quản lý</li>
-                            <li class="treeview">
-                                <a href="{{url('/home')}}">
-                                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="treeview">
-                                <a href="#">
-                                    <i class="fa-solid fa-list"></i>
-                                    <span>Danh mục phim</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li>
-                                        <a href="{{route('category.create')}}"><i class="fa fa-angle-right"></i> Thêm
-                                            danh mục</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('category.index')}}"><i class="fa fa-angle-right"></i> Liệt kê
-                                            danh mục</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="treeview">
-                                <a href="#">
-                                    <i class="fas fa-masks-theater"></i>
-                                    <span>Thể loại phim</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li>
-                                        <a href="{{route('genre.create')}}"><i class="fa fa-angle-right"></i> Thêm thể
-                                            loại</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('genre.index')}}"><i class="fa fa-angle-right"></i> Liệt kê thể
-                                            loại</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="treeview">
-                                <a href="#">
-                                    <i class="fa-solid fa-globe"></i>
-                                    <span>Quốc gia phim</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li>
-                                        <a href="{{route('country.create')}}"><i class="fa fa-angle-right"></i> Thêm
-                                            quốc gia</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('country.index')}}"><i class="fa fa-angle-right"></i> Liệt kê
-                                            quốc gia</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="treeview">
-                                <a href="#">
-                                    <i class="fa-solid fa-film"></i>
-                                    <span>Phim</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li>
-                                        <a href="{{route('movie.create')}}"><i class="fa fa-angle-right"></i> Thêm
-                                            phim</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('movie.index')}}"><i class="fa fa-angle-right"></i> Liệt kê
-                                            phim</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('leech-movie')}}"><i class="fa fa-angle-right"></i> API
-                                            phim</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="treeview">
-                                <a href="#">
-                                    <i class="fa-solid fa-circle-play"></i>
-                                    <span>Quản lý tập phim</span>
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </a>
-                                <ul class="treeview-menu">
-                                    <li>
-                                        <a href="{{route('episode.create')}}"><i class="fa fa-angle-right"></i> Thêm tập
-                                            phim</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('episode.index')}}"><i class="fa fa-angle-right"></i> Liệt kê
-                                            tập phim</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <li class="header">Quản Lý</li>
+                            @include('layouts.partials.sidebar-menu')
                         </ul>
                     </div>
                     <!-- /.navbar-collapse -->
@@ -374,7 +268,7 @@
                 <div class="profile_details_left">
                     <!--notifications of menu start -->
                     <ul class="nofitications-dropdown">
-                        <li class="dropdown head-dpdn">
+                        {{-- <li class="dropdown head-dpdn">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i
                                     class="fa fa-envelope"></i><span class="badge">4</span></a>
                             <ul class="dropdown-menu">
@@ -385,7 +279,7 @@
                                 </li>
                                 <!-- ... Menu items ... -->
                             </ul>
-                        </li>
+                        </li> --}}
                         <!-- ... Other dropdown items ... -->
                     </ul>
                     <div class="clearfix"></div>
@@ -597,15 +491,16 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address')
+                                <label for="login" class="col-md-4 col-form-label text-md-end">{{ __('Email hoặc Tên
+                                    đăng nhập')
                                     }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="email" type="email"
-                                        class="form-control @error('email') is-invalid @enderror" name="email"
-                                        value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                    <input id="login" type="text"
+                                        class="form-control @error('login') is-invalid @enderror" name="login"
+                                        value="{{ old('login') }}" required autocomplete="login" autofocus>
 
-                                    @error('email')
+                                    @error('login')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -726,19 +621,7 @@
         let modalCountdownTimer;
         
         $(document).ready(function() {
-            // Khởi tạo DataTables với tùy chọn ngôn ngữ tiếng Việt
-            // $('#tablephim').DataTable({
-            //     "scrollX": true,
-                
-            //     "responsive": true,
-            //     "language": {
-            //         // Sử dụng đường dẫn phù hợp với phiên bản 2.3.0
-            //         "url": "//cdn.datatables.net/plug-ins/2.0.0/i18n/vi.json"
-            //     }
-                
-            // });
-
-            
+          
             // Khởi tạo Owl Carousel
             $('#owl-demo').owlCarousel({
                 items: 3,
@@ -1059,7 +942,7 @@
                 var ten_phim = $(this).attr('title');
                 
                 $.ajax({
-                    url: "{{url('/update-year-phim')}}",
+                    url: "{{url('/admin/update-year-phim')}}",
                     method: "GET",
                     data: {
                         year: year,
@@ -1095,7 +978,7 @@
                 }
                 
                 $.ajax({
-                    url: "{{url('/update-topview-phim')}}",
+                    url: "{{url('/admin/update-topview-phim')}}",
                     method: "GET",
                     data: {
                         topview: topview,
@@ -1122,7 +1005,7 @@
                 var ten_phim = $(this).attr('title');
                 
                 $.ajax({
-                    url: "{{url('/update-season-phim')}}",
+                    url: "{{url('/admin/update-season-phim')}}",
                     method: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

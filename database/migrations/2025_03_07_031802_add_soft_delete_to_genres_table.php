@@ -14,8 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('genres', function (Blueprint $table) {
-            $table->softDeletes();
-
+            if (!Schema::hasColumn('genres', 'deleted_at')) {
+                $table->softDeletes();
+            }
         });
     }
 
@@ -28,7 +29,6 @@ return new class extends Migration
     {
         Schema::table('genres', function (Blueprint $table) {
             $table->dropSoftDeletes();
-
         });
     }
 };

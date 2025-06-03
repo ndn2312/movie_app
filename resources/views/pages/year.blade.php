@@ -1,7 +1,6 @@
 @extends('layout')
 @section('content')
 <style>
-    /* ==================== RESET & BASE STYLES ==================== */
     .tag-base {
         display: inline-block;
         padding: 4px 10px;

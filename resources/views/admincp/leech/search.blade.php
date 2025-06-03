@@ -1,6 +1,188 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    /* Filter options styles */
+    .filter-options {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .filter-actions {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    .filter-apply-btn,
+    .filter-reset-btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        text-decoration: none;
+    }
+
+    .filter-apply-btn {
+        background: #4a6bff;
+        color: white;
+        border: none;
+    }
+
+    .filter-reset-btn {
+        background: #f8f9fa;
+        color: #495057;
+        border: 1px solid #ddd;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #495057;
+    }
+
+    /* Movie episode CSS */
+    .movie-year .fas {
+        color: #6c757d;
+    }
+
+    /* CSS cho trang chào mừng tìm kiếm */
+    .welcome-search {
+        text-align: center;
+        padding: 50px 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        margin-top: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .welcome-icon {
+        width: 80px;
+        height: 80px;
+        background-color: #e9ecef;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+    }
+
+    .welcome-icon i {
+        font-size: 36px;
+        color: #4a6bff;
+    }
+
+    .welcome-search h3 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .welcome-search p {
+        font-size: 16px;
+        color: #6c757d;
+        margin-bottom: 30px;
+    }
+
+    .search-tips {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .search-tips h4 {
+        font-size: 18px;
+        color: #343a40;
+        margin-bottom: 15px;
+    }
+
+    .search-tips h4 i {
+        color: #ffc107;
+        margin-right: 5px;
+    }
+
+    .tips-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .tip-btn {
+        padding: 8px 16px;
+        background-color: #e9ecef;
+        border: none;
+        border-radius: 20px;
+        color: #495057;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .tip-btn:hover {
+        background-color: #4a6bff;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .empty-results {
+        text-align: center;
+        padding: 50px 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .empty-results i {
+        font-size: 48px;
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .empty-results h3 {
+        font-size: 24px;
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+
+    .empty-results p {
+        font-size: 16px;
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+</style>
 <link rel="stylesheet" href="{{ asset('css/movie-grid.css') }}">
 <script src="{{ asset('js/movie-grid.js') }}"></script>
 
@@ -48,34 +230,47 @@
                         </select>
                     </div>
                     <div class="filter-group">
-                        <label>Thể loại</label>
+                        <label>Thể loại phim</label>
                         <select name="category" class="form-select">
                             <option value="">Tất cả</option>
-                            <option value="hanh-dong" {{ $category=='hanh-dong' ? 'selected' : '' }}>Hành động</option>
-                            <option value="tinh-cam" {{ $category=='tinh-cam' ? 'selected' : '' }}>Tình cảm</option>
-                            <option value="hai-huoc" {{ $category=='hai-huoc' ? 'selected' : '' }}>Hài hước</option>
-                            <option value="co-trang" {{ $category=='co-trang' ? 'selected' : '' }}>Cổ trang</option>
-                            <option value="kinh-di" {{ $category=='kinh-di' ? 'selected' : '' }}>Kinh dị</option>
-                            <option value="tam-ly" {{ $category=='tam-ly' ? 'selected' : '' }}>Tâm lý</option>
+                            @foreach($genres as $genre)
+                            <option value="{{ $genre->slug }}" {{ $category==$genre->slug ? 'selected' : '' }}>
+                                {{ $genre->title }}
+                            </option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="filter-group">
                         <label>Quốc gia</label>
                         <select name="country" class="form-select">
                             <option value="">Tất cả</option>
-                            <option value="trung-quoc" {{ $country=='trung-quoc' ? 'selected' : '' }}>Trung Quốc
+                            @foreach($countries as $country_item)
+                            <option value="{{ $country_item->slug }}" {{ $country==$country_item->slug ? 'selected' : ''
+                                }}>
+                                {{ $country_item->title }}
                             </option>
-                            <option value="han-quoc" {{ $country=='han-quoc' ? 'selected' : '' }}>Hàn Quốc</option>
-                            <option value="au-my" {{ $country=='au-my' ? 'selected' : '' }}>Âu Mỹ</option>
-                            <option value="nhat-ban" {{ $country=='nhat-ban' ? 'selected' : '' }}>Nhật Bản</option>
-                            <option value="thai-lan" {{ $country=='thai-lan' ? 'selected' : '' }}>Thái Lan</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Danh mục phim</label>
+                        <select name="type" class="form-select">
+                            <option value="">Tất cả</option>
+                            <option value="single" {{ $type=='single' ? 'selected' : '' }}>Phim lẻ
+                            </option>
+                            <option value="series" {{ $type=='series' ? 'selected' : '' }}>Phim bộ
+                            </option>
+                            <option value="hoathinh" {{ $type=='hoathinh' ? 'selected' : '' }}>Hoạt hình
+                            </option>
+                            <option value="tvshows" {{ $type=='tvshows' ? 'selected' : '' }}>TV Shows
+                            </option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <label>Năm</label>
                         <select name="year" class="form-select">
                             <option value="">Tất cả</option>
-                            @for($i = 2024; $i >= 2015; $i--)
+                            @for($i = 2025; $i >= 2015; $i--)
                             <option value="{{ $i }}" {{ $year==$i ? 'selected' : '' }}>{{ $i }}</option>
                             @endfor
                         </select>
@@ -140,7 +335,7 @@
         <div class="movie-card" data-id="{{ $res['_id'] }}" data-slug="{{ $res['slug'] }}">
             <div class="movie-card-header">
                 <div class="movie-image">
-                   
+
                     @if(isset($res['tmdb']) && isset($res['tmdb']['vote_average']) && $res['tmdb']['vote_average'] > 0)
                     <div class="rating-badge">
                         <i class="fas fa-star"></i> {{ $res['tmdb']['vote_average'] }}
@@ -399,6 +594,28 @@
             </ul>
         </nav>
     </div>
+    @elseif(empty($keyword))
+    <!-- Hiển thị trang chào mừng khi chưa tìm kiếm -->
+    <div class="welcome-search">
+        <div class="welcome-icon">
+            <i class="fas fa-search"></i>
+        </div>
+        <h3>Tìm kiếm phim theo API</h3>
+        <p>Nhập từ khóa vào ô tìm kiếm phía trên để tìm phim từ nguồn API</p>
+        <div class="search-tips">
+            <h4><i class="fas fa-lightbulb"></i> Gợi ý tìm kiếm:</h4>
+            <div class="tips-list">
+                <button onclick="quickSearch('marvel')" class="tip-btn">Marvel</button>
+                <button onclick="quickSearch('ác quỷ')" class="tip-btn">Ác quỷ</button>
+                <button onclick="quickSearch('batman')" class="tip-btn">Batman</button>
+                <button onclick="quickSearch('avatar')" class="tip-btn">Avatar</button>
+                <button onclick="quickSearch('ngôi nhà')" class="tip-btn">Ngôi nhà</button>
+                <button onclick="quickSearch('hàn quốc')" class="tip-btn">Hàn Quốc</button>
+                <button onclick="quickSearch('ma')" class="tip-btn">Ma</button>
+                <button onclick="quickSearch('chiến tranh')" class="tip-btn">Chiến tranh</button>
+            </div>
+        </div>
+    </div>
     @else
     <div class="empty-results">
         <i class="fas fa-search"></i>
@@ -411,80 +628,7 @@
     @endif
 </div>
 
-<style>
-    /* Filter options styles */
-    .filter-options {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-    }
 
-    .filter-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-
-    .filter-group {
-        flex: 1;
-        min-width: 200px;
-    }
-
-    .filter-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #495057;
-    }
-
-    .filter-actions {
-        display: flex;
-        align-items: flex-end;
-        gap: 10px;
-    }
-
-    .filter-apply-btn,
-    .filter-reset-btn {
-        padding: 8px 16px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        text-decoration: none;
-    }
-
-    .filter-apply-btn {
-        background: #4a6bff;
-        color: white;
-        border: none;
-    }
-
-    .filter-reset-btn {
-        background: #f8f9fa;
-        color: #495057;
-        border: 1px solid #ddd;
-    }
-
-    .form-select {
-        width: 100%;
-        padding: 8px 12px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-        color: #495057;
-    }
-
-    /* Movie episode CSS */
-    .movie-year .fas {
-        color: #6c757d;
-    }
-</style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -551,9 +695,18 @@
             // Cập nhật danh sách slug của phim đã chọn
             const selectedSlugs = [];
             document.querySelectorAll('.movie-checkbox:checked').forEach(checkbox => {
-                selectedSlugs.push(checkbox.getAttribute('data-slug'));
+                const slug = checkbox.getAttribute('data-slug');
+                if (slug) {
+                    selectedSlugs.push(slug);
+                }
             });
+            
+            // Đảm bảo giá trị JSON chắc chắn hợp lệ và không bị trống
+            if (selectedSlugs.length > 0) {
             selectedMoviesInput.value = JSON.stringify(selectedSlugs);
+            } else {
+                selectedMoviesInput.value = "[]"; // JSON array trống là hợp lệ
+            }
         }
         
         // Xử lý sự kiện thay đổi trên mỗi checkbox
@@ -582,9 +735,54 @@
             updateSelectedCount();
         });
         
+        // Xử lý submit form thêm nhiều phim
+        document.getElementById('batch-add-form')?.addEventListener('submit', function(event) {
+            // Cập nhật lại giá trị input trước khi submit để đảm bảo
+            updateSelectedCount();
+            
+            // Kiểm tra xem có phim nào được chọn không
+            const selectedCount = document.querySelectorAll('.movie-checkbox:checked').length;
+            
+            if (selectedCount === 0) {
+                event.preventDefault(); // Ngăn form submit nếu không có phim nào được chọn
+                alert('Vui lòng chọn ít nhất một phim để thêm!');
+                return false;
+            }
+            
+            // Kiểm tra giá trị JSON có hợp lệ không
+            try {
+                const parsedValue = JSON.parse(selectedMoviesInput.value);
+                if (!Array.isArray(parsedValue) || parsedValue.length === 0) {
+                    event.preventDefault();
+                    alert('Dữ liệu không hợp lệ, vui lòng thử lại!');
+                    return false;
+                }
+            } catch (e) {
+                event.preventDefault();
+                alert('Dữ liệu không hợp lệ, vui lòng thử lại!');
+                return false;
+            }
+            
+            // Hiển thị thông báo đang xử lý
+            batchAddBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+            batchAddBtn.disabled = true;
+            
+            return true; // Cho phép form submit
+        });
+        
         // Khởi tạo ban đầu
-        updateSelectedCount();
+        if (movieCheckboxes.length > 0) {
+            updateSelectedCount();
+        }
     });
+    
+    // Hàm xử lý tìm kiếm nhanh
+    function quickSearch(keyword) {
+        const form = document.querySelector('.search-box form');
+        const inputElement = form.querySelector('input[name="keyword"]');
+        inputElement.value = keyword;
+        form.submit();
+    }
 </script>
 
 @endsection

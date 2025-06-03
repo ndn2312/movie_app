@@ -30,6 +30,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Chia sẻ biến genre, country và category tới tất cả các view
+        View::composer('*', function ($view) {
+            $genre = Genre::orderBy('id', 'DESC')->get();
+            $country = Country::orderBy('id', 'DESC')->get();
+            $category = Category::orderBy('id', 'DESC')->get();
+
+            $view->with(compact('genre', 'country', 'category'));
+        });
+
         View::composer('layouts.app', function ($view) {
             // Tổng số người dùng
             $totalUsers = User::count();

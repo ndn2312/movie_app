@@ -1,442 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="dashboard-container py-4">
-    <div class="page-header mb-4">
-        <div class="glass-card">
-            <h3 class="page-title text-gradient">Quản Lý Tập Phim</h3>
-            <p class="text-muted">Tổng hợp tập phim đã leech</p>
-        </div>
-    </div>
-
-    <!-- Thêm bộ lọc và tìm kiếm -->
-    <div class="filter-section mb-4">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="episode-search" class="form-control" placeholder="Tìm kiếm tập phim...">
-        </div>
-        <div class="filter-buttons">
-            <button class="btn btn-primary btn-sm me-2" id="refresh-btn"><i class="fas fa-sync-alt me-1"></i> Làm
-                mới</button>
-            <button class="btn btn-secondary btn-sm" id="filter-btn"><i class="fas fa-filter me-1"></i> Lọc</button>
-        </div>
-    </div>
-
-    <!-- Bảng hiển thị desktop -->
-    <div class="data-table-container d-none d-xl-block mb-5">
-        <div class="glass-card">
-            <div class="table-responsive">
-                <table class="table custom-table">
-                    <thead>
-                        <tr>
-                            <th><span class="th-content">#</span></th>
-                            <th><span class="th-content">ID</span></th>
-                            <th><span class="th-content">Tên phim</span></th>
-                            <th><span class="th-content">Tên tiếng Anh</span></th>
-                            <th><span class="th-content">Slug</span></th>
-                            <th><span class="th-content">Tập</span></th>
-                            <th><span class="th-content">Server</span></th>
-                            <th><span class="th-content">Thao tác</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($resp['episodes'] as $key => $res)
-                        <tr class="table-row-hover">
-                            <td>
-                                <div class="badge badge-circle">{{$key}}</div>
-                            </td>
-                            <td>
-                                <span class="id-tag">{{$resp['movie']['_id']}}</span>
-                            </td>
-                            <td>
-                                <div class="movie-title">{{$resp['movie']['name']}}</div>
-                            </td>
-                            <td>
-                                <div class="movie-origin">{{$resp['movie']['origin_name']}}</div>
-                            </td>
-                            <td>
-                                <div class="slug-text text-truncate">{{$resp['movie']['slug']}}</div>
-                            </td>
-                            <td>
-                                <div class="episode-badge">
-                                    <span class="current">{{$resp['movie']['episode_current']}}</span>
-                                    <span class="divider">/</span>
-                                    <span class="total">{{$resp['movie']['episode_total']}}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <button class="btn btn-outline-info btn-rounded server-btn" data-bs-toggle="modal"
-                                    data-bs-target="#modal-{{$key}}">
-                                    <i class="fas fa-server me-1"></i> {{$res['server_name']}}
-                                </button>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <form method="post"
-                                        action="{{route('leech-episode-store', [$resp['movie']['slug']])}}">
-                                        @csrf
-                                        <input type="hidden" name="server_name" value="{{$res['server_name']}}">
-                                        <button type="submit" class="btn btn-success btn-icon" data-bs-toggle="tooltip"
-                                            data-bs-placement="top"
-                                            title="Thêm tập phim server {{$res['server_name']}}">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </form>
-                                    <form method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-icon" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Xóa tập phim">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                    <button class="btn btn-primary btn-icon" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Xem chi tiết">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Grid layout chính -->
-    <div class="row g-4" id="episode-grid-container">
-        @foreach ($resp['episodes'] as $key => $res)
-        <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
-            <div class="movie-card" data-name="{{$resp['movie']['name']}}"
-                data-origin-name="{{$resp['movie']['origin_name']}}" data-id="{{$resp['movie']['_id']}}">
-                <div class="movie-card-header">
-                    <div class="episode-number">Server {{$key+1}}</div>
-                    <div class="server-badge">{{$res['server_name']}}</div>
-                </div>
-                <div class="movie-card-body">
-                    <h4 class="movie-name">{{$resp['movie']['name']}}</h4>
-                    <div class="movie-original-name">{{$resp['movie']['origin_name']}}</div>
-
-                    <div class="movie-info">
-                        <div class="info-item">
-                            <span class="info-label">ID:</span>
-                            <span class="info-value id-value">{{$resp['movie']['_id']}}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Slug:</span>
-                            <span class="info-value slug-value text-truncate">{{$resp['movie']['slug']}}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Tập:</span>
-                            <span class="info-value episode-count">{{count($res['server_data'])}} tập</span>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary btn-block server-modal-btn" data-bs-toggle="modal"
-                        data-bs-target="#modal-{{$key}}">
-                        <i class="fas fa-server me-2"></i> Xem thông tin server
-                    </button>
-
-                    <div class="action-row">
-                        <form method="post" action="{{route('leech-episode-store', [$resp['movie']['slug']])}}"
-                            class="w-100">
-                            @csrf
-                            <input type="hidden" name="server_name" value="{{$res['server_name']}}">
-                            <button type="submit" class="btn btn-success btn-sm w-100">
-                                <i class="fas fa-plus me-1"></i> Thêm Server {{$res['server_name']}}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endforeach
-    </div>
-
-    <!-- Phân trang -->
-    <div class="pagination-container mt-4">
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center" id="pagination">
-                <!-- Phân trang sẽ được tạo bằng JavaScript -->
-            </ul>
-        </nav>
-    </div>
-</div>
-
-<!-- Modals for each episode's server information -->
-@foreach ($resp['episodes'] as $key => $res)
-<div class="modal fade custom-modal" id="modal-{{$key}}" tabindex="-1" aria-labelledby="serverModalLabel-{{$key}}"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title-wrapper">
-                    <h5 class="modal-title" id="serverModalLabel-{{$key}}">
-                        <i class="fas fa-film text-primary me-2"></i>
-                        <span class="text-gradient">{{$resp['movie']['name']}}</span>
-                        <span class="server-badge-sm ms-2">{{$res['server_name']}}</span>
-                    </h5>
-                    <span class="modal-subtitle">Thông tin chi tiết server</span>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="server-info-header mb-3">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="server-detail">
-                            <span class="server-label">Server:</span>
-                            <span class="server-value">{{$res['server_name']}}</span>
-                        </div>
-                        <div class="episode-count-badge">
-                            <i class="fas fa-film me-1"></i> {{count($res['server_data'])}} tập phim
-                        </div>
-                    </div>
-                </div>
-                <ul class="nav nav-pills custom-tabs mb-3" id="serverTab-{{$key}}" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="embed-tab-{{$key}}" data-bs-toggle="tab"
-                            data-bs-target="#embed-{{$key}}" type="button" role="tab">
-                            <i class="fas fa-code me-2"></i>Embed Links
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="m3u8-tab-{{$key}}" data-bs-toggle="tab"
-                            data-bs-target="#m3u8-{{$key}}" type="button" role="tab">
-                            <i class="fas fa-play-circle me-2"></i>M3U8 Links
-                        </button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="serverTabContent-{{$key}}">
-                    <div class="tab-pane fade show active" id="embed-{{$key}}" role="tabpanel">
-                        @foreach($res['server_data'] as $server_key => $server)
-                        <div class="link-item">
-                            <div class="link-header">
-                                <div class="d-flex align-items-center">
-                                    <span class="server-name">{{$server['name']}}</span>
-                                    <span class="episode-tag ms-2">Tập {{$server['name']}}</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="server-label me-2">{{$res['server_name']}}</div>
-                                    <div class="server-type">Embed</div>
-                                </div>
-                            </div>
-                            <div class="link-content">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" value="{{$server['link_embed']}}" readonly>
-                                    <button class="btn btn-copy copy-btn" type="button"
-                                        data-clipboard-text="{{$server['link_embed']}}">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                    <div class="tab-pane fade" id="m3u8-{{$key}}" role="tabpanel">
-                        @foreach($res['server_data'] as $server_key => $server)
-                        <div class="link-item">
-                            <div class="link-header">
-                                <div class="d-flex align-items-center">
-                                    <span class="server-name">{{$server['name']}}</span>
-                                    <span class="episode-tag ms-2">Tập {{$server['name']}}</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="server-label me-2">{{$res['server_name']}}</div>
-                                    <div class="server-type">M3U8</div>
-                                </div>
-                            </div>
-                            <div class="link-content">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" value="{{$server['link_m3u8']}}" readonly>
-                                    <button class="btn btn-copy copy-btn" type="button"
-                                        data-clipboard-text="{{$server['link_m3u8']}}">
-                                        <i class="fas fa-copy"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-    
-    // Clipboard functionality for copy buttons
-    document.querySelectorAll('.copy-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const text = this.getAttribute('data-clipboard-text');
-            navigator.clipboard.writeText(text).then(() => {
-                // Add the copied class to button
-                this.classList.add('copied');
-                this.innerHTML = '<i class="fas fa-check"></i>';
-                
-                // Show toast notification
-                const toast = document.createElement('div');
-                toast.className = 'toast-notification';
-                toast.innerHTML = '<i class="fas fa-check-circle"></i> Link đã được sao chép!';
-                document.body.appendChild(toast);
-                
-                setTimeout(() => {
-                    toast.classList.add('show');
-                }, 100);
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                    setTimeout(() => {
-                        document.body.removeChild(toast);
-                    }, 300);
-                }, 2000);
-                
-                // Reset the button after animation
-                setTimeout(() => {
-                    this.classList.remove('copied');
-                    this.innerHTML = '<i class="fas fa-copy"></i>';
-                }, 1500);
-            });
-        });
-    });
-    
-    // Animate cards on load
-    const cards = document.querySelectorAll('.movie-card');
-    cards.forEach((card, index) => {
-        setTimeout(() => {
-            card.classList.add('show');
-        }, 100 * index);
-    });
-    
-    // Tìm kiếm và phân trang
-    const searchInput = document.getElementById('episode-search');
-    const movieCards = document.querySelectorAll('.movie-card');
-    const cardsPerPage = 12;
-    let currentPage = 1;
-    let filteredCards = Array.from(movieCards);
-    
-    // Hàm cập nhật hiển thị thẻ phim
-    function updateDisplay() {
-        // Tính toán vị trí bắt đầu và kết thúc cho trang hiện tại
-        const startIndex = (currentPage - 1) * cardsPerPage;
-        const endIndex = startIndex + cardsPerPage;
-        
-        // Ẩn tất cả các card
-        movieCards.forEach(card => {
-            card.style.display = 'none';
-        });
-        
-        // Hiển thị chỉ những card nằm trong phạm vi của trang hiện tại
-        filteredCards.slice(startIndex, endIndex).forEach(card => {
-            card.style.display = 'block';
-        });
-        
-        // Cập nhật phân trang
-        updatePagination();
-    }
-    
-    // Hàm cập nhật phân trang
-    function updatePagination() {
-        const paginationContainer = document.getElementById('pagination');
-        const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
-        
-        // Xóa các nút phân trang cũ
-        paginationContainer.innerHTML = '';
-        
-        // Nút Previous
-        const prevLi = document.createElement('li');
-        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-        const prevLink = document.createElement('a');
-        prevLink.className = 'page-link';
-        prevLink.href = '#';
-        prevLink.innerHTML = '&laquo;';
-        prevLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (currentPage > 1) {
-                currentPage--;
-                updateDisplay();
-            }
-        });
-        prevLi.appendChild(prevLink);
-        paginationContainer.appendChild(prevLi);
-        
-        // Các nút số trang
-        for (let i = 1; i <= totalPages; i++) {
-            const pageLi = document.createElement('li');
-            pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
-            const pageLink = document.createElement('a');
-            pageLink.className = 'page-link';
-            pageLink.href = '#';
-            pageLink.textContent = i;
-            pageLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                currentPage = i;
-                updateDisplay();
-            });
-            pageLi.appendChild(pageLink);
-            paginationContainer.appendChild(pageLi);
-        }
-        
-        // Nút Next
-        const nextLi = document.createElement('li');
-        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-        const nextLink = document.createElement('a');
-        nextLink.className = 'page-link';
-        nextLink.href = '#';
-        nextLink.innerHTML = '&raquo;';
-        nextLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (currentPage < totalPages) {
-                currentPage++;
-                updateDisplay();
-            }
-        });
-        nextLi.appendChild(nextLink);
-        paginationContainer.appendChild(nextLi);
-    }
-    
-    // Xử lý tìm kiếm
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        
-        filteredCards = Array.from(movieCards).filter(card => {
-            const movieName = card.getAttribute('data-name').toLowerCase();
-            const originName = card.getAttribute('data-origin-name').toLowerCase();
-            const movieId = card.getAttribute('data-id').toLowerCase();
-            
-            return movieName.includes(searchTerm) || 
-                   originName.includes(searchTerm) || 
-                   movieId.includes(searchTerm);
-        });
-        
-        currentPage = 1; // Reset về trang 1 khi tìm kiếm
-        updateDisplay();
-    });
-    
-    // Nút làm mới
-    document.getElementById('refresh-btn').addEventListener('click', function() {
-        searchInput.value = '';
-        filteredCards = Array.from(movieCards);
-        currentPage = 1;
-        updateDisplay();
-    });
-    
-    // Khởi tạo hiển thị ban đầu
-    updateDisplay();
-});
-</script>
-
 <style>
     /* Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -1110,4 +674,441 @@
         }
     }
 </style>
+<div class="dashboard-container py-4">
+    <div class="page-header mb-4">
+        <div class="glass-card">
+            <h3 class="page-title text-gradient">Quản Lý Tập Phim</h3>
+            <p class="text-muted">Tổng hợp tập phim đã leech</p>
+        </div>
+    </div>
+
+    <!-- Thêm bộ lọc và tìm kiếm -->
+    <div class="filter-section mb-4">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="episode-search" class="form-control" placeholder="Tìm kiếm tập phim...">
+        </div>
+        <div class="filter-buttons">
+            <button class="btn btn-primary btn-sm me-2" id="refresh-btn"><i class="fas fa-sync-alt me-1"></i> Làm
+                mới</button>
+            <button class="btn btn-secondary btn-sm" id="filter-btn"><i class="fas fa-filter me-1"></i> Lọc</button>
+        </div>
+    </div>
+
+    <!-- Bảng hiển thị desktop -->
+    <div class="data-table-container d-none d-xl-block mb-5">
+        <div class="glass-card">
+            <div class="table-responsive">
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th><span class="th-content">#</span></th>
+                            <th><span class="th-content">ID</span></th>
+                            <th><span class="th-content">Tên phim</span></th>
+                            <th><span class="th-content">Tên tiếng Anh</span></th>
+                            <th><span class="th-content">Slug</span></th>
+                            <th><span class="th-content">Tập</span></th>
+                            <th><span class="th-content">Server</span></th>
+                            <th><span class="th-content">Thao tác</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($resp['episodes'] as $key => $res)
+                        <tr class="table-row-hover">
+                            <td>
+                                <div class="badge badge-circle">{{$key}}</div>
+                            </td>
+                            <td>
+                                <span class="id-tag">{{$resp['movie']['_id']}}</span>
+                            </td>
+                            <td>
+                                <div class="movie-title">{{$resp['movie']['name']}}</div>
+                            </td>
+                            <td>
+                                <div class="movie-origin">{{$resp['movie']['origin_name']}}</div>
+                            </td>
+                            <td>
+                                <div class="slug-text text-truncate">{{$resp['movie']['slug']}}</div>
+                            </td>
+                            <td>
+                                <div class="episode-badge">
+                                    <span class="current">{{$resp['movie']['episode_current']}}</span>
+                                    <span class="divider">/</span>
+                                    <span class="total">{{$resp['movie']['episode_total']}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-info btn-rounded server-btn" data-bs-toggle="modal"
+                                    data-bs-target="#modal-{{$key}}">
+                                    <i class="fas fa-server me-1"></i> {{$res['server_name']}}
+                                </button>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <form method="post"
+                                        action="{{route('leech-episode-store', [$resp['movie']['slug']])}}">
+                                        @csrf
+                                        <input type="hidden" name="server_name" value="{{$res['server_name']}}">
+                                        <button type="submit" class="btn btn-success btn-icon" data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Thêm tập phim server {{$res['server_name']}}">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </form>
+                                    <form method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-icon" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Xóa tập phim">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <button class="btn btn-primary btn-icon" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid layout chính -->
+    <div class="row g-4" id="episode-grid-container">
+        @foreach ($resp['episodes'] as $key => $res)
+        <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-12">
+            <div class="movie-card" data-name="{{$resp['movie']['name']}}"
+                data-origin-name="{{$resp['movie']['origin_name']}}" data-id="{{$resp['movie']['_id']}}">
+                <div class="movie-card-header">
+                    <div class="episode-number">Server {{$key+1}}</div>
+                    <div class="server-badge">{{$res['server_name']}}</div>
+                </div>
+                <div class="movie-card-body">
+                    <h4 class="movie-name">{{$resp['movie']['name']}}</h4>
+                    <div class="movie-original-name">{{$resp['movie']['origin_name']}}</div>
+
+                    <div class="movie-info">
+                        <div class="info-item">
+                            <span class="info-label">ID:</span>
+                            <span class="info-value id-value">{{$resp['movie']['_id']}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Slug:</span>
+                            <span class="info-value slug-value text-truncate">{{$resp['movie']['slug']}}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Tập:</span>
+                            <span class="info-value episode-count">{{count($res['server_data'])}} tập</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-block server-modal-btn" data-bs-toggle="modal"
+                        data-bs-target="#modal-{{$key}}">
+                        <i class="fas fa-server me-2"></i> Xem thông tin server
+                    </button>
+
+                    <div class="action-row">
+                        <form method="post" action="{{route('leech-episode-store', [$resp['movie']['slug']])}}"
+                            class="w-100">
+                            @csrf
+                            <input type="hidden" name="server_name" value="{{$res['server_name']}}">
+                            <button type="submit" class="btn btn-success btn-sm w-100">
+                                <i class="fas fa-plus me-1"></i> Thêm Server {{$res['server_name']}}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    <!-- Phân trang -->
+    <div class="pagination-container mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center" id="pagination">
+                <!-- Phân trang sẽ được tạo bằng JavaScript -->
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Modals for each episode's server information -->
+@foreach ($resp['episodes'] as $key => $res)
+<div class="modal fade custom-modal" id="modal-{{$key}}" tabindex="-1" aria-labelledby="serverModalLabel-{{$key}}"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <h5 class="modal-title" id="serverModalLabel-{{$key}}">
+                        <i class="fas fa-film text-primary me-2"></i>
+                        <span class="text-gradient">{{$resp['movie']['name']}}</span>
+                        <span class="server-badge-sm ms-2">{{$res['server_name']}}</span>
+                    </h5>
+                    <span class="modal-subtitle">Thông tin chi tiết server</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="server-info-header mb-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="server-detail">
+                            <span class="server-label">Server:</span>
+                            <span class="server-value">{{$res['server_name']}}</span>
+                        </div>
+                        <div class="episode-count-badge">
+                            <i class="fas fa-film me-1"></i> {{count($res['server_data'])}} tập phim
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav nav-pills custom-tabs mb-3" id="serverTab-{{$key}}" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="embed-tab-{{$key}}" data-bs-toggle="tab"
+                            data-bs-target="#embed-{{$key}}" type="button" role="tab">
+                            <i class="fas fa-code me-2"></i>Embed Links
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="m3u8-tab-{{$key}}" data-bs-toggle="tab"
+                            data-bs-target="#m3u8-{{$key}}" type="button" role="tab">
+                            <i class="fas fa-play-circle me-2"></i>M3U8 Links
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="serverTabContent-{{$key}}">
+                    <div class="tab-pane fade show active" id="embed-{{$key}}" role="tabpanel">
+                        @foreach($res['server_data'] as $server_key => $server)
+                        <div class="link-item">
+                            <div class="link-header">
+                                <div class="d-flex align-items-center">
+                                    <span class="server-name">{{$server['name']}}</span>
+                                    <span class="episode-tag ms-2">Tập {{$server['name']}}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="server-label me-2">{{$res['server_name']}}</div>
+                                    <div class="server-type">Embed</div>
+                                </div>
+                            </div>
+                            <div class="link-content">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{$server['link_embed']}}" readonly>
+                                    <button class="btn btn-copy copy-btn" type="button"
+                                        data-clipboard-text="{{$server['link_embed']}}">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="tab-pane fade" id="m3u8-{{$key}}" role="tabpanel">
+                        @foreach($res['server_data'] as $server_key => $server)
+                        <div class="link-item">
+                            <div class="link-header">
+                                <div class="d-flex align-items-center">
+                                    <span class="server-name">{{$server['name']}}</span>
+                                    <span class="episode-tag ms-2">Tập {{$server['name']}}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="server-label me-2">{{$res['server_name']}}</div>
+                                    <div class="server-type">M3U8</div>
+                                </div>
+                            </div>
+                            <div class="link-content">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{$server['link_m3u8']}}" readonly>
+                                    <button class="btn btn-copy copy-btn" type="button"
+                                        data-clipboard-text="{{$server['link_m3u8']}}">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+    
+    // Clipboard functionality for copy buttons
+    document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const text = this.getAttribute('data-clipboard-text');
+            navigator.clipboard.writeText(text).then(() => {
+                // Add the copied class to button
+                this.classList.add('copied');
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                
+                // Show toast notification
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification';
+                toast.innerHTML = '<i class="fas fa-check-circle"></i> Link đã được sao chép!';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.add('show');
+                }, 100);
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 300);
+                }, 2000);
+                
+                // Reset the button after animation
+                setTimeout(() => {
+                    this.classList.remove('copied');
+                    this.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 1500);
+            });
+        });
+    });
+    
+    // Animate cards on load
+    const cards = document.querySelectorAll('.movie-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add('show');
+        }, 100 * index);
+    });
+    
+    // Tìm kiếm và phân trang
+    const searchInput = document.getElementById('episode-search');
+    const movieCards = document.querySelectorAll('.movie-card');
+    const cardsPerPage = 12;
+    let currentPage = 1;
+    let filteredCards = Array.from(movieCards);
+    
+    // Hàm cập nhật hiển thị thẻ phim
+    function updateDisplay() {
+        // Tính toán vị trí bắt đầu và kết thúc cho trang hiện tại
+        const startIndex = (currentPage - 1) * cardsPerPage;
+        const endIndex = startIndex + cardsPerPage;
+        
+        // Ẩn tất cả các card
+        movieCards.forEach(card => {
+            card.style.display = 'none';
+        });
+        
+        // Hiển thị chỉ những card nằm trong phạm vi của trang hiện tại
+        filteredCards.slice(startIndex, endIndex).forEach(card => {
+            card.style.display = 'block';
+        });
+        
+        // Cập nhật phân trang
+        updatePagination();
+    }
+    
+    // Hàm cập nhật phân trang
+    function updatePagination() {
+        const paginationContainer = document.getElementById('pagination');
+        const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+        
+        // Xóa các nút phân trang cũ
+        paginationContainer.innerHTML = '';
+        
+        // Nút Previous
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+        const prevLink = document.createElement('a');
+        prevLink.className = 'page-link';
+        prevLink.href = '#';
+        prevLink.innerHTML = '&laquo;';
+        prevLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage > 1) {
+                currentPage--;
+                updateDisplay();
+            }
+        });
+        prevLi.appendChild(prevLink);
+        paginationContainer.appendChild(prevLi);
+        
+        // Các nút số trang
+        for (let i = 1; i <= totalPages; i++) {
+            const pageLi = document.createElement('li');
+            pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+            const pageLink = document.createElement('a');
+            pageLink.className = 'page-link';
+            pageLink.href = '#';
+            pageLink.textContent = i;
+            pageLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage = i;
+                updateDisplay();
+            });
+            pageLi.appendChild(pageLink);
+            paginationContainer.appendChild(pageLi);
+        }
+        
+        // Nút Next
+        const nextLi = document.createElement('li');
+        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+        const nextLink = document.createElement('a');
+        nextLink.className = 'page-link';
+        nextLink.href = '#';
+        nextLink.innerHTML = '&raquo;';
+        nextLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateDisplay();
+            }
+        });
+        nextLi.appendChild(nextLink);
+        paginationContainer.appendChild(nextLi);
+    }
+    
+    // Xử lý tìm kiếm
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        filteredCards = Array.from(movieCards).filter(card => {
+            const movieName = card.getAttribute('data-name').toLowerCase();
+            const originName = card.getAttribute('data-origin-name').toLowerCase();
+            const movieId = card.getAttribute('data-id').toLowerCase();
+            
+            return movieName.includes(searchTerm) || 
+                   originName.includes(searchTerm) || 
+                   movieId.includes(searchTerm);
+        });
+        
+        currentPage = 1; // Reset về trang 1 khi tìm kiếm
+        updateDisplay();
+    });
+    
+    // Nút làm mới
+    document.getElementById('refresh-btn').addEventListener('click', function() {
+        searchInput.value = '';
+        filteredCards = Array.from(movieCards);
+        currentPage = 1;
+        updateDisplay();
+    });
+    
+    // Khởi tạo hiển thị ban đầu
+    updateDisplay();
+});
+</script>
+
+
 @endsection

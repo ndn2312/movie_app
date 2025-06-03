@@ -1,63 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-            <h2 class="section-title"><i class="fas fa-masks-theater""></i>Quản lý thể loại phim</h2>
-            <br>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    @if(!isset($genre))                    
-                        {!! Form::open(['route' => 'genre.store', 'method'=>'POST']) !!}
-                    @else    
-                        {!! Form::open(['route' => ['genre.update', $genre->id], 'method'=>'PUT']) !!}
-
-                    @endif
-                    <div class="form-group">
-                            {!! Form::label('title','Tiêu đề',['class' => 'd-block mb-2']) !!}
-                            {!! Form::text('title',isset($genre)? $genre->title:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'slug','onkeyup'=>'ChangeToSlug()']) !!}
-                        </div>
-                        <br>
-                        <div class="form-group">
-                            {!! Form::label('slug','Đường dẫn',['class' => 'd-block mb-2']) !!}
-                            {!! Form::text('slug',isset($genre)? $genre->slug:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'convert_slug']) !!}
-                        </div>
-                        <br>
-                        <div class="form-group">
-                            {!! Form::label('description','Mô tả',['class' => 'd-block mb-2']) !!}
-                            
-                            {!! Form::textarea('description',isset($genre)? $genre->description:'', ['style'=>'resize:none','class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'description']) !!}
-                        </div>
-                        <br>
-                        <div class="form-group">
-                            {!! Form::label('Active','Trạng thái',['class' => 'd-block mb-2']) !!}
-                            {!! Form::select('status',['1'=>'Hiển thị','0'=>'Ẩn'], isset($genre) ? $genre->status : '', ['class'=>'form-control']) !!}
-
-                        </div>
-                        <br>
-                        @if(!isset($genre))                    
-
-                            {!! Form::submit('Thêm dữ liệu',['class'=>'btn btn-success']) !!}
-
-                        @else
-                            {!! Form::submit('Cập nhật',['class'=>'btn btn-success']) !!}
-                        @endif
-                    {!! Form::close() !!}
-
-                </div>
-            </div>
-           
-        </div>
-    </div>
-</div>
-@if (session('success'))
 <style>
     .notification-modal {
         position: fixed;
@@ -240,6 +183,64 @@
     @keyframes actionPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
     @keyframes timerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 </style>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card">
+            <h2 class="section-title"><i class="fas fa-masks-theater""></i>Quản lý thể loại phim</h2>
+            <br>
+
+                <div class="card-body">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @if(!isset($genre))                    
+                        {!! Form::open(['route' => 'genre.store', 'method'=>'POST']) !!}
+                    @else    
+                        {!! Form::open(['route' => ['genre.update', $genre->id], 'method'=>'PUT']) !!}
+
+                    @endif
+                    <div class="form-group">
+                            {!! Form::label('title','Tiêu đề',['class' => 'd-block mb-2']) !!}
+                            {!! Form::text('title',isset($genre)? $genre->title:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'slug','onkeyup'=>'ChangeToSlug()']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('slug','Đường dẫn',['class' => 'd-block mb-2']) !!}
+                            {!! Form::text('slug',isset($genre)? $genre->slug:'', ['class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'convert_slug']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('description','Mô tả',['class' => 'd-block mb-2']) !!}
+                            
+                            {!! Form::textarea('description',isset($genre)? $genre->description:'', ['style'=>'resize:none','class'=>'form-control','placeholder'=>'Nhập vào dữ liệu...','id'=>'description']) !!}
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            {!! Form::label('Active','Trạng thái',['class' => 'd-block mb-2']) !!}
+                            {!! Form::select('status',['1'=>'Hiển thị','0'=>'Ẩn'], isset($genre) ? $genre->status : '', ['class'=>'form-control']) !!}
+
+                        </div>
+                        <br>
+                        @if(!isset($genre))                    
+
+                            {!! Form::submit('Thêm dữ liệu',['class'=>'btn btn-success']) !!}
+
+                        @else
+                            {!! Form::submit('Cập nhật',['class'=>'btn btn-success']) !!}
+                        @endif
+                    {!! Form::close() !!}
+
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+@if (session('success'))
+
 
 <div id="successModal" class="notification-modal">
     <div class="notification-dialog">

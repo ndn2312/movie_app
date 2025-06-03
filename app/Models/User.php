@@ -21,6 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'status',
+        'gender',
+        'avatar'
     ];
 
     /**
@@ -41,4 +45,36 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Lấy các bình luận của người dùng
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Lấy các phim yêu thích của người dùng
+     */
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    /**
+     * Lấy các phim yêu thích thông qua bảng pivot
+     */
+    public function favoriteMovies()
+    {
+        return $this->belongsToMany(Movie::class, 'favorites', 'user_id', 'movie_id')->withTimestamps();
+    }
+
+    /**
+     * Lấy các tin nhắn chatbot của người dùng
+     */
+    public function chatbots()
+    {
+        return $this->hasMany(Chatbot::class);
+    }
 }

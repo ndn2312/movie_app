@@ -8,25 +8,25 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('episodes', function (Blueprint $table) {
-            $table->string('server_name')->nullable()->after('episode');
+            if (!Schema::hasColumn('episodes', 'server_name')) {
+                $table->string('server_name')->nullable()->after('episode');
+            }
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('episodes', function (Blueprint $table) {
-            $table->dropColumn('server_name');
+            if (Schema::hasColumn('episodes', 'server_name')) {
+                $table->dropColumn('server_name');
+            }
         });
     }
 };

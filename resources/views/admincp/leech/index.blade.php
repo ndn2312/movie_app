@@ -1,6 +1,202 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    /* Định dạng cho nút tìm kiếm API mới */
+    .search-action-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .search-api-btn {
+        background-color: #4a6bff;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-api-btn:hover {
+        background-color: #3451d1;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .search-api-btn i {
+        font-size: 16px;
+    }
+
+    /* Layout phù hợp cho container */
+    .search-filter-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f8f9fa;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease;
+    }
+
+    .loading-content {
+        background: #171f30;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        width: 90%;
+        max-width: 500px;
+        color: white;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .spinner-container {
+        margin-bottom: 20px;
+    }
+
+    .spinner {
+        width: 70px;
+        height: 70px;
+        border: 5px solid transparent;
+        border-top-color: #4CAF50;
+        border-radius: 50%;
+        animation: spin 1.5s linear infinite;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .spinner:before {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border: 5px solid transparent;
+        border-top-color: #8BC34A;
+        border-radius: 50%;
+        animation: spin 2s linear infinite;
+    }
+
+    .spinner:after {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        border: 5px solid transparent;
+        border-top-color: #CDDC39;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading-text {
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
+    .loading-description {
+        color: #aaa;
+        line-height: 1.5;
+    }
+
+    /* Dialog xác nhận */
+    .delete-confirmation-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.3s ease;
+    }
+
+    .confirmation-content {
+        background: #171f30;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transform: translateY(0);
+        transition: transform 0.4s ease;
+    }
+
+    .confirmation-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .confirmation-message {
+        color: #fff;
+        margin-bottom: 30px;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .selected-movies-list {
+        max-height: 150px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        text-align: left;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+    }
+
+    .selected-movie-item {
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e0e0e0;
+    }
+
+    /* Khi phim được chọn */
+    .movie-card.selected {
+        box-shadow: 0 0 0 3px #4CAF50;
+        transform: translateY(-5px);
+    }
+</style>
 <link rel="stylesheet" href="{{ asset('css/movie-grid.css') }}">
 <script src="{{ asset('js/movie-grid.js') }}"></script>
 
@@ -19,66 +215,10 @@
                 <span class="result-badge">{{ count($resp['items']) }} kết quả</span>
             </div>
 
-            <div class="search-container">
-                <form action="{{ route('leech-search') }}" method="GET" class="search-form">
-                    <div class="search-input-group">
-                        <input type="text" name="keyword" class="search-input" placeholder="Tìm kiếm phim..." required>
-                        <button type="submit" class="search-button">
-                            <i class="fas fa-search"></i> TÌM KIẾM
-                        </button>
-                    </div>
-                    <div class="advanced-filter-toggle">
-                        <i class="fas fa-sliders-h"></i> Bộ lọc nâng cao
-                    </div>
-                </form>
-
-                <div class="advanced-filters">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label>Thể loại</label>
-                            <select name="category" class="filter-select">
-                                <option value="">Tất cả</option>
-                                <option value="hanh-dong">Hành động</option>
-                                <option value="tinh-cam">Tình cảm</option>
-                                <option value="hai-huoc">Hài hước</option>
-                                <option value="co-trang">Cổ trang</option>
-                                <option value="kinh-di">Kinh dị</option>
-                                <option value="tam-ly">Tâm lý</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Quốc gia</label>
-                            <select name="country" class="filter-select">
-                                <option value="">Tất cả</option>
-                                <option value="trung-quoc">Trung Quốc</option>
-                                <option value="han-quoc">Hàn Quốc</option>
-                                <option value="au-my">Âu Mỹ</option>
-                                <option value="nhat-ban">Nhật Bản</option>
-                                <option value="thai-lan">Thái Lan</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label>Năm</label>
-                            <select name="year" class="filter-select">
-                                <option value="">Tất cả</option>
-                                @for($i = 2024; $i >= 2015; $i--)
-                                <option value="{{ $i }}">{{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                    </div>
-                    <div class="filter-actions">
-                        <button type="button" class="filter-apply-btn">
-                            <i class="fas fa-check"></i> Áp dụng
-                        </button>
-                        <button type="button" class="filter-reset-btn">
-                            <i class="fas fa-redo"></i> Đặt lại
-                        </button>
-                        <button type="button" class="filter-close-btn">
-                            <i class="fas fa-times"></i> Đóng
-                        </button>
-                    </div>
-                </div>
+            <div class="search-action-container">
+                <a href="{{ route('leech-search') }}" class="search-api-btn">
+                    <i class="fas fa-search"></i> Tìm kiếm phim theo API
+                </a>
             </div>
         </div>
     </div>
@@ -126,11 +266,46 @@
                     </button>
                     <span id="selected-count" class="ml-3 badge badge-info">0 phim được chọn</span>
                 </div>
-                <button type="submit" id="batch-add-btn" class="btn btn-success" disabled>
+                <button type="button" id="batch-add-confirm-btn" class="btn btn-success" disabled>
                     <i class="fas fa-plus-circle"></i> Thêm phim đã chọn
                 </button>
             </div>
         </form>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+            </div>
+            <h3 class="loading-text">Đang xử lý...</h3>
+            <p class="loading-description" id="loading-description">Vui lòng đợi trong khi hệ thống đang thêm phim.
+                Quá trình này có thể mất vài phút.</p>
+        </div>
+    </div>
+
+    <!-- Dialog xác nhận thêm nhiều phim -->
+    <div class="delete-confirmation-dialog" id="addMoviesConfirmation" style="display: none;">
+        <div class="confirmation-content">
+            <h3 class="confirmation-title" style="color: #4CAF50;"><i class="fas fa-plus-circle"></i> Xác nhận thêm phim
+            </h3>
+            <p class="confirmation-message">Bạn sắp thêm <span id="movies-count">0</span> phim vào hệ thống.</p>
+
+            <div class="selected-movies-list" id="selectedMoviesList"
+                style="max-height: 200px; overflow-y: auto; margin-bottom: 20px;">
+                <!-- Danh sách phim sẽ được thêm vào bằng JavaScript -->
+            </div>
+
+            <div class="confirmation-buttons">
+                <button type="button" class="cancel-add-btn" id="cancelAddBtn"
+                    style="background: #ccc; color: #333; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Hủy
+                    bỏ</button>
+                <button type="button" class="confirm-add-btn" id="confirmAddBtn"
+                    style="background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-left: 10px;">Thêm
+                    phim</button>
+            </div>
+        </div>
     </div>
 
     <!-- Grid Layout thay thế Table -->
@@ -152,7 +327,7 @@
                 <!-- Checkbox chọn phim -->
                 <div class="select-movie-checkbox">
                     <input type="checkbox" class="movie-checkbox" data-slug="{{ $res['slug'] }}"
-                        id="movie-{{ $res['_id'] }}">
+                        data-title="{{ $res['name'] }}" id="movie-{{ $res['_id'] }}">
                     <label for="movie-{{ $res['_id'] }}"></label>
                 </div>
             </div>
@@ -379,6 +554,8 @@
 </div>
 </div>
 
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Thêm hiệu ứng khi trang tải xong
@@ -387,7 +564,7 @@
         document.querySelector('.api-page-navigation').classList.add('animate-element');
         
         // Hiệu ứng khi hover vào các phần tử
-        const interactiveElements = document.querySelectorAll('.search-button, .filter-tab, .action-btn, #batch-add-btn, #select-all-btn, #deselect-all-btn');
+        const interactiveElements = document.querySelectorAll('.search-api-btn, .filter-tab, .action-btn, #batch-add-confirm-btn, #select-all-btn, #deselect-all-btn');
         interactiveElements.forEach(element => {
             element.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-3px)';
@@ -451,41 +628,84 @@
         const selectAllBtn = document.getElementById('select-all-btn');
         const deselectAllBtn = document.getElementById('deselect-all-btn');
         const selectedCountDisplay = document.getElementById('selected-count');
-        const batchAddBtn = document.getElementById('batch-add-btn');
+        const batchAddBtn = document.getElementById('batch-add-confirm-btn');
         const selectedMoviesInput = document.getElementById('selected-movies-input');
+        const batchAddForm = document.getElementById('batch-add-form');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const addMoviesConfirmation = document.getElementById('addMoviesConfirmation');
+        const moviesCountEl = document.getElementById('movies-count');
+        const selectedMoviesList = document.getElementById('selectedMoviesList');
+        const confirmAddBtn = document.getElementById('confirmAddBtn');
+        const cancelAddBtn = document.getElementById('cancelAddBtn');
+        
+        // Danh sách phim đã chọn
+        let selectedMovies = [];
         
         // Hàm cập nhật số lượng phim đã chọn
         function updateSelectedCount() {
-            const selectedCount = document.querySelectorAll('.movie-checkbox:checked').length;
+            const checkedBoxes = document.querySelectorAll('.movie-checkbox:checked');
+            const selectedCount = checkedBoxes.length;
+            
+            // Debug log
+            console.log('Số phim đã chọn:', selectedCount);
+            
+            // Cập nhật hiển thị
             selectedCountDisplay.textContent = selectedCount + ' phim được chọn';
             batchAddBtn.disabled = selectedCount === 0;
             
             // Thêm hiệu ứng khi có phim được chọn
             if (selectedCount > 0) {
                 selectedCountDisplay.style.transform = 'scale(1.05)';
-                selectedCountDisplay.style.boxShadow = '0 2px 10px rgba(79, 70, 229, 0.3)';
+                selectedCountDisplay.style.boxShadow = '0 2px 10px rgba(76, 175, 80, 0.3)';
                 setTimeout(() => {
                     selectedCountDisplay.style.transform = 'scale(1)';
                     selectedCountDisplay.style.boxShadow = 'none';
                 }, 300);
             }
             
-            // Cập nhật danh sách slug của phim đã chọn
-            const selectedSlugs = [];
-            document.querySelectorAll('.movie-checkbox:checked').forEach(checkbox => {
-                selectedSlugs.push(checkbox.getAttribute('data-slug'));
+            // Cập nhật danh sách phim đã chọn
+            selectedMovies = [];
+            checkedBoxes.forEach(checkbox => {
+                const slug = checkbox.getAttribute('data-slug');
+                const title = checkbox.getAttribute('data-title') || 'Phim không có tiêu đề';
+                if (slug) {
+                    selectedMovies.push({slug: slug, title: title});
+                    console.log('Đã thêm slug:', slug); // Debug log
+                }
             });
-            selectedMoviesInput.value = JSON.stringify(selectedSlugs);
+            
+            // Cập nhật giá trị input
+            if (selectedMovies.length > 0) {
+                const slugs = selectedMovies.map(movie => movie.slug);
+                selectedMoviesInput.value = JSON.stringify(slugs);
+            } else {
+                selectedMoviesInput.value = "[]";
+            }
+            
+            // Cập nhật card style
+            document.querySelectorAll('.movie-card').forEach(card => {
+                const checkbox = card.querySelector('.movie-checkbox');
+                if (checkbox && checkbox.checked) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+            
+            console.log('Giá trị input:', selectedMoviesInput.value); // Debug log
         }
         
         // Xử lý sự kiện thay đổi trên mỗi checkbox
         movieCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
+                // Debug log
+                console.log('Checkbox thay đổi:', this.id, 'Trạng thái:', this.checked);
+                
                 // Thêm hiệu ứng khi chọn phim
                 const movieCard = this.closest('.movie-card');
                 if (this.checked) {
                     movieCard.style.transform = 'translateY(-5px)';
-                    movieCard.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+                    movieCard.style.boxShadow = '0 8px 15px rgba(76, 175, 80, 0.3)';
                     setTimeout(() => {
                         movieCard.style.transform = '';
                         movieCard.style.boxShadow = '';
@@ -509,17 +729,22 @@
                 }
             });
             
+            // Debug log
+            console.log('Đã chọn tất cả phim mới:', countSelected);
+            
             // Thêm hiệu ứng khi chọn tất cả
             if (countSelected > 0) {
                 document.querySelectorAll('.movie-card').forEach((card, index) => {
-                    setTimeout(() => {
-                        card.style.transform = 'translateY(-5px)';
-                        card.style.boxShadow = '0 8px 15px rgba(0, 0, 0, 0.1)';
+                    if (!card.querySelector('.destroy-movie-button')) {
                         setTimeout(() => {
-                            card.style.transform = '';
-                            card.style.boxShadow = '';
-                        }, 200);
-                    }, index * 20); // Tạo hiệu ứng lần lượt
+                            card.style.transform = 'translateY(-5px)';
+                            card.style.boxShadow = '0 8px 15px rgba(76, 175, 80, 0.3)';
+                            setTimeout(() => {
+                                card.style.transform = '';
+                                card.style.boxShadow = '';
+                            }, 200);
+                        }, index * 20); // Tạo hiệu ứng lần lượt
+                    }
                 });
             }
             
@@ -531,11 +756,72 @@
             movieCheckboxes.forEach(checkbox => {
                 checkbox.checked = false;
             });
+            
+            // Debug log
+            console.log('Đã bỏ chọn tất cả');
+            
             updateSelectedCount();
         });
         
-        // Khởi tạo ban đầu
-        updateSelectedCount();
+        // Mở dialog xác nhận khi nhấn nút thêm phim
+        batchAddBtn.addEventListener('click', function() {
+            if (selectedMovies.length === 0) return;
+            
+            // Cập nhật nội dung dialog
+            moviesCountEl.textContent = selectedMovies.length;
+            
+            // Hiển thị danh sách phim sẽ thêm
+            selectedMoviesList.innerHTML = '';
+            selectedMovies.forEach(movie => {
+                const movieEl = document.createElement('div');
+                movieEl.className = 'selected-movie-item';
+                movieEl.innerHTML = `<i class="fas fa-film"></i> ${movie.title}`;
+                selectedMoviesList.appendChild(movieEl);
+            });
+            
+            // Hiển thị dialog
+            addMoviesConfirmation.style.display = 'flex';
+        });
+        
+        // Đóng dialog khi nhấn nút hủy
+        cancelAddBtn.addEventListener('click', function() {
+            addMoviesConfirmation.style.display = 'none';
+        });
+        
+        // Thực hiện thêm phim khi xác nhận
+        confirmAddBtn.addEventListener('click', function() {
+            // Hiển thị loading overlay
+            addMoviesConfirmation.style.display = 'none';
+            document.getElementById('loading-description').textContent = 
+                `Đang thêm ${selectedMovies.length} phim vào hệ thống. Quá trình này có thể mất vài phút, vui lòng không đóng trình duyệt.`;
+            
+            loadingOverlay.style.display = 'flex';
+            
+            // Hiệu ứng loading
+            let dots = 0;
+            const loadingText = document.querySelector('.loading-text');
+            const originalText = loadingText.textContent;
+            
+            const loadingInterval = setInterval(() => {
+                dots = (dots + 1) % 4;
+                loadingText.textContent = originalText + '.'.repeat(dots);
+            }, 500);
+            
+            // Lưu interval vào window để có thể clear khi cần
+            window.loadingInterval = loadingInterval;
+            
+            // Submit form sau khi hiển thị loading
+            setTimeout(() => {
+                batchAddForm.submit();
+            }, 500);
+        });
+        
+        // Đóng dialog khi click ra ngoài
+        addMoviesConfirmation.addEventListener('click', function(e) {
+            if (e.target === addMoviesConfirmation) {
+                addMoviesConfirmation.style.display = 'none';
+            }
+        });
 
         // Xử lý chuyển tab
         const filterTabs = document.querySelectorAll('.filter-tab');
@@ -556,112 +842,8 @@
             });
         });
         
-        // Hiển thị/ẩn bộ lọc nâng cao
-        const advancedFilterToggle = document.querySelector('.advanced-filter-toggle');
-        const advancedFilters = document.querySelector('.advanced-filters');
-        if (advancedFilterToggle) {
-            advancedFilterToggle.addEventListener('click', function() {
-                if (advancedFilters.style.display === 'block') {
-                    advancedFilters.style.display = 'none';
-                } else {
-                    advancedFilters.style.display = 'block';
-                    // Thêm hiệu ứng khi hiển thị bộ lọc
-                    advancedFilters.style.opacity = '0';
-                    advancedFilters.style.transform = 'translateY(-10px)';
-                    setTimeout(() => {
-                        advancedFilters.style.opacity = '1';
-                        advancedFilters.style.transform = 'translateY(0)';
-                    }, 10);
-                }
-            });
-        }
-        
-        // Đóng bộ lọc nâng cao
-        const filterCloseBtn = document.querySelector('.filter-close-btn');
-        if (filterCloseBtn) {
-            filterCloseBtn.addEventListener('click', function() {
-                advancedFilters.style.opacity = '0';
-                advancedFilters.style.transform = 'translateY(-10px)';
-                setTimeout(() => {
-                    advancedFilters.style.display = 'none';
-                }, 200);
-            });
-        }
-        
-        // Áp dụng bộ lọc nâng cao (cần thêm logic gửi form tìm kiếm với các bộ lọc)
-        const filterApplyBtn = document.querySelector('.filter-apply-btn');
-        if (filterApplyBtn) {
-            filterApplyBtn.addEventListener('click', function() {
-                // Hiệu ứng khi nhấn nút áp dụng
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 100);
-                
-                // Lấy giá trị từ các select và thêm vào form tìm kiếm
-                const searchForm = document.querySelector('.search-form');
-                const category = document.querySelector('select[name="category"]').value;
-                const country = document.querySelector('select[name="country"]').value;
-                const year = document.querySelector('select[name="year"]').value;
-                
-                // Tạo input ẩn để thêm vào form
-                if (category) {
-                    const categoryInput = document.createElement('input');
-                    categoryInput.type = 'hidden';
-                    categoryInput.name = 'category';
-                    categoryInput.value = category;
-                    searchForm.appendChild(categoryInput);
-                }
-                
-                if (country) {
-                    const countryInput = document.createElement('input');
-                    countryInput.type = 'hidden';
-                    countryInput.name = 'country';
-                    countryInput.value = country;
-                    searchForm.appendChild(countryInput);
-                }
-                
-                if (year) {
-                    const yearInput = document.createElement('input');
-                    yearInput.type = 'hidden';
-                    yearInput.name = 'year';
-                    yearInput.value = year;
-                    searchForm.appendChild(yearInput);
-                }
-                
-                // Gửi form
-                searchForm.submit();
-            });
-        }
-        
-        // Đặt lại bộ lọc nâng cao
-        const filterResetBtn = document.querySelector('.filter-reset-btn');
-        if (filterResetBtn) {
-            filterResetBtn.addEventListener('click', function() {
-                // Hiệu ứng khi nhấn nút đặt lại
-                this.style.transform = 'rotate(360deg)';
-                this.style.transition = 'transform 0.5s ease';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 500);
-                
-                document.querySelectorAll('.filter-select').forEach(select => {
-                    select.selectedIndex = 0;
-                });
-            });
-        }
-        
-        // Thêm hiệu ứng khi hover lên các phần tử
-        const searchInput = document.querySelector('.search-input');
-        if (searchInput) {
-            searchInput.addEventListener('focus', function() {
-                this.parentElement.style.boxShadow = '0 4px 12px rgba(92, 107, 192, 0.15)';
-            });
-            
-            searchInput.addEventListener('blur', function() {
-                this.parentElement.style.boxShadow = 'none';
-            });
-        }
+        // Khởi tạo ban đầu
+        updateSelectedCount();
     });
 </script>
 

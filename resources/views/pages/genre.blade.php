@@ -1,7 +1,6 @@
 @extends('layout')
 @section('content')
 <style>
-    /* ==================== RESET & BASE STYLES ==================== */
     .tag-base {
         display: inline-block;
         padding: 4px 10px;
@@ -15,7 +14,6 @@
         transition: all 0.3s ease;
     }
 
-    /* ==================== POSITION STYLES ==================== */
     .status {
         position: absolute;
         top: 10px;
@@ -33,7 +31,6 @@
         margin: 0;
     }
 
-    /* ==================== TAG STYLES ==================== */
     .trailer-tag {
         background: linear-gradient(135deg, #e304af 0%, #dc07d5 100%);
     }

@@ -3,7 +3,8 @@
 @section('content')
 <style>
     .button-custom {
-        width: 200px; /* Điều chỉnh kích thước theo ý muốn */
+        width: 200px;
+        /* Điều chỉnh kích thước theo ý muốn */
         height: 50px;
         display: flex;
         align-items: center;
@@ -17,15 +18,17 @@
         text-decoration: none;
         transition: all 0.3s ease-in-out;
         max-width: 400px;
-        margin:auto;
+        margin: auto;
 
 
     }
-    .button-custom:hover{
+
+    .button-custom:hover {
         background: linear-gradient(90deg, #ff4b2b, #ff416c);
         transform: scale(1.1);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-    } 
+    }
+
     /*css them phim*/
     /*css them phim*/
     .button-customadd {
@@ -42,13 +45,13 @@
         transition: all 0.3s ease-in-out;
         max-width: 400px;
         margin: auto;
-        
+
         /* Thêm màu nền gradient xanh */
         background: linear-gradient(90deg, #4CAF50, #2196F3);
         /* Thêm màu chữ vàng */
         color: #FFD700;
         /* Thêm đổ bóng cho chữ */
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     /* Thêm hiệu ứng hover */
@@ -58,7 +61,349 @@
         box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
     }
 
+    /* Common notification overlay */
+    .success-notification-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.65);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        backdrop-filter: blur(8px);
+        animation: fadeIn 0.3s ease-out;
+    }
 
+    /* Card styles */
+    .success-notification-card,
+    .delete-notification-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        width: 320px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        animation: slideIn 0.4s ease-out;
+    }
+
+    /* Icon container styles */
+    .success-icon-container,
+    .delete-icon-container {
+        padding: 20px 0 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Content container styles */
+    .success-notification-content,
+    .delete-notification-content {
+        padding: 0 20px 20px;
+        text-align: center;
+    }
+
+    /* Checkmark styles */
+    .success-checkmark,
+    .delete-checkmark {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        animation: scale .3s ease-in-out .9s both;
+    }
+
+    /* Action-specific checkmark styles */
+    .success-checkmark {
+        animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+
+    .delete-checkmark {
+        stroke: #d32f2f;
+        box-shadow: inset 0px 0px 0px #d32f2f;
+        animation: fill-red .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+
+    .add-icon {
+        stroke: #4caf50;
+    }
+
+    .add-icon .checkmark-circle,
+    .add-icon .checkmark-check {
+        stroke: #4caf50;
+    }
+
+    .update-icon {
+        stroke: #ffc107;
+    }
+
+    .update-icon .checkmark-circle,
+    .update-icon .checkmark-check {
+        stroke: #ffc107;
+    }
+
+    /* Circle and check animations */
+    .checkmark-circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        fill: none;
+        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .checkmark-check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        stroke-width: 3;
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+
+    /* Title styles */
+    .success-title,
+    .delete-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0 0 10px;
+    }
+
+    .success-title {
+        color: #4caf50;
+    }
+
+    .update-title {
+        color: #ffc107;
+    }
+
+    .delete-title {
+        color: #d32f2f;
+    }
+
+    /* Message styles */
+    .success-message,
+    .delete-message {
+        color: #4a4a4a;
+        font-size: 14px;
+        line-height: 1.4;
+        margin-bottom: 12px;
+    }
+
+    /* Highlighted title styles */
+    .highlighted-title {
+        font-weight: 700;
+        color: #1e88e5;
+        background: linear-gradient(to bottom, transparent 60%, rgba(76, 175, 80, 0.2) 40%);
+        padding: 0 3px;
+        border-radius: 3px;
+        display: inline-block;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+    }
+
+    .highlighted-title-delete {
+        font-weight: 700;
+        color: #c62828;
+        background: linear-gradient(to bottom, transparent 60%, rgba(220, 53, 69, 0.2) 40%);
+        padding: 0 3px;
+        border-radius: 3px;
+        display: inline-block;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+    }
+
+    /* Action highlight styles */
+    .action-highlight {
+        font-weight: 800;
+        font-size: 15px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: white;
+    }
+
+    .add-action {
+        background-color: #4caf50;
+    }
+
+    .update-action {
+        background-color: #ffc107;
+        color: #212121;
+    }
+
+    .delete-action {
+        color: white;
+        background-color: #d32f2f;
+        box-shadow: 0 2px 5px rgba(211, 47, 47, 0.5);
+        animation: delete-action-pulse 2s infinite;
+    }
+
+    /* Countdown container */
+    .countdown-container,
+    .delete-countdown-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+        color: #757575;
+        font-size: 13px;
+    }
+
+    .countdown-number {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        text-align: center;
+        border-radius: 50%;
+        font-weight: bold;
+        margin: 0 4px;
+        animation: pulse 1s infinite;
+    }
+
+    /* Button styles */
+    .success-button,
+    .delete-button {
+        border: none;
+        border-radius: 6px;
+        padding: 8px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .success-button {
+        color: white;
+    }
+
+    .add-button {
+        background-color: #4caf50;
+        box-shadow: 0 2px 6px rgba(76, 175, 80, 0.25);
+    }
+
+    .add-button:hover {
+        background-color: #43a047;
+        box-shadow: 0 3px 8px rgba(76, 175, 80, 0.35);
+        transform: translateY(-1px);
+    }
+
+    .update-button {
+        background-color: #ffc107;
+        box-shadow: 0 2px 6px rgba(255, 193, 7, 0.25);
+        color: #212121;
+    }
+
+    .update-button:hover {
+        background-color: #ffb300;
+        box-shadow: 0 3px 8px rgba(255, 193, 7, 0.35);
+        transform: translateY(-1px);
+    }
+
+    .delete-button {
+        background-color: #d32f2f;
+        color: white;
+        box-shadow: 0 2px 6px rgba(211, 47, 47, 0.25);
+    }
+
+    .delete-button:hover {
+        background-color: #b71c1c;
+        box-shadow: 0 3px 8px rgba(211, 47, 47, 0.35);
+        transform: translateY(-1px);
+    }
+
+    /* Animations */
+    @keyframes fill {
+        100% {
+            box-shadow: inset 0px 0px 0px 30px rgba(76, 175, 80, 0.1);
+        }
+    }
+
+    @keyframes fill-red {
+        100% {
+            box-shadow: inset 0px 0px 0px 30px rgba(211, 47, 47, 0.1);
+        }
+    }
+
+    @keyframes stroke {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes scale {
+
+        0%,
+        100% {
+            transform: none;
+        }
+
+        50% {
+            transform: scale3d(1.1, 1.1, 1);
+        }
+    }
+
+    @keyframes delete-action-pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+            box-shadow: 0 3px 8px rgba(211, 47, 47, 0.7);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+    }
 </style>
 
 <div class="container">
@@ -66,13 +411,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="d-flex mb-3" style="gap: 15px;">
-                    {{-- @if(isset($episode))
-                    <a href="{{route('episode.create')}}" class="button-customadd">
-                        <i>➕ THÊM TẬP PHIM 🎬</i>
-                    </a>
-                    
-                    @endif --}}
-                    
+
                     <a href="{{route('episode.index')}}" class="button-custom">
                         <i>🎬 DS.TẬP PHIM</i>
                     </a>
@@ -85,380 +424,141 @@
                 <!-- Phần còn lại của form -->
 
                 <div class="card-body">
-                        @if(session('success') || session('error'))
-                        <div class="position-fixed top-0 end-0 mt-3 me-3 alert alert-{{ session('success') ? 'success' : 'danger' }} alert-dismissible fade show small p-2" role="alert" style="max-width: 250px;">
-                            <strong>{{ session('success') ? '✔' : '✖' }}</strong> {{ session('success') ?? session('error') }}
-                        </div>
-                        @endif
-                    
+                    @if(session('success') || session('error'))
+                    <div class="position-fixed top-0 end-0 mt-3 me-3 alert alert-{{ session('success') ? 'success' : 'danger' }} alert-dismissible fade show small p-2"
+                        role="alert" style="max-width: 250px;">
+                        <strong>{{ session('success') ? '✔' : '✖' }}</strong> {{ session('success') ?? session('error')
+                        }}
+                    </div>
+                    @endif
+
                     <script>
                         setTimeout(() => document.querySelectorAll('.alert').forEach(alert => alert.remove()), 3000);
                     </script>
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
-                        @if(!isset($episode))                    
-                            {!! Form::open(['route' => 'episode.store', 'method'=>'POST','enctype'=>'multipart/form-data']) !!}
-                        @else    
-                            {!! Form::open(['route' => ['episode.update', $episode->id], 'method'=>'PUT','enctype'=>'multipart/form-data']) !!}
+                    @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                    @endif
+                    @if(!isset($episode))
+                    {!! Form::open(['route' => 'episode.store', 'method'=>'POST','enctype'=>'multipart/form-data']) !!}
+                    @else
+                    {!! Form::open(['route' => ['episode.update', $episode->id],
+                    'method'=>'PUT','enctype'=>'multipart/form-data']) !!}
 
-                        @endif
-                            
-                            <div class="form-group">
-                                {!! Form::label('movie','Chọn phim',['class' => 'd-block mb-2']) !!}
-                                {!! Form::select('movie_id',['0'=>'Chọn phim','Phim' => $list_movie], isset($episode) ? $episode->movie_id : '', ['class'=>'form-control select-movie']) !!}
+                    @endif
 
-                            </div>
-                            <br>
-                            <div class="form-group">
-                                {!! Form::label('link','Link phim hoặc video',['class' => 'd-block mb-2']) !!}
-                                {!! Form::text('link',isset($episode)? $episode->linkphim:'', ['class'=>'form-control', 'placeholder'=>'Dán link video (YouTube, Vimeo, m3u8, mp4...) hoặc mã nhúng iframe']) !!}
-                                <small class="form-text text-muted mt-1">
-                                    <strong>Hỗ trợ tự động nhận diện:</strong><br>
-                                    - <i>Link YouTube:</i> https://www.youtube.com/watch?v=XXXX hoặc https://youtu.be/XXXX<br>
-                                    - <i>Link Vimeo:</i> https://vimeo.com/XXXX<br>
-                                    - <i>Link m3u8:</i> https://example.com/video.m3u8<br>
-                                    - <i>Link trực tiếp MP4:</i> https://example.com/video.mp4<br>
-                                    - <i>Link nhúng:</i> Tự động tạo iframe cho các link có chứa từ "embed" hoặc "player"<br>
-                                    - <i>Mã iframe đầy đủ:</i> Có thể dán trọn mã <code>&lt;iframe src="..."&gt;&lt;/iframe&gt;</code> nếu muốn
-                                </small>
-                            </div>
-                            
-                            <div class="form-group mt-3">
-                                <label for="video_file" class="d-block mb-2">Hoặc upload video</label>
-                                <input type="file" name="video_file" id="video_file" class="form-control" accept="video/mp4,video/x-m4v,video/*">
-                                @if(isset($episode) && strpos($episode->linkphim, '<iframe') === false)
-                                    <div class="mt-2">
-                                        <small class="text-success">Video hiện tại: {{ basename($episode->linkphim) }}</small>
-                                    </div>
-                                @endif
-                            </div>
-                            
-                            <br>
-                            @if(isset($episode))
-                                <div class="form-group">
-                                    {!! Form::label('episode','Tập phim',[]) !!}
-                                    {!! Form::text('episode',isset($episode)? $episode->episode:'', ['class'=>'form-control ','placeholder'=>'Nhập vào dữ liệu...',isset($episode)? 'readonly':'']) !!}
-                                </div>
-                            @else
-                                <div class="form-group">
-                                    {!! Form::label('episode','Tập phim',[]) !!}
-                                    <select name="episode" class="form-control" id="episode"></select>
-                                </div>
-                            @endif             
-                            <br>
-                            @if(!isset($episode))                    
+                    <div class="form-group">
+                        {!! Form::label('movie','Chọn phim',['class' => 'd-block mb-2']) !!}
+                        {!! Form::select('movie_id',['0'=>'Chọn phim','Phim' => $list_movie], isset($episode) ?
+                        $episode->movie_id : '', ['class'=>'form-control select-movie']) !!}
 
-                                {!! Form::submit('Thêm tập phim',['class'=>'btn btn-success']) !!}
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        {!! Form::label('link','Link phim hoặc video',['class' => 'd-block mb-2']) !!}
+                        {!! Form::text('link',isset($episode)? $episode->linkphim:'', ['class'=>'form-control',
+                        'placeholder'=>'Dán link video (YouTube, Vimeo, m3u8, mp4...) hoặc mã nhúng iframe']) !!}
+                        <small class="form-text text-muted mt-1">
+                            <strong>Hỗ trợ tự động nhận diện:</strong><br>
+                            - <i>Link YouTube:</i> https://www.youtube.com/watch?v=XXXX hoặc https://youtu.be/XXXX<br>
+                            - <i>Link Vimeo:</i> https://vimeo.com/XXXX<br>
+                            - <i>Link m3u8:</i> https://example.com/video.m3u8<br>
+                            - <i>Link trực tiếp MP4:</i> https://example.com/video.mp4<br>
+                            - <i>Link nhúng:</i> Tự động tạo iframe cho các link có chứa từ "embed" hoặc "player"<br>
+                            - <i>Mã iframe đầy đủ:</i> Có thể dán trọn mã
+                            <code>&lt;iframe src="..."&gt;&lt;/iframe&gt;</code> nếu muốn
+                        </small>
+                    </div>
 
-                            @else
-                                {!! Form::submit('Cập nhật tập phim',['class'=>'btn btn-success']) !!}
-                            @endif
-                        {!! Form::close() !!}
-
+                    <div class="form-group mt-3">
+                        <label for="video_file" class="d-block mb-2">Hoặc upload video</label>
+                        <input type="file" name="video_file" id="video_file" class="form-control"
+                            accept="video/mp4,video/x-m4v,video/*">
+                        @if(isset($episode) && strpos($episode->linkphim, '<iframe')===false) <div class="mt-2">
+                            <small class="text-success">Video hiện tại: {{ basename($episode->linkphim) }}</small>
+                    </div>
+                    @endif
                 </div>
+
+                <br>
+                @if(isset($episode))
+                <div class="form-group">
+                    {!! Form::label('episode','Tập phim',[]) !!}
+                    {!! Form::text('episode',isset($episode)? $episode->episode:'', ['class'=>'form-control
+                    ','placeholder'=>'Nhập vào dữ liệu...',isset($episode)? 'readonly':'']) !!}
+                </div>
+                @else
+                <div class="form-group">
+                    {!! Form::label('episode','Tập phim',[]) !!}
+                    <select name="episode" class="form-control" id="episode"></select>
+                </div>
+                @endif
+                <br>
+                @if(!isset($episode))
+
+                {!! Form::submit('Thêm tập phim',['class'=>'btn btn-success']) !!}
+
+                @else
+                {!! Form::submit('Cập nhật tập phim',['class'=>'btn btn-success']) !!}
+                @endif
+                {!! Form::close() !!}
+
             </div>
-            
         </div>
+
     </div>
 </div>
+</div>
 @if(session('action_type') == 'xóa' || session('action_type') == 'thêm' || session('action_type') == 'cập nhật')
-    <div class="success-notification-overlay" id="{{ session('action_type') == 'xóa' ? 'deleteSuccessPopup' : 'successPopup' }}">
-        <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-card' : 'success-notification-card' }}">
-            <div class="{{ session('action_type') == 'xóa' ? 'delete-icon-container' : 'success-icon-container' }}">
-                <svg class="{{ 
+<div class="success-notification-overlay"
+    id="{{ session('action_type') == 'xóa' ? 'deleteSuccessPopup' : 'successPopup' }}">
+    <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-card' : 'success-notification-card' }}">
+        <div class="{{ session('action_type') == 'xóa' ? 'delete-icon-container' : 'success-icon-container' }}">
+            <svg class="{{ 
                     session('action_type') == 'xóa' ? 'delete-checkmark' : 
                     (session('action_type') == 'thêm' ? 'success-checkmark add-icon' : 'success-checkmark update-icon') 
                 }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                    <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
-                    <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
-                </svg>
-            </div>
-            
-            <div class="{{ session('action_type') == 'xóa' ? 'delete-notification-content' : 'success-notification-content' }}">
-                <h2 class="{{ 
+                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
+        </div>
+
+        <div
+            class="{{ session('action_type') == 'xóa' ? 'delete-notification-content' : 'success-notification-content' }}">
+            <h2 class="{{ 
                     session('action_type') == 'xóa' ? 'delete-title' : 
                     (session('action_type') == 'cập nhật' ? 'success-title update-title' : 'success-title') 
                 }}">Thành công!</h2>
-                
-                <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
-                    Tập Phim "<span class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{ session('movie_title') }}</span>" 
-                    {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }} 
-                    <span class="action-highlight {{ 
+
+            <p class="{{ session('action_type') == 'xóa' ? 'delete-message' : 'success-message' }}">
+                Tập Phim "<span
+                    class="{{ session('action_type') == 'xóa' ? 'highlighted-title-delete' : 'highlighted-title' }}">{{
+                    session('movie_title') }}</span>"
+                {{ session('action_type') == 'xóa' ? session('delete_message') : session('success_message') }}
+                <span class="action-highlight {{ 
                         session('action_type') == 'xóa' ? 'delete-action' : 
                         (session('action_type') == 'thêm' ? 'add-action' : 'update-action') 
-                    }}">{{ session('action_type') }}</span> 
-                    {{ session('action_type') == 'xóa' ? session('delete_end') : session('success_end') }}
-                </p>
-                
-                <div class="{{ session('action_type') == 'xóa' ? 'delete-countdown-container' : 'countdown-container' }}">
-                    <span>Tự động đóng sau </span>
-                    <span class="countdown-number" id="{{ session('action_type') == 'xóa' ? 'deleteCountdown' : 'countdown' }}">3</span>
-                    <span> giây</span>
-                </div>
-                
-                <button class="{{ 
+                    }}">{{ session('action_type') }}</span>
+                {{ session('action_type') == 'xóa' ? session('delete_end') : session('success_end') }}
+            </p>
+
+            <div class="{{ session('action_type') == 'xóa' ? 'delete-countdown-container' : 'countdown-container' }}">
+                <span>Tự động đóng sau </span>
+                <span class="countdown-number"
+                    id="{{ session('action_type') == 'xóa' ? 'deleteCountdown' : 'countdown' }}">3</span>
+                <span> giây</span>
+            </div>
+
+            <button class="{{ 
                     session('action_type') == 'xóa' ? 'delete-button' : 
                     (session('action_type') == 'thêm' ? 'success-button add-button' : 'success-button update-button') 
                 }}" id="{{ session('action_type') == 'xóa' ? 'closeDeleteBtn' : 'closeSuccessBtn' }}">OK</button>
-            </div>
         </div>
     </div>
-    
-    <style>
-        /* Common notification overlay */
-        .success-notification-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.65);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            backdrop-filter: blur(8px);
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        /* Card styles */
-        .success-notification-card, .delete-notification-card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            width: 320px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            animation: slideIn 0.4s ease-out;
-        }
-        
-        /* Icon container styles */
-        .success-icon-container, .delete-icon-container {
-            padding: 20px 0 10px;
-            display: flex;
-            justify-content: center;
-        }
-        
-        /* Content container styles */
-        .success-notification-content, .delete-notification-content {
-            padding: 0 20px 20px;
-            text-align: center;
-        }
-        
-        /* Checkmark styles */
-        .success-checkmark, .delete-checkmark {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: block;
-            stroke-width: 2;
-            stroke-miterlimit: 10;
-            animation: scale .3s ease-in-out .9s both;
-        }
-        
-        /* Action-specific checkmark styles */
-        .success-checkmark {
-            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-        }
-        
-        .delete-checkmark {
-            stroke: #d32f2f;
-            box-shadow: inset 0px 0px 0px #d32f2f;
-            animation: fill-red .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-        }
-        
-        .add-icon { stroke: #4caf50; }
-        .add-icon .checkmark-circle, .add-icon .checkmark-check { stroke: #4caf50; }
-        
-        .update-icon { stroke: #ffc107; }
-        .update-icon .checkmark-circle, .update-icon .checkmark-check { stroke: #ffc107; }
-        
-        /* Circle and check animations */
-        .checkmark-circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            stroke-width: 2;
-            stroke-miterlimit: 10;
-            fill: none;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
-        
-        .checkmark-check {
-            transform-origin: 50% 50%;
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            stroke-width: 3;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-        }
-        
-        /* Title styles */
-        .success-title, .delete-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0 0 10px;
-        }
-        
-        .success-title { color: #4caf50; }
-        .update-title { color: #ffc107; }
-        .delete-title { color: #d32f2f; }
-        
-        /* Message styles */
-        .success-message, .delete-message {
-            color: #4a4a4a;
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-        
-        /* Highlighted title styles */
-        .highlighted-title {
-            font-weight: 700;
-            color: #1e88e5;
-            background: linear-gradient(to bottom, transparent 60%, rgba(76, 175, 80, 0.2) 40%);
-            padding: 0 3px;
-            border-radius: 3px;
-            display: inline-block;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.7);
-        }
-        
-        .highlighted-title-delete {
-            font-weight: 700;
-            color: #c62828;
-            background: linear-gradient(to bottom, transparent 60%, rgba(220, 53, 69, 0.2) 40%);
-            padding: 0 3px;
-            border-radius: 3px;
-            display: inline-block;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
-        }
-        
-        /* Action highlight styles */
-        .action-highlight {
-            font-weight: 800;
-            font-size: 15px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: white;
-        }
-        
-        .add-action { background-color: #4caf50; }
-        .update-action { 
-            background-color: #ffc107; 
-            color: #212121; 
-        }
-        .delete-action {
-            color: white;
-            background-color: #d32f2f;
-            box-shadow: 0 2px 5px rgba(211, 47, 47, 0.5);
-            animation: delete-action-pulse 2s infinite;
-        }
-        
-        /* Countdown container */
-        .countdown-container, .delete-countdown-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 15px;
-            color: #757575;
-            font-size: 13px;
-        }
-        
-        .countdown-number {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            width: 22px;
-            height: 22px;
-            line-height: 22px;
-            text-align: center;
-            border-radius: 50%;
-            font-weight: bold;
-            margin: 0 4px;
-            animation: pulse 1s infinite;
-        }
-        
-        /* Button styles */
-        .success-button, .delete-button {
-            border: none;
-            border-radius: 6px;
-            padding: 8px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .success-button { color: white; }
-        
-        .add-button {
-            background-color: #4caf50;
-            box-shadow: 0 2px 6px rgba(76, 175, 80, 0.25);
-        }
-        
-        .add-button:hover {
-            background-color: #43a047;
-            box-shadow: 0 3px 8px rgba(76, 175, 80, 0.35);
-            transform: translateY(-1px);
-        }
-        
-        .update-button {
-            background-color: #ffc107;
-            box-shadow: 0 2px 6px rgba(255, 193, 7, 0.25);
-            color: #212121;
-        }
-        
-        .update-button:hover {
-            background-color: #ffb300;
-            box-shadow: 0 3px 8px rgba(255, 193, 7, 0.35);
-            transform: translateY(-1px);
-        }
-        
-        .delete-button {
-            background-color: #d32f2f;
-            color: white;
-            box-shadow: 0 2px 6px rgba(211, 47, 47, 0.25);
-        }
-        
-        .delete-button:hover {
-            background-color: #b71c1c;
-            box-shadow: 0 3px 8px rgba(211, 47, 47, 0.35);
-            transform: translateY(-1px);
-        }
-        
-        /* Animations */
-        @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 30px rgba(76, 175, 80, 0.1); } }
-        @keyframes fill-red { 100% { box-shadow: inset 0px 0px 0px 30px rgba(211, 47, 47, 0.1); } }
-        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
-        
-        @keyframes scale {
-            0%, 100% { transform: none; }
-            50% { transform: scale3d(1.1, 1.1, 1); }
-        }
-        
-        @keyframes delete-action-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); box-shadow: 0 3px 8px rgba(211, 47, 47, 0.7); }
-        }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-    </style>
- <script>
+</div>
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         // Determine which popup is active based on action type
         const isDeleteAction = "{{ session('action_type') }}" === "xóa";
@@ -510,8 +610,7 @@
             }
         }
     });
-    </script>
-    @endif
+</script>
+@endif
 
 @endsection
-
