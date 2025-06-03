@@ -21,7 +21,6 @@
 -   [Cấu hình](#-cấu-hình)
 -   [Sử dụng](#-sử-dụng)
 
-
 ## ✨ Tính năng chính
 
 ### 🎭 Cho người dùng
@@ -183,8 +182,6 @@ MAIL_FROM_ADDRESS=your_email@gmail.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
- 
-
 ### Truy cập Admin Panel
 
 1. Đăng ký tài khoản admin đầu tiên
@@ -266,7 +263,7 @@ Chúng tôi hoan nghênh mọi đóng góp! Để đóng góp:
 
 ### Báo cáo lỗ hổng bảo mật
 
-Nếu phát hiện lỗ hổng bảo mật, vui lòng gửi email đến: security@movieapp.com
+Nếu phát hiện lỗ hổng bảo mật, vui lòng gửi email đến: kocoten001a@gmail.com
 
 ### Best Practices
 
@@ -289,5 +286,3 @@ Nếu phát hiện lỗ hổng bảo mật, vui lòng gửi email đến: securi
 ### Admin Panel
 
 ![Admin Panel](docs/images/admin-panel.png)
-
-
