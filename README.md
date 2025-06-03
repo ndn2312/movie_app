@@ -20,10 +20,7 @@
 -   [Cài đặt](#-cài-đặt)
 -   [Cấu hình](#-cấu-hình)
 -   [Sử dụng](#-sử-dụng)
--   [API](#-api)
--   [Đóng góp](#-đóng-góp)
--   [Bảo mật](#-bảo-mật)
--   [Giấy phép](#-giấy-phép)
+
 
 ## ✨ Tính năng chính
 
@@ -186,22 +183,7 @@ MAIL_FROM_ADDRESS=your_email@gmail.com
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-### Cấu hình API phim (nếu sử dụng)
-
-```env
-MOVIE_API_URL=https://phimapi.com
-MOVIE_API_KEY=your_api_key
-```
-
-### Cấu hình Cache (Production)
-
-```env
-CACHE_DRIVER=redis
-QUEUE_CONNECTION=redis
-SESSION_DRIVER=redis
-```
-
-## 📖 Sử dụng
+ 
 
 ### Truy cập Admin Panel
 
@@ -308,34 +290,4 @@ Nếu phát hiện lỗ hổng bảo mật, vui lòng gửi email đến: securi
 
 ![Admin Panel](docs/images/admin-panel.png)
 
-## 📞 Hỗ trợ
 
--   **Documentation**: [Wiki](https://github.com/your-username/movie-app/wiki)
--   **Issues**: [GitHub Issues](https://github.com/your-username/movie-app/issues)
--   **Discussions**: [GitHub Discussions](https://github.com/your-username/movie-app/discussions)
--   **Email**: support@movieapp.com
-
-## 📄 Giấy phép
-
-Dự án này được phát hành dưới [MIT License](LICENSE).
-
-```
-Copyright (c) 2024 Movie App
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software...
-```
-
-## 🙏 Lời cảm ơn
-
--   [Laravel](https://laravel.com) - Framework tuyệt vời
--   [PhimAPI](https://phimapi.com) - API cung cấp dữ liệu phim
--   [Bootstrap](https://getbootstrap.com) - CSS Framework
--   Tất cả contributors đã đóng góp cho project
-
----
-
-<p align="center">Made with ❤️ by <a href="https://github.com/your-username">Your Name</a></p>
