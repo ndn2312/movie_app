@@ -1,66 +1,341 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎬 Movie Streaming Platform
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-9.19-red?style=for-the-badge&logo=laravel" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-8.0.2+-blue?style=for-the-badge&logo=php" alt="PHP">
+  <img src="https://img.shields.io/badge/MySQL-8.0-orange?style=for-the-badge&logo=mysql" alt="MySQL">
+  <img src="https://img.shields.io/badge/Bootstrap-5.2.3-purple?style=for-the-badge&logo=bootstrap" alt="Bootstrap">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
 </p>
 
-## About Laravel
+<p align="center">
+  Một nền tảng xem phim trực tuyến hiện đại được xây dựng với Laravel, cung cấp trải nghiệm người dùng mượt mà và các tính năng quản lý nội dung mạnh mẽ.
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Mục lục
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   [Tính năng chính](#-tính-năng-chính)
+-   [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
+-   [Yêu cầu hệ thống](#-yêu-cầu-hệ-thống)
+-   [Cài đặt](#-cài-đặt)
+-   [Cấu hình](#-cấu-hình)
+-   [Sử dụng](#-sử-dụng)
+-   [API](#-api)
+-   [Đóng góp](#-đóng-góp)
+-   [Bảo mật](#-bảo-mật)
+-   [Giấy phép](#-giấy-phép)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Tính năng chính
 
-## Learning Laravel
+### 🎭 Cho người dùng
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   **Xem phim trực tuyến** với chất lượng HD/FullHD/4K
+-   **Tìm kiếm nâng cao** theo thể loại, quốc gia, năm sản xuất
+-   **Hệ thống đánh giá** và bình luận phim
+-   **Danh sách yêu thích** cá nhân
+-   **Lịch sử xem phim** với tính năng tiếp tục xem
+-   **Chatbot AI** hỗ trợ tư vấn phim
+-   **Thông báo** phim mới và cập nhật
+-   **Giao diện responsive** trên mọi thiết bị
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🛠️ Cho quản trị viên
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   **Dashboard quản lý** thống kê chi tiết
+-   **Quản lý phim** và tập phim
+-   **Hệ thống leech** tự động từ API bên ngoài
+-   **Quản lý người dùng** và phân quyền
+-   **Quản lý thể loại**, quốc gia, danh mục
+-   **Hệ thống thông báo** tự động
+-   **Báo cáo thống kê** chi tiết
 
-## Laravel Sponsors
+### 🔧 Tính năng kỹ thuật
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+-   **Tối ưu SEO** với slug thân thiện
+-   **Cache thông minh** để tăng tốc độ
+-   **API RESTful** cho tích hợp
+-   **Xử lý ảnh** tự động
+-   **Backup dữ liệu** định kỳ
+-   **Logging hệ thống** chi tiết
 
-### Premium Partners
+## 🛠️ Công nghệ sử dụng
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Backend
 
-## Contributing
+-   **Laravel 9.19** - PHP Framework
+-   **PHP 8.0.2+** - Ngôn ngữ lập trình
+-   **MySQL 8.0** - Cơ sở dữ liệu
+-   **Laravel Sanctum** - API Authentication
+-   **Laravel Socialite** - Social Login
+-   **Guzzle HTTP** - API Client
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Frontend
 
-## Code of Conduct
+-   **Bootstrap 5.2.3** - CSS Framework
+-   **Vite** - Build tool
+-   **Axios** - HTTP Client
+-   **jQuery** - JavaScript Library
+-   **Owl Carousel** - Slider component
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Tools & Services
 
-## Security Vulnerabilities
+-   **Composer** - PHP Dependency Manager
+-   **NPM** - JavaScript Package Manager
+-   **XAMPP** - Development Environment
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📋 Yêu cầu hệ thống
 
-## License
+-   PHP >= 8.0.2
+-   Composer
+-   Node.js & NPM
+-   MySQL >= 8.0
+-   Apache/Nginx
+-   OpenSSL PHP Extension
+-   PDO PHP Extension
+-   Mbstring PHP Extension
+-   Tokenizer PHP Extension
+-   XML PHP Extension
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🚀 Cài đặt
+
+### 1. Clone repository
+
+```bash
+git clone https://github.com/your-username/movie-app.git
+cd movie-app
+```
+
+### 2. Cài đặt dependencies
+
+```bash
+# Cài đặt PHP dependencies
+composer install
+
+# Cài đặt JavaScript dependencies
+npm install
+```
+
+### 3. Cấu hình môi trường
+
+```bash
+# Copy file môi trường
+cp .env.example .env
+
+# Tạo application key
+php artisan key:generate
+```
+
+### 4. Cấu hình database
+
+Chỉnh sửa file `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=movie_app
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 5. Chạy migration và seeder
+
+```bash
+# Tạo bảng database
+php artisan migrate
+
+# Seed dữ liệu mẫu (tùy chọn)
+php artisan db:seed
+```
+
+### 6. Tạo symbolic link cho storage
+
+```bash
+php artisan storage:link
+```
+
+### 7. Build assets
+
+```bash
+# Development
+npm run dev
+
+# Production
+npm run build
+```
+
+### 8. Khởi chạy server
+
+```bash
+php artisan serve
+```
+
+Truy cập ứng dụng tại: `http://localhost:8000`
+
+## ⚙️ Cấu hình
+
+### Cấu hình Mail (tùy chọn)
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your_email@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+### Cấu hình API phim (nếu sử dụng)
+
+```env
+MOVIE_API_URL=https://phimapi.com
+MOVIE_API_KEY=your_api_key
+```
+
+### Cấu hình Cache (Production)
+
+```env
+CACHE_DRIVER=redis
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+```
+
+## 📖 Sử dụng
+
+### Truy cập Admin Panel
+
+1. Đăng ký tài khoản admin đầu tiên
+2. Truy cập: `http://localhost:8000/admin`
+3. Đăng nhập với thông tin admin
+
+### Quản lý phim
+
+1. **Thêm phim thủ công**: Admin Panel > Phim > Thêm mới
+2. **Leech từ API**: Admin Panel > Leech > Tìm kiếm và thêm
+3. **Quản lý tập phim**: Chọn phim > Thêm tập
+
+### Cấu hình thể loại và danh mục
+
+1. **Thể loại**: Admin Panel > Thể loại
+2. **Quốc gia**: Admin Panel > Quốc gia
+3. **Danh mục**: Admin Panel > Danh mục
+
+## 🔌 API
+
+### Authentication
+
+```bash
+# Đăng nhập
+POST /api/login
+Content-Type: application/json
+{
+  "email": "user@example.com",
+  "password": "password"
+}
+```
+
+### Movies Endpoints
+
+```bash
+# Lấy danh sách phim
+GET /api/movies?page=1&limit=20
+
+# Lấy chi tiết phim
+GET /api/movies/{id}
+
+# Tìm kiếm phim
+GET /api/movies/search?q=keyword
+```
+
+### Favorites Endpoints
+
+```bash
+# Thêm vào yêu thích
+POST /api/favorites
+Authorization: Bearer {token}
+{
+  "movie_id": 1
+}
+
+# Lấy danh sách yêu thích
+GET /api/favorites
+Authorization: Bearer {token}
+```
+
+## 🤝 Đóng góp
+
+Chúng tôi hoan nghênh mọi đóng góp! Để đóng góp:
+
+1. Fork project
+2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Tạo Pull Request
+
+### Guidelines
+
+-   Viết code theo PSR-12 standard
+-   Thêm tests cho features mới
+-   Cập nhật documentation
+-   Sử dụng commit message rõ ràng
+
+## 🛡️ Bảo mật
+
+### Báo cáo lỗ hổng bảo mật
+
+Nếu phát hiện lỗ hổng bảo mật, vui lòng gửi email đến: security@movieapp.com
+
+### Best Practices
+
+-   Thường xuyên cập nhật dependencies
+-   Sử dụng HTTPS trong production
+-   Cấu hình firewall phù hợp
+-   Backup dữ liệu định kỳ
+-   Monitor logs thường xuyên
+
+## 📱 Screenshots
+
+### Trang chủ
+
+![Homepage](docs/images/homepage.png)
+
+### Chi tiết phim
+
+![Movie Detail](docs/images/movie-detail.png)
+
+### Admin Panel
+
+![Admin Panel](docs/images/admin-panel.png)
+
+## 📞 Hỗ trợ
+
+-   **Documentation**: [Wiki](https://github.com/your-username/movie-app/wiki)
+-   **Issues**: [GitHub Issues](https://github.com/your-username/movie-app/issues)
+-   **Discussions**: [GitHub Discussions](https://github.com/your-username/movie-app/discussions)
+-   **Email**: support@movieapp.com
+
+## 📄 Giấy phép
+
+Dự án này được phát hành dưới [MIT License](LICENSE).
+
+```
+Copyright (c) 2024 Movie App
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software...
+```
+
+## 🙏 Lời cảm ơn
+
+-   [Laravel](https://laravel.com) - Framework tuyệt vời
+-   [PhimAPI](https://phimapi.com) - API cung cấp dữ liệu phim
+-   [Bootstrap](https://getbootstrap.com) - CSS Framework
+-   Tất cả contributors đã đóng góp cho project
+
+---
+
+<p align="center">Made with ❤️ by <a href="https://github.com/your-username">Your Name</a></p>
