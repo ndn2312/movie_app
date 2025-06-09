@@ -30,15 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Chia sẻ biến genre, country và category tới tất cả các view
-        View::composer('*', function ($view) {
-            $genre = Genre::orderBy('id', 'DESC')->get();
-            $country = Country::orderBy('id', 'DESC')->get();
-            $category = Category::orderBy('id', 'DESC')->get();
-
-            $view->with(compact('genre', 'country', 'category'));
-        });
-
         View::composer('layouts.app', function ($view) {
             // Tổng số người dùng
             $totalUsers = User::count();
@@ -73,5 +64,14 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('statistics', $statistics);
         });
+
+        // Chia sẻ biến genre, country, category cho tất cả các view
+        // \Illuminate\Support\Facades\View::composer('*', function ($view) {
+        //     $view->with([
+        //         'genre' => \App\Models\Genre::orderBy('id', 'DESC')->get(),
+        //         'country' => \App\Models\Country::orderBy('id', 'DESC')->get(),
+        //         'category' => \App\Models\Category::orderBy('position', 'ASC')->get(),
+        //     ]);
+        // });
     }
 }

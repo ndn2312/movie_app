@@ -268,7 +268,7 @@
                 <div class="profile_details_left">
                     <!--notifications of menu start -->
                     <ul class="nofitications-dropdown">
-                        {{-- <li class="dropdown head-dpdn">
+                        <li class="dropdown head-dpdn">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i
                                     class="fa fa-envelope"></i><span class="badge">4</span></a>
                             <ul class="dropdown-menu">
@@ -279,7 +279,7 @@
                                 </li>
                                 <!-- ... Menu items ... -->
                             </ul>
-                        </li> --}}
+                        </li>
                         <!-- ... Other dropdown items ... -->
                     </ul>
                     <div class="clearfix"></div>

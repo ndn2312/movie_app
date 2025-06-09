@@ -836,7 +836,8 @@ h6 {
 }
 
 .footer-logo {
-    height: 150px;
+    height: 60px;
+    margin-bottom: 20px;
 }
 
 .footer-content {
@@ -1710,7 +1711,7 @@ img:hover {
 }
 
 .footer-content {
-    /* padding-top: 20px; */
+    padding-top: 20px;
     padding-bottom: 20px;
     color: #5a6870;
     font-size: 12px

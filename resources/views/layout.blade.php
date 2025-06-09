@@ -26,11 +26,11 @@
 
     <!-- CSS Files -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel='stylesheet' href='{{asset(' css/bootstrap.min.css')}}'>
+    <link rel='stylesheet' href='{{asset('css/bootstrap.min.css')}}'>
     {{--
     <link rel='stylesheet' href='{{asset(' css/layout.css')}}'> --}}
 
-    <link rel='stylesheet' href='{{asset(' css/style.css')}}'>
+    <link rel='stylesheet' href='{{asset('css/style.css')}}'>
 
 
 
@@ -41,7 +41,7 @@
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v22.0">
     </script>
-    <script src='{{asset(' js/jquery.min.js')}}'></script>
+    <script src='{{asset('js/jquery.min.js')}}'></script>
 
     <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
@@ -617,83 +617,6 @@
                 font-size: 2em;
             }
         }
-
-        /* Patriotic Banner */
-        .patriotic-banner {
-            background-color: #da251d;
-            color: #fff;
-            text-align: center;
-            padding: 10px 15px;
-            border-radius: 30px;
-            font-weight: bold;
-            /* margin-bottom: 20px; */
-            font-size: 16px;
-            display: inline-block;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .patriotic-banner .star {
-            color: #ffff00;
-            margin-right: 5px;
-        }
-
-        /* Footer logo styling */
-        .logo-container {
-            text-align: center;
-            margin: 15px 0 25px;
-        }
-
-        /* .footer-logo {
-            max-height: 60px;
-            width: auto;
-        } */
-
-        .footer-bottom {
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        /* Banner and logo styling */
-        .header-elements {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            /* margin-bottom: 25px; */
-            gap: 15px;
-        }
-
-        .patriotic-banner {
-            background-color: #da251d;
-            color: #fff;
-            text-align: center;
-            padding: 10px 15px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 16px;
-            display: inline-block;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .patriotic-banner .star {
-            color: #ffff00;
-            margin-right: 5px;
-        }
-
-        .logo-wrapper {
-            text-align: center;
-        }
-
-        /* .footer-logo {
-            max-height: 60px;
-            width: auto;
-        } */
-
-        .footer-bottom {
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
     </style>
 
 </head>
@@ -701,7 +624,7 @@
 <body>
 
 
-    {{-- @include('partials.loading-screen') --}}
+    @include('partials.loading-screen')
 
     <!-- Header -->
 
@@ -806,8 +729,6 @@
                                 <li><a href="{{route('favorites')}}"><i class="fas fa-heart"></i> Phim yêu thích</a>
                                 </li>
                                 <li><a href="{{route('history')}}"><i class="fas fa-history"></i> Lịch sử xem</a>
-                                </li>
-                                <li><a href="{{route('chatbot')}}"><i class="fas fa-robot"></i> ChatBot AI</a>
                                 </li>
                                 <li><a href="{{route('account')}}"><i class="fas fa-user-cog"></i> Thông tin tài
                                         khoản</a>
@@ -926,16 +847,7 @@
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
-            <div class="header-elements">
-                <div class="patriotic-banner">
-                    <span class="star">★</span> Hoàng Sa & Trường Sa là của Việt Nam!
-                </div>
-
-                <div class="logo-wrapper">
-                    <img src="/imgs/logo.png" alt="NdnPhim" class="footer-logo">
-                </div>
-            </div>
-
+            <img src="https://example.com/logo.png" alt="NdnPhim" class="footer-logo">
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>Về chúng tôi</h3>
@@ -1035,10 +947,10 @@
     </script>
 
 
-    <script src='{{asset(' js/bootstrap.min.js')}}'></script>
-    <script src='{{asset(' js/owl.carousel.min.js')}}'></script>
-    <script src='{{asset(' js/search.js')}}'></script>
-    <script src='{{asset(' js/favorites.js')}}'></script>
+    <script src='{{asset('js/bootstrap.min.js')}}'></script>
+    <script src='{{asset('js/owl.carousel.min.js')}}'></script>
+    <script src='{{asset('js/search.js')}}'></script>
+    <script src='{{asset('js/favorites.js')}}'></script>
     <script>
         $(document).ready(function() {
         // Khởi tạo hệ thống đánh giá popup
@@ -1130,15 +1042,15 @@
                     feedback.fadeOut();
                 }, 5000);
                 },
-                // error: function() {
-                // feedback.removeClass('loading success')
-                //         .addClass('error')
-                //         .html('<i class="fas fa-exclamation-triangle"></i> Lỗi kết nối, vui lòng thử lại sau');
+                error: function() {
+                feedback.removeClass('loading success')
+                        .addClass('error')
+                        .html('<i class="fas fa-exclamation-triangle"></i> Lỗi kết nối, vui lòng thử lại sau');
                 
-                // setTimeout(function() {
-                //     feedback.fadeOut();
-                // }, 5000);
-                // }
+                setTimeout(function() {
+                    feedback.fadeOut();
+                }, 5000);
+                }
             });
             }
     

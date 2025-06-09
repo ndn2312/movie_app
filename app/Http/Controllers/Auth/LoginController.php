@@ -164,61 +164,61 @@ class LoginController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    // public function adminLogin(Request $request)
-    // {
-    //     $this->validateLogin($request);
+    public function adminLogin(Request $request)
+    {
+        $this->validateLogin($request);
 
-    //     // Kiểm tra giới hạn đăng nhập
-    //     if (
-    //         method_exists($this, 'hasTooManyLoginAttempts') &&
-    //         $this->hasTooManyLoginAttempts($request)
-    //     ) {
-    //         $this->fireLockoutEvent($request);
-    //         return $this->sendLockoutResponse($request);
-    //     }
+        // Kiểm tra giới hạn đăng nhập
+        if (
+            method_exists($this, 'hasTooManyLoginAttempts') &&
+            $this->hasTooManyLoginAttempts($request)
+        ) {
+            $this->fireLockoutEvent($request);
+            return $this->sendLockoutResponse($request);
+        }
 
-    //     // Lấy thông tin đăng nhập (email hoặc name)
-    //     $credentials = $this->credentials($request);
+        // Lấy thông tin đăng nhập (email hoặc name)
+        $credentials = $this->credentials($request);
 
-    //     // Thử đăng nhập
-    //     if (Auth::attempt($credentials, $request->filled('remember'))) {
-    //         // Thành công, lấy người dùng hiện tại
-    //         $user = Auth::user();
+        // Thử đăng nhập
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            // Thành công, lấy người dùng hiện tại
+            $user = Auth::user();
 
-    //         // Kiểm tra trạng thái tài khoản
-    //         if ($user->status == 0) {
-    //             // Tài khoản bị khóa, đăng xuất ngay lập tức
-    //             Auth::logout();
-    //             $request->session()->invalidate();
-    //             $request->session()->regenerateToken();
+            // Kiểm tra trạng thái tài khoản
+            if ($user->status == 0) {
+                // Tài khoản bị khóa, đăng xuất ngay lập tức
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
 
-    //             return redirect()->route('admin.login')
-    //                 ->withErrors(['login' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.']);
-    //         }
+                return redirect()->route('admin.login')
+                    ->withErrors(['login' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để được hỗ trợ.']);
+            }
 
-    //         // Refresh session
-    //         $request->session()->regenerate();
+            // Refresh session
+            $request->session()->regenerate();
 
-    //         // Kiểm tra nếu không phải admin
-    //         if ($user->role !== 'admin') {
-    //             Auth::logout();
-    //             $request->session()->invalidate();
-    //             $request->session()->regenerateToken();
+            // Kiểm tra nếu không phải admin
+            if ($user->role !== 'admin') {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
 
-    //             return redirect()->route('admin.login')
-    //                 ->withErrors(['login' => 'Tài khoản này không có quyền truy cập trang quản trị.']);
-    //         }
+                return redirect()->route('admin.login')
+                    ->withErrors(['login' => 'Tài khoản này không có quyền truy cập trang quản trị.']);
+            }
 
-    //         return redirect()->route('home')
-    //             ->with('success', 'Đăng nhập trang quản trị thành công!');
-    //     }
+            return redirect()->route('home')
+                ->with('success', 'Đăng nhập trang quản trị thành công!');
+        }
 
-    //     // Đăng nhập thất bại
-    //     $this->incrementLoginAttempts($request);
+        // Đăng nhập thất bại
+        $this->incrementLoginAttempts($request);
 
-    //     return redirect()->route('admin.login')
-    //         ->withErrors(['login' => 'Thông tin đăng nhập không chính xác.']);
-    // }
+        return redirect()->route('admin.login')
+            ->withErrors(['login' => 'Thông tin đăng nhập không chính xác.']);
+    }
 
     /**
      * Get the failed login response instance.

@@ -402,73 +402,32 @@ class IndexController extends Controller
 
     public function add_rating(Request $request)
     {
-        try {
-            $data = $request->all();
-            $ip_address = $request->ip();
+        $data = $request->all();
+        $ip_address = $request->ip();
 
-            // Kiểm tra dữ liệu đầu vào
-            if (!isset($data['movie_id']) || !isset($data['rating'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Thiếu thông tin đánh giá phim!'
-                ], 422);
-            }
+        // Kiểm tra xem người dùng đã đánh giá phim này chưa
+        $rating_count = Rating::where('movie_id', $data['movie_id'])
+            ->where('ip_address', $ip_address)
+            ->count();
 
-            // Kiểm tra xem người dùng đã đánh giá phim này chưa
-            $existing_rating = Rating::where('movie_id', $data['movie_id'])
-                ->where('ip_address', $ip_address)
-                ->first();
+        if ($rating_count > 0) {
+            return 'exist';
+        } else {
+            // Thêm đánh giá mới
+            $rating = new Rating();
+            $rating->movie_id = $data['movie_id'];
+            $rating->rating = $data['index'];
+            $rating->ip_address = $ip_address;
+            $rating->save();
 
-            if ($existing_rating) {
-                // Kiểm tra xem đã đủ 24 giờ để đánh giá lại chưa
-                $last_rated = $existing_rating->updated_at;
-                $hours_since_last_rating = now()->diffInHours($last_rated);
-
-                if ($hours_since_last_rating < 24) {
-                    // Chưa đủ 24 giờ, báo lỗi và thông báo khi nào có thể đánh giá lại
-                    $hours_remaining = 24 - $hours_since_last_rating;
-                    return response()->json([
-                        'success' => false,
-                        'message' => "Bạn đã đánh giá phim này rồi. Vui lòng đợi {$hours_remaining} giờ nữa để đánh giá lại.",
-                        'rating' => $existing_rating->rating
-                    ]);
-                }
-
-                // Đã đủ 24 giờ, cập nhật đánh giá
-                $existing_rating->rating = $data['rating'];
-                $existing_rating->save();
-                $message = 'Đã cập nhật đánh giá của bạn!';
-            } else {
-                // Thêm đánh giá mới
-                $rating = new Rating();
-                $rating->movie_id = $data['movie_id'];
-                $rating->rating = $data['rating'];
-                $rating->ip_address = $ip_address;
-                $rating->save();
-
-                $message = 'Cảm ơn bạn đã đánh giá phim!';
-            }
-
-            // Tính toán số liệu đánh giá để trả về
+            // Cập nhật lại giá trị đánh giá trung bình
             $avg_rating = Rating::where('movie_id', $data['movie_id'])->avg('rating');
-            $avg_rating = round($avg_rating, 1); // Làm tròn đến 1 chữ số thập phân
-            $count_total = Rating::where('movie_id', $data['movie_id'])->count();
+            $avg_rating = round($avg_rating);
 
             // Cập nhật file JSON với rating mới
             $this->updateMovieJsonRating($data['movie_id'], $avg_rating);
 
-            // Trả về JSON với thông tin đầy đủ
-            return response()->json([
-                'success' => true,
-                'message' => $message,
-                'avg_rating' => $avg_rating,
-                'count_total' => $count_total
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Đã xảy ra lỗi: ' . $e->getMessage()
-            ], 500);
+            return 'done';
         }
     }
 
@@ -482,7 +441,7 @@ class IndexController extends Controller
 
             foreach ($jsonData as $key => $movie) {
                 if ($movie['id'] == $movieId) {
-                    $jsonData[$key]['rating'] = (float)$newRating; // Đảm bảo lưu dưới dạng số thập phân
+                    $jsonData[$key]['rating'] = $newRating;
                     $jsonData[$key]['rating_count'] = Rating::where('movie_id', $movieId)->count();
                     break;
                 }

@@ -75,11 +75,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/favorites/remove/{id}', [App\Http\Controllers\FavoriteController::class, 'destroy'])->name('favorites.remove');
     Route::get('/favorites/check', [App\Http\Controllers\FavoriteController::class, 'check'])->name('favorites.check');
 
-    // ChatBot AI
-    Route::get('/chatbot', [App\Http\Controllers\ChatbotController::class, 'index'])->name('chatbot');
-    Route::post('/chatbot/send', [App\Http\Controllers\ChatbotController::class, 'sendMessage'])->name('chatbot.send');
-    Route::post('/chatbot/clear', [App\Http\Controllers\ChatbotController::class, 'clearHistory'])->name('chatbot.clear');
-
     // Lưu và lấy lịch sử xem phim
     Route::post('/history/save', [App\Http\Controllers\WatchHistoryController::class, 'store'])->name('history.save');
     Route::get('/history/get/{movie_id}/{episode?}', [App\Http\Controllers\WatchHistoryController::class, 'getHistory'])->name('history.get');

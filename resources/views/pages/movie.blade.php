@@ -3153,87 +3153,19 @@ $(document).ready(function() {
         const rating = $(this).data('value');
         const movieId = $('#movie-rating-system-popup').data('movie-id');
         
-        // Gửi đánh giá đến server qua AJAX
-        $.ajax({
-            url: '{{ route("add-rating") }}',
-            type: 'POST',
-            data: {
-                movie_id: movieId,
-                rating: rating,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if (response.success) {
-                    // Hiển thị phản hồi thành công
-                    $('#rating-feedback-popup')
-                        .removeClass('error')
-                        .addClass('success')
-                        .text(response.message || 'Cảm ơn bạn đã đánh giá phim!')
-                        .slideDown();
-                    
-                    // Cập nhật hiển thị rating trên giao diện
-                    if (response.avg_rating) {
-                        $('.current-rating .average').text(response.avg_rating);
-                        $('.current-rating small').text('(' + response.count_total + ' lượt đánh giá)');
-                        
-                        // Cập nhật active stars
-                        $('.star').removeClass('active');
-                        $('.star').each(function() {
-                            if ($(this).data('value') <= response.avg_rating) {
-                                $(this).addClass('active');
-                            }
-                        });
-                    }
-                } else {
-                    // Hiển thị phản hồi lỗi
-                    $('#rating-feedback-popup')
-                        .removeClass('success')
-                        .addClass('error')
-                        .text(response.message || 'Đã xảy ra lỗi khi đánh giá phim.')
-                        .slideDown();
-                    
-                    // Nếu có thông tin về đánh giá hiện tại, làm nổi bật sao tương ứng
-                    if (response.rating) {
-                        $('.star').removeClass('active');
-                        $('.star').each(function() {
-                            if ($(this).data('value') <= response.rating) {
-                                $(this).addClass('active');
-                            }
-                        });
-                    }
-                }
-                
-                // Ẩn phản hồi sau 5 giây
-                setTimeout(() => {
-                    $('#rating-feedback-popup').slideUp();
-                }, 5000);
-            },
-            error: function(xhr) {
-                // Xử lý lỗi chi tiết
-                let errorMessage = 'Đã xảy ra lỗi khi đánh giá phim.';
-                
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                } else if (xhr.status === 500) {
-                    errorMessage = 'Lỗi máy chủ, vui lòng thử lại sau.';
-                    console.error('Server error:', xhr.responseText);
-                } else if (xhr.status === 404) {
-                    errorMessage = 'Không tìm thấy phương thức xử lý đánh giá.';
-                } else if (xhr.status === 422) {
-                    errorMessage = 'Dữ liệu không hợp lệ, vui lòng thử lại.';
-                }
-                
-                $('#rating-feedback-popup')
-                    .removeClass('success')
-                    .addClass('error')
-                    .text(errorMessage)
-                    .slideDown();
-                    
-                setTimeout(() => {
-                    $('#rating-feedback-popup').slideUp();
-                }, 5000);
-            }
-        });
+        // Gửi đánh giá đến server - giả lập
+        console.log(`Đánh giá ${rating} sao cho phim ID: ${movieId}`);
+        
+        // Hiển thị phản hồi
+        $('#rating-feedback-popup')
+            .addClass('success')
+            .text('Cảm ơn bạn đã đánh giá phim!')
+            .slideDown();
+        
+        // Ẩn phản hồi sau 3 giây
+        setTimeout(() => {
+            $('#rating-feedback-popup').slideUp();
+        }, 3000);
     });
 
     // Hover effect cho star

@@ -308,9 +308,8 @@
             <article class="col-md-3 col-sm-3 col-xs-6 thumb grid-item post-37606">
                <div class="halim-item">
                   <a class="halim-thumb" href="{{route('movie',$mov->slug)}}">
-                     <figure><img class="lazy img-responsive"
-                        src="@if(Str::startsWith($mov->image, ['http://', 'https://'])){{$mov->image}}@else{{asset('uploads/movie/'.$mov->image)}}@endif"
-                        title="{{$mov->title}}"></figure>
+                     <figure><img class="lazy img-responsive" src="{{asset('uploads/movie/'.$mov->image)}}"
+                           title="{{$mov->title}}"></figure>
                      <span class="status">
                         @if($mov->resolution==0)
                         <span class="tag-base hd-tag">HD</span>

@@ -69,12 +69,4 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Movie::class, 'favorites', 'user_id', 'movie_id')->withTimestamps();
     }
-
-    /**
-     * Lấy các tin nhắn chatbot của người dùng
-     */
-    public function chatbots()
-    {
-        return $this->hasMany(Chatbot::class);
-    }
 }

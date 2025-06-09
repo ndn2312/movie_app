@@ -157,35 +157,17 @@
 
     .main-title {
         font-size: 32px;
+        background: linear-gradient(45deg, yellow 50%, red 50%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         font-weight: 800;
         letter-spacing: 1px;
-        line-height: 1.4;
+        line-height: 1.2;
         margin: 0 0 15px;
         text-transform: uppercase;
         font-family: 'Be Vietnam Pro', sans-serif;
-        color: #fff;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .main-title .yellow-line {
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .main-title .red-line {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-
-    .main-title .connector {
-        margin: 0 15px;
-        display: inline-block;
+        text-shadow: none;
     }
 
     .date-container {
@@ -350,24 +332,6 @@
             padding: 20px 15px;
         }
     }
-
-    .yellow-text {
-        background: linear-gradient(to right, #FFD700);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: none;
-        display: inline-block;
-    }
-
-    .red-text {
-        background: linear-gradient(to right, #FF0000);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: none;
-        display: inline-block;
-    }
 </style>
 <!-- Màn hình loading -->
 <div id="page-loader" class="page-loader">
@@ -386,10 +350,7 @@
             <div class="anniversary-content">
                 <div class="top-line"></div>
                 <h2 class="celebration-title">CHÀO MỪNG</h2>
-                <h1 class="main-title">
-                    <div class="yellow-line"><span class="yellow-text">80 NĂM CÁCH MẠNG THÁNG 8</span></div>
-                    <div class="red-line"><span class="red-text">QUỐC KHÁNH 2/9</span></div>
-                </h1>
+                <h1 class="main-title">80 NĂM CÁCH MẠNG THÁNG 8 VÀ QUỐC KHÁNH 2/9</h1>
                 <div class="date-container">
                     <span class="anniversary-date">02/09/1945 - 02/09/2025</span>
                 </div>
@@ -441,7 +402,7 @@
                 // Navigate after showing animation
                 setTimeout(function() {
                     window.location.href = href;
-                }, 4000);
+                }, 2000);
             }
         });
     });
